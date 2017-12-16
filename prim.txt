@@ -1,0 +1,28 @@
+let the doubting prime be a discrete value
+<
+	enter a full self
+	enter a full question
+	let the question be the value divided twice
+	from self is none, to self up to lower than the question, let the self ascend
+	<
+		enter a full answer
+		let the answer be the value reminding self
+		ask whether the answer is none then
+		<
+			exeunt untruth
+		>
+	> 
+	exeunt indeed
+>
+
+enter a whole confession
+let the confession be summoned
+let the confession be the cry for prime's confession
+ask whether the confession is true then
+<
+	quote "Truth"
+>
+otherwise
+<
+	quote "Lie"
+>

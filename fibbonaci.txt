@@ -1,0 +1,19 @@
+let whole fibbonaci be a discrete person
+<
+	enter a fixed ideal
+	let the ideal be none
+	enter a fixed obstacle
+	let the obstacle be one
+	since the person is not none
+	<
+		let the ideal be an obstacle
+		let upon an obstacle added an ideal
+		let the person descend
+	>
+	exeunt the ideal
+>
+enter a full name
+let the name be summoned
+quote cry for fibbonaci's name
+	
+	
