@@ -1,8 +1,16 @@
 %{
 #include <stdio.h>
+#include "types.h"
+
 extern FILE* yyin;
 extern char* yytext;
 extern int yylineno;
+int yyerror(const char* s)
+{
+	fprintf(stderr, "%s\n", s);
+}
+int yylex(void);
+
 %}
 %token TYPE ID NUMBER STRING QUOTE ENTER LET BE THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT COMMA UP TO DOWN LOWER GREATER THAN EXEUNT SUMMONED NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE UNTRUTH INDEED
 %start progr
@@ -97,6 +105,7 @@ printf("eroare: %s la linia:%d\n",s,yylineno);
 }
 
 int main(int argc, char** argv){
-yyin=fopen(argv[1],"r");
-yyparse();
+	yyin=fopen(argv[1],"r");
+	yyparse();
+	return 0;
 } 
