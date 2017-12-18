@@ -12,7 +12,7 @@
 
 namespace Language
 {
-	enum Type { BOOLEAN, INT, STR };
+	enum Type { BOOLEAN, INT, STR, STRUCT };
 	struct Value
 	{
 		Type type;
@@ -29,11 +29,13 @@ namespace Language
 		std::string 		name;
 		std::string 		scope;
 		bool 			isConstant;
-		union {
-			int 		int_val;
-			bool 		bool_val;
-			char*	 	str_val;		
-		} value;
+		void*			data;
+	};
+
+	struct Struct
+	{
+		std::string typeName;
+		std::map<std::string, Variable*> vars;	
 	};
 }
 

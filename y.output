@@ -64,9 +64,9 @@ Grammar
 
    11 expression: '<' expression '>'
    12           | expression ADDING expression
-   13           | expression DIVIDED expression
-   14           | expression REMINDING expression
-   15           | expression CONSPIRING expression
+   13           | expression CONSPIRING expression
+   14           | expression DIVIDED expression
+   15           | expression REMINDING expression
    16           | expression EMPOWERING expression
    17           | NUMBER
    18           | STRING
@@ -74,7 +74,6 @@ Grammar
    20           | BOOL_TRUE
 
    21 output: QUOTE expression
-   22       | QUOTE ID
 
 
 Terminals, with rules where they appear
@@ -83,7 +82,7 @@ $end (0) 0
 '<' (60) 11
 '>' (62) 11
 error (256)
-ID (258) 10 22
+ID (258) 10
 TELLING (259)
 FIXED (260)
 INT_TYPE (261) 7
@@ -93,7 +92,7 @@ NUMBER (264) 17
 STRING (265) 18
 BOOL_TRUE (266) 20
 BOOL_FALSE (267) 19
-QUOTE (268) 21 22
+QUOTE (268) 21
 ENTER (269) 10
 LET (270)
 BE (271)
@@ -105,10 +104,10 @@ ASCEND (276)
 DESCEND (277)
 CRY (278)
 FOR (279)
-DIVIDED (280) 13
-REMINDING (281) 14
+DIVIDED (280) 14
+REMINDING (281) 15
 ADDING (282) 12
-CONSPIRING (283) 15
+CONSPIRING (283) 13
 EMPOWERING (284) 16
 IS (285)
 LEFT (286)
@@ -159,7 +158,7 @@ expression (67)
     on left: 11 12 13 14 15 16 17 18 19 20, on right: 5 11 12 13 14
     15 16 21
 output (68)
-    on left: 21 22, on right: 6
+    on left: 21, on right: 6
 
 
 State 0
@@ -213,27 +212,25 @@ State 4
 State 5
 
    21 output: QUOTE . expression
-   22       | QUOTE . ID
 
-    ID          shift, and go to state 14
     NUMBER      shift, and go to state 1
     STRING      shift, and go to state 2
     BOOL_TRUE   shift, and go to state 3
     BOOL_FALSE  shift, and go to state 4
     '<'         shift, and go to state 7
 
-    expression  go to state 15
+    expression  go to state 14
 
 
 State 6
 
    10 declaration: ENTER . var_type ID
 
-    INT_TYPE      shift, and go to state 16
-    STR_TYPE      shift, and go to state 17
-    BOOLEAN_TYPE  shift, and go to state 18
+    INT_TYPE      shift, and go to state 15
+    STR_TYPE      shift, and go to state 16
+    BOOLEAN_TYPE  shift, and go to state 17
 
-    var_type  go to state 19
+    var_type  go to state 18
 
 
 State 7
@@ -246,14 +243,14 @@ State 7
     BOOL_FALSE  shift, and go to state 4
     '<'         shift, and go to state 7
 
-    expression  go to state 20
+    expression  go to state 19
 
 
 State 8
 
     0 $accept: progr . $end
 
-    $end  shift, and go to state 21
+    $end  shift, and go to state 20
 
 
 State 9
@@ -271,7 +268,7 @@ State 9
 
     $default  reduce using rule 1 (progr)
 
-    line         go to state 22
+    line         go to state 21
     declaration  go to state 11
     expression   go to state 12
     output       go to state 13
@@ -295,16 +292,16 @@ State 12
 
     5 line: expression .
    12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
 
-    DIVIDED     shift, and go to state 23
-    REMINDING   shift, and go to state 24
-    ADDING      shift, and go to state 25
-    CONSPIRING  shift, and go to state 26
-    EMPOWERING  shift, and go to state 27
+    DIVIDED     shift, and go to state 22
+    REMINDING   shift, and go to state 23
+    ADDING      shift, and go to state 24
+    CONSPIRING  shift, and go to state 25
+    EMPOWERING  shift, and go to state 26
 
     $default  reduce using rule 5 (line)
 
@@ -318,91 +315,97 @@ State 13
 
 State 14
 
-   22 output: QUOTE ID .
-
-    $default  reduce using rule 22 (output)
-
-
-State 15
-
    12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
    21 output: QUOTE expression .
 
-    DIVIDED     shift, and go to state 23
-    REMINDING   shift, and go to state 24
-    ADDING      shift, and go to state 25
-    CONSPIRING  shift, and go to state 26
-    EMPOWERING  shift, and go to state 27
+    DIVIDED     shift, and go to state 22
+    REMINDING   shift, and go to state 23
+    ADDING      shift, and go to state 24
+    CONSPIRING  shift, and go to state 25
+    EMPOWERING  shift, and go to state 26
 
     $default  reduce using rule 21 (output)
 
 
-State 16
+State 15
 
     7 var_type: INT_TYPE .
 
     $default  reduce using rule 7 (var_type)
 
 
-State 17
+State 16
 
     8 var_type: STR_TYPE .
 
     $default  reduce using rule 8 (var_type)
 
 
-State 18
+State 17
 
     9 var_type: BOOLEAN_TYPE .
 
     $default  reduce using rule 9 (var_type)
 
 
-State 19
+State 18
 
    10 declaration: ENTER var_type . ID
 
-    ID  shift, and go to state 28
+    ID  shift, and go to state 27
 
 
-State 20
+State 19
 
    11 expression: '<' expression . '>'
    12           | expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
 
-    DIVIDED     shift, and go to state 23
-    REMINDING   shift, and go to state 24
-    ADDING      shift, and go to state 25
-    CONSPIRING  shift, and go to state 26
-    EMPOWERING  shift, and go to state 27
-    '>'         shift, and go to state 29
+    DIVIDED     shift, and go to state 22
+    REMINDING   shift, and go to state 23
+    ADDING      shift, and go to state 24
+    CONSPIRING  shift, and go to state 25
+    EMPOWERING  shift, and go to state 26
+    '>'         shift, and go to state 28
 
 
-State 21
+State 20
 
     0 $accept: progr $end .
 
     $default  accept
 
 
-State 22
+State 21
 
     3 lines: lines line .
 
     $default  reduce using rule 3 (lines)
 
 
+State 22
+
+   14 expression: expression DIVIDED . expression
+
+    NUMBER      shift, and go to state 1
+    STRING      shift, and go to state 2
+    BOOL_TRUE   shift, and go to state 3
+    BOOL_FALSE  shift, and go to state 4
+    '<'         shift, and go to state 7
+
+    expression  go to state 29
+
+
 State 23
 
-   13 expression: expression DIVIDED . expression
+   15 expression: expression REMINDING . expression
 
     NUMBER      shift, and go to state 1
     STRING      shift, and go to state 2
@@ -415,7 +418,7 @@ State 23
 
 State 24
 
-   14 expression: expression REMINDING . expression
+   12 expression: expression ADDING . expression
 
     NUMBER      shift, and go to state 1
     STRING      shift, and go to state 2
@@ -428,7 +431,7 @@ State 24
 
 State 25
 
-   12 expression: expression ADDING . expression
+   13 expression: expression CONSPIRING . expression
 
     NUMBER      shift, and go to state 1
     STRING      shift, and go to state 2
@@ -441,7 +444,7 @@ State 25
 
 State 26
 
-   15 expression: expression CONSPIRING . expression
+   16 expression: expression EMPOWERING . expression
 
     NUMBER      shift, and go to state 1
     STRING      shift, and go to state 2
@@ -454,93 +457,80 @@ State 26
 
 State 27
 
-   16 expression: expression EMPOWERING . expression
-
-    NUMBER      shift, and go to state 1
-    STRING      shift, and go to state 2
-    BOOL_TRUE   shift, and go to state 3
-    BOOL_FALSE  shift, and go to state 4
-    '<'         shift, and go to state 7
-
-    expression  go to state 34
-
-
-State 28
-
    10 declaration: ENTER var_type ID .
 
     $default  reduce using rule 10 (declaration)
 
 
-State 29
+State 28
 
    11 expression: '<' expression '>' .
 
     $default  reduce using rule 11 (expression)
 
 
-State 30
+State 29
 
    12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   13           | expression DIVIDED expression .
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
-   16           | expression . EMPOWERING expression
-
-    $default  reduce using rule 13 (expression)
-
-
-State 31
-
-   12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   14           | expression REMINDING expression .
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   14           | expression DIVIDED expression .
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
 
     $default  reduce using rule 14 (expression)
 
 
-State 32
+State 30
+
+   12 expression: expression . ADDING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
+   15           | expression REMINDING expression .
+   16           | expression . EMPOWERING expression
+
+    $default  reduce using rule 15 (expression)
+
+
+State 31
 
    12 expression: expression . ADDING expression
    12           | expression ADDING expression .
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
 
-    DIVIDED     shift, and go to state 23
-    REMINDING   shift, and go to state 24
-    EMPOWERING  shift, and go to state 27
+    DIVIDED     shift, and go to state 22
+    REMINDING   shift, and go to state 23
+    EMPOWERING  shift, and go to state 26
 
     $default  reduce using rule 12 (expression)
+
+
+State 32
+
+   12 expression: expression . ADDING expression
+   13           | expression . CONSPIRING expression
+   13           | expression CONSPIRING expression .
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
+   16           | expression . EMPOWERING expression
+
+    DIVIDED     shift, and go to state 22
+    REMINDING   shift, and go to state 23
+    EMPOWERING  shift, and go to state 26
+
+    $default  reduce using rule 13 (expression)
 
 
 State 33
 
    12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
-   15           | expression CONSPIRING expression .
-   16           | expression . EMPOWERING expression
-
-    DIVIDED     shift, and go to state 23
-    REMINDING   shift, and go to state 24
-    EMPOWERING  shift, and go to state 27
-
-    $default  reduce using rule 15 (expression)
-
-
-State 34
-
-   12 expression: expression . ADDING expression
-   13           | expression . DIVIDED expression
-   14           | expression . REMINDING expression
-   15           | expression . CONSPIRING expression
+   13           | expression . CONSPIRING expression
+   14           | expression . DIVIDED expression
+   15           | expression . REMINDING expression
    16           | expression . EMPOWERING expression
    16           | expression EMPOWERING expression .
 

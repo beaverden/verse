@@ -68,7 +68,7 @@
 #include <stdarg.h>
 #include "types.h"
 
-//#define DEBUG_MODE
+//	#define DEBUG_MODE
 
 extern FILE* yyin;
 extern char* yytext;
@@ -572,18 +572,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  21
+#define YYFINAL  20
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   60
+#define YYLAST   56
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  61
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  23
+#define YYNRULES  22
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  35
+#define YYNSTATES  34
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -635,9 +635,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   113,   113,   115,   116,   119,   120,   121,   124,   125,
-     126,   129,   135,   136,   159,   179,   199,   219,   260,   267,
-     276,   283,   292,   298
+       0,   113,   113,   117,   118,   121,   122,   123,   126,   127,
+     128,   131,   137,   141,   162,   174,   186,   198,   226,   233,
+     242,   249,   258
 };
 #endif
 
@@ -675,10 +675,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -9
+#define YYPACT_NINF -16
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-9)))
+  (!!((Yystate) == (-16)))
 
 #define YYTABLE_NINF -1
 
@@ -689,10 +689,10 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       1,    -9,    -9,    -9,    -9,    -3,    31,    -8,     5,     1,
-      -9,    -9,     2,    -9,    -9,     2,    -9,    -9,    -9,    13,
-      -7,    -9,    -9,    -8,    -8,    -8,    -8,    -8,    -9,    -9,
-      -9,    -9,     7,     7,    -9
+      -9,   -16,   -16,   -16,   -16,    -3,    22,    -3,    16,    -9,
+     -16,   -16,    -7,   -16,    -7,   -16,   -16,   -16,    23,   -15,
+     -16,   -16,    -3,    -3,    -3,    -3,    -3,   -16,   -16,   -16,
+     -16,    -2,    -2,   -16
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -701,21 +701,21 @@ static const yytype_int8 yypact[] =
 static const yytype_uint8 yydefact[] =
 {
        0,    18,    19,    21,    20,     0,     0,     0,     0,     2,
-       3,     5,     6,     7,    23,    22,     8,     9,    10,     0,
-       0,     1,     4,     0,     0,     0,     0,     0,    11,    12,
-      14,    15,    13,    16,    17
+       3,     5,     6,     7,    22,     8,     9,    10,     0,     0,
+       1,     4,     0,     0,     0,     0,     0,    11,    12,    15,
+      16,    13,    14,    17
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -9,    -9,    -9,     8,    -9,    -9,    18,    -9
+     -16,   -16,   -16,    28,   -16,   -16,    10,   -16
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     8,     9,    10,    19,    11,    12,    13
+      -1,     8,     9,    10,    18,    11,    12,    13
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -723,24 +723,22 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      14,     1,     2,     3,     4,    21,     1,     2,     3,     4,
-       1,     2,     3,     4,     5,     6,    28,    22,    23,    24,
-      25,    26,    27,    15,     0,    20,     0,    23,    24,    25,
-      26,    27,    23,    24,     0,     0,    27,    16,    17,    18,
-       0,    30,    31,    32,    33,    34,     0,     0,     0,     0,
-       0,     7,     0,    29,     0,     0,     7,     0,     0,     0,
-       7
+       1,     2,     3,     4,     5,     6,     1,     2,     3,     4,
+      22,    23,    24,    25,    26,    14,    20,    19,    22,    23,
+      24,    25,    26,    22,    23,     0,    27,    26,    15,    16,
+      17,     0,    29,    30,    31,    32,    33,    21,     0,     0,
+       0,     0,     0,     0,     0,    28,     0,     0,     0,     0,
+       7,     0,     0,     0,     0,     0,     7
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     9,    10,    11,    12,     0,     9,    10,    11,    12,
-       9,    10,    11,    12,    13,    14,     3,     9,    25,    26,
-      27,    28,    29,     5,    -1,     7,    -1,    25,    26,    27,
-      28,    29,    25,    26,    -1,    -1,    29,     6,     7,     8,
-      -1,    23,    24,    25,    26,    27,    -1,    -1,    -1,    -1,
-      -1,    59,    -1,    60,    -1,    -1,    59,    -1,    -1,    -1,
-      59
+       9,    10,    11,    12,    13,    14,     9,    10,    11,    12,
+      25,    26,    27,    28,    29,     5,     0,     7,    25,    26,
+      27,    28,    29,    25,    26,    -1,     3,    29,     6,     7,
+       8,    -1,    22,    23,    24,    25,    26,     9,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    60,    -1,    -1,    -1,    -1,
+      59,    -1,    -1,    -1,    -1,    -1,    59
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -748,9 +746,9 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,     9,    10,    11,    12,    13,    14,    59,    62,    63,
-      64,    66,    67,    68,     3,    67,     6,     7,     8,    65,
-      67,     0,    64,    25,    26,    27,    28,    29,     3,    60,
-      67,    67,    67,    67,    67
+      64,    66,    67,    68,    67,     6,     7,     8,    65,    67,
+       0,    64,    25,    26,    27,    28,    29,     3,    60,    67,
+      67,    67,    67,    67
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -758,7 +756,7 @@ static const yytype_uint8 yyr1[] =
 {
        0,    61,    62,    63,    63,    64,    64,    64,    65,    65,
       65,    66,    67,    67,    67,    67,    67,    67,    67,    67,
-      67,    67,    68,    68
+      67,    67,    68
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -766,7 +764,7 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     1,     2,     1,     1,     1,     1,     1,
        1,     3,     3,     3,     3,     3,     3,     3,     1,     1,
-       1,     1,     2,     2
+       1,     1,     2
 };
 
 
@@ -1445,198 +1443,161 @@ yyreduce:
         case 2:
 #line 113 "limbaj.ypp" /* yacc.c:1646  */
     {printf("program corect sintactic\n");}
-#line 1449 "y.tab.c" /* yacc.c:1646  */
+#line 1447 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 124 "limbaj.ypp" /* yacc.c:1646  */
+#line 126 "limbaj.ypp" /* yacc.c:1646  */
     { (yyval.typevalue) = Language::Type::INT; }
-#line 1455 "y.tab.c" /* yacc.c:1646  */
+#line 1453 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 125 "limbaj.ypp" /* yacc.c:1646  */
+#line 127 "limbaj.ypp" /* yacc.c:1646  */
     { (yyval.typevalue) = Language::Type::STR; }
-#line 1461 "y.tab.c" /* yacc.c:1646  */
+#line 1459 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 126 "limbaj.ypp" /* yacc.c:1646  */
+#line 128 "limbaj.ypp" /* yacc.c:1646  */
     { (yyval.typevalue) = Language::Type::BOOLEAN; }
-#line 1467 "y.tab.c" /* yacc.c:1646  */
+#line 1465 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 130 "limbaj.ypp" /* yacc.c:1646  */
+#line 132 "limbaj.ypp" /* yacc.c:1646  */
     {
 			//make_variable($<strvalue>2, $<strvalue>3);
 		}
-#line 1475 "y.tab.c" /* yacc.c:1646  */
+#line 1473 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 135 "limbaj.ypp" /* yacc.c:1646  */
-    { (yyval.exprvalue) = (yyvsp[-1].exprvalue); }
+#line 138 "limbaj.ypp" /* yacc.c:1646  */
+    { 
+			(yyval.exprvalue) = (yyvsp[-1].exprvalue); 
+		}
 #line 1481 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 137 "limbaj.ypp" /* yacc.c:1646  */
+#line 142 "limbaj.ypp" /* yacc.c:1646  */
     {
-			if ((yyvsp[-2].exprvalue).type == (yyvsp[0].exprvalue).type)
+			if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::INT)
 			{
-				
-				if ((yyvsp[-2].exprvalue).type == Language::Type::BOOLEAN) 
-				{
-					yyfmterror("Can't add with this type");
-				}
-				else if ((yyvsp[-2].exprvalue).type == Language::Type::STR && (yyvsp[0].exprvalue).type == Language::Type::STR)
-				{
-					(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
-					(yyval.exprvalue).value.str_val = (char*)calloc(strlen((yyvsp[-2].exprvalue).value.str_val) + strlen((yyvsp[0].exprvalue).value.str_val) + 1, sizeof(char));
-					strncpy((yyval.exprvalue).value.str_val, (yyvsp[-2].exprvalue).value.str_val, strlen((yyvsp[-2].exprvalue).value.str_val));
-					strncpy((yyval.exprvalue).value.str_val + strlen((yyvsp[-2].exprvalue).value.str_val), (yyvsp[0].exprvalue).value.str_val, strlen((yyvsp[0].exprvalue).value.str_val));
-					(yyval.exprvalue).value.str_val[strlen((yyvsp[-2].exprvalue).value.str_val) + strlen((yyvsp[0].exprvalue).value.str_val)] = '\0';
-				}
+				(yyval.exprvalue).type = Language::Type::INT;
+				(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val + (yyvsp[0].exprvalue).value.int_val;
+			}
+			else if ((yyvsp[-2].exprvalue).type == Language::Type::STR && (yyvsp[0].exprvalue).type == Language::Type::STR) 
+			{
+				//Unite both strings "hey" + "mate" = "heymate"
+				(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
+				(yyval.exprvalue).value.str_val = (char*)calloc(strlen((yyvsp[-2].exprvalue).value.str_val) + strlen((yyvsp[0].exprvalue).value.str_val) + 1, sizeof(char));
+				strncpy((yyval.exprvalue).value.str_val, (yyvsp[-2].exprvalue).value.str_val, strlen((yyvsp[-2].exprvalue).value.str_val));
+				strncpy((yyval.exprvalue).value.str_val + strlen((yyvsp[-2].exprvalue).value.str_val), (yyvsp[0].exprvalue).value.str_val, strlen((yyvsp[0].exprvalue).value.str_val));
+				(yyval.exprvalue).value.str_val[strlen((yyvsp[-2].exprvalue).value.str_val) + strlen((yyvsp[0].exprvalue).value.str_val)] = '\0';	
 			}
 			else
 			{
 				yyfmterror("Invalid types for adding");
-			}	
+			}
 		}
-#line 1508 "y.tab.c" /* yacc.c:1646  */
+#line 1506 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 160 "limbaj.ypp" /* yacc.c:1646  */
+#line 163 "limbaj.ypp" /* yacc.c:1646  */
     {
-			if ((yyvsp[-2].exprvalue).type == (yyvsp[0].exprvalue).type)
+			if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::INT)
 			{
-				
-				if ((yyvsp[-2].exprvalue).type == Language::Type::STR || (yyvsp[-2].exprvalue).type == Language::Type::BOOLEAN) 
-				{
-					yyfmterror("Can't divide with this type");
-				}
-				else 
-				{
-					(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
-					(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val / (yyvsp[0].exprvalue).value.int_val;
-				}
-			}
-			else
-			{
-				yyfmterror("Invalid types for dividing");
-			}			
-		}
-#line 1532 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 180 "limbaj.ypp" /* yacc.c:1646  */
-    {
-			if ((yyvsp[-2].exprvalue).type == (yyvsp[0].exprvalue).type)
-			{
-				
-				if ((yyvsp[-2].exprvalue).type == Language::Type::STR || (yyvsp[-2].exprvalue).type == Language::Type::BOOLEAN) 
-				{
-					yyfmterror("Can't remind of this type");
-				}
-				else 
-				{
-					(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
-					(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val % (yyvsp[0].exprvalue).value.int_val;
-				}
-			}
-			else
-			{
-				yyfmterror("Invalid types for reminding");
-			}			
-		}
-#line 1556 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 16:
-#line 200 "limbaj.ypp" /* yacc.c:1646  */
-    {
-			if ((yyvsp[-2].exprvalue).type == (yyvsp[0].exprvalue).type)
-			{
-				
-				if ((yyvsp[-2].exprvalue).type == Language::Type::STR || (yyvsp[-2].exprvalue).type == Language::Type::BOOLEAN) 
-				{
-					yyfmterror("Can't conspire on this type");
-				}
-				else 
-				{
-					(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
-					(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val - (yyvsp[0].exprvalue).value.int_val;
-				}
+				(yyval.exprvalue).type == Language::Type::INT;
+				(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val - (yyvsp[0].exprvalue).value.int_val;
 			}
 			else
 			{
 				yyfmterror("Invalid types for conspiring");
 			}
 		}
-#line 1580 "y.tab.c" /* yacc.c:1646  */
+#line 1522 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 17:
-#line 220 "limbaj.ypp" /* yacc.c:1646  */
+  case 15:
+#line 175 "limbaj.ypp" /* yacc.c:1646  */
     {
-			if ((yyvsp[-2].exprvalue).type == (yyvsp[0].exprvalue).type)
+			if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::INT) 
 			{
-				
-				if ((yyvsp[-2].exprvalue).type == Language::Type::STR || (yyvsp[-2].exprvalue).type == Language::Type::BOOLEAN) 
-				{
-					yyfmterror("Can't multiply this type");
-				}
-				else 
-				{
-					(yyval.exprvalue).type == (yyvsp[-2].exprvalue).type;
-					(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val * (yyvsp[0].exprvalue).value.int_val;
-				}
+				(yyval.exprvalue).type == Language::Type::INT;
+				(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val / (yyvsp[0].exprvalue).value.int_val;
 			}
 			else
 			{
-				if   (((yyvsp[-2].exprvalue).type == Language::Type::STR && (yyvsp[0].exprvalue).type == Language::Type::INT)
-				   || ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::STR))
+				yyfmterror("Invalid types for dividing");
+			}			
+		}
+#line 1538 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 187 "limbaj.ypp" /* yacc.c:1646  */
+    {
+			if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::INT) 
+			{
+				(yyval.exprvalue).type == Language::Type::INT;
+				(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val % (yyvsp[0].exprvalue).value.int_val;
+			}
+			else
+			{
+				yyfmterror("Invalid types for reminding");
+			}		
+		}
+#line 1554 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 17:
+#line 199 "limbaj.ypp" /* yacc.c:1646  */
+    {
+			if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::INT)
+			{
+				(yyval.exprvalue).type == Language::Type::INT;
+				(yyval.exprvalue).value.int_val = (yyvsp[-2].exprvalue).value.int_val * (yyvsp[0].exprvalue).value.int_val;
+			}
+			else if (((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::STR)
+				||((yyvsp[-2].exprvalue).type == Language::Type::STR && (yyvsp[0].exprvalue).type == Language::Type::INT))
+			{
+				(yyval.exprvalue).type = Language::Type::STR;
+				int slen = 0;
+				int ival = 0;
+				char* sval = NULL;
+				if ((yyvsp[-2].exprvalue).type == Language::Type::STR) { sval = (yyvsp[-2].exprvalue).value.str_val; slen = strlen(sval); ival = (yyvsp[0].exprvalue).value.int_val; }
+				else if ((yyvsp[-2].exprvalue).type == Language::Type::INT) { sval = (yyvsp[0].exprvalue).value.str_val; slen = strlen(sval); ival = (yyvsp[-2].exprvalue).value.int_val; }
+				
+				(yyval.exprvalue).value.str_val = (char*)calloc(slen * ival + 1, sizeof(char));
+				for (int i = 0; i < slen * ival; i++)
 				{
-					if ((yyvsp[-2].exprvalue).type == Language::Type::INT && (yyvsp[0].exprvalue).type == Language::Type::STR) std::swap((yyvsp[-2].exprvalue), (yyvsp[0].exprvalue));
-					if ((yyvsp[0].exprvalue).value.int_val >= 0)
-					{
-						(yyval.exprvalue).type = Language::Type::STR;
-						(yyval.exprvalue).value.str_val = (char*)calloc(strlen((yyvsp[-2].exprvalue).value.str_val) * (yyvsp[0].exprvalue).value.int_val + 1, sizeof(char));
-						for (int i = 0; i < strlen((yyvsp[-2].exprvalue).value.str_val) * (yyvsp[0].exprvalue).value.int_val; i++)
-						{
-							(yyval.exprvalue).value.str_val[i] = (yyvsp[-2].exprvalue).value.str_val[ i % strlen((yyvsp[-2].exprvalue).value.str_val)];
-						}
-					}
-					else 
-					{
-						yyfmterror("Can't multiply string %s negative times", (yyvsp[-2].exprvalue).value.str_val);
-					}
-				}
-				else 
-				{
-					yyfmterror("Invalid types for multiplication");
-				}
+					(yyval.exprvalue).value.str_val[i] = sval[i % slen];
+				}	
+			}
+			else 
+			{
+				yyfmterror("Invalid types for empowering");
 			}
 		}
-#line 1625 "y.tab.c" /* yacc.c:1646  */
+#line 1586 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 261 "limbaj.ypp" /* yacc.c:1646  */
+#line 227 "limbaj.ypp" /* yacc.c:1646  */
     { 
 			(yyval.exprvalue).type = Language::Type::INT; (yyval.exprvalue).value.int_val = (yyvsp[0].intvalue); 
 			#ifdef DEBUG_MODE
 				printf("Expr type: INT, value: %d\n", (yyval.exprvalue).value.int_val);
 			#endif
 		}
-#line 1636 "y.tab.c" /* yacc.c:1646  */
+#line 1597 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 268 "limbaj.ypp" /* yacc.c:1646  */
+#line 234 "limbaj.ypp" /* yacc.c:1646  */
     { 
 			(yyval.exprvalue).type = Language::Type::STR; (yyval.exprvalue).value.str_val = (yyvsp[0].strvalue); 
 			(yyval.exprvalue).value.str_val[strlen((yyval.exprvalue).value.str_val) - 1 ] = '\0';
@@ -1645,43 +1606,43 @@ yyreduce:
 				printf("Expr type: STR, value: %s\n", (yyval.exprvalue).value.str_val);
 			#endif
 		}
-#line 1649 "y.tab.c" /* yacc.c:1646  */
+#line 1610 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 277 "limbaj.ypp" /* yacc.c:1646  */
+#line 243 "limbaj.ypp" /* yacc.c:1646  */
     { 
 			(yyval.exprvalue).type = Language::Type::BOOLEAN; (yyval.exprvalue).value.bool_val = false; 
 			#ifdef DEBUG_MODE
 				printf("Expr type: BOOL, value: %d\n", (yyval.exprvalue).value.bool_val);
 			#endif
 		}
-#line 1660 "y.tab.c" /* yacc.c:1646  */
+#line 1621 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 284 "limbaj.ypp" /* yacc.c:1646  */
+#line 250 "limbaj.ypp" /* yacc.c:1646  */
     { 
 			(yyval.exprvalue).type = Language::Type::BOOLEAN; (yyval.exprvalue).value.bool_val = true; 
 			#ifdef DEBUG_MODE
 				printf("Expr type: BOOL, value: %d\n", (yyval.exprvalue).value.bool_val);
 			#endif
 		}
-#line 1671 "y.tab.c" /* yacc.c:1646  */
+#line 1632 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 293 "limbaj.ypp" /* yacc.c:1646  */
+#line 259 "limbaj.ypp" /* yacc.c:1646  */
     { 
 			if ((yyvsp[0].exprvalue).type == Language::Type::STR) printf("[QUOTE] %s\n", (yyvsp[0].exprvalue).value.str_val);
 			if ((yyvsp[0].exprvalue).type == Language::Type::INT) printf("[QUOTE] %d\n", (yyvsp[0].exprvalue).value.int_val);
 			if ((yyvsp[0].exprvalue).type == Language::Type::BOOLEAN) printf("[QUOTE] %s\n", ((yyvsp[0].exprvalue).value.bool_val == true) ? "true" : "false");			
 		}
-#line 1681 "y.tab.c" /* yacc.c:1646  */
+#line 1642 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1685 "y.tab.c" /* yacc.c:1646  */
+#line 1646 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1909,7 +1870,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 302 "limbaj.ypp" /* yacc.c:1906  */
+#line 267 "limbaj.ypp" /* yacc.c:1906  */
 
 void leave()
 {
