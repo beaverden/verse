@@ -15,8 +15,8 @@
 "false" { return BOOL_FALSE; }
 "quote" {return QUOTE;}
 "enter" {return ENTER;}
+"proclaim" {return PROCLAIM;}
 "let" {return LET;} 
-"be" {return BE;}
 "there" {return THERE;}
 "equalling" {return EQUALLING;}
 "upon" {return UPON;}
@@ -31,7 +31,6 @@
 "conspiring" {return CONSPIRING;}
 "empowering" {return EMPOWERING;}
 "is" {return IS;}
-"," {return COMMA;}
 "up" {return UP;}
 "to" {return TO;}
 "down" {return DOWN;}

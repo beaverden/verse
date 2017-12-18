@@ -3,7 +3,8 @@
 #include <stdarg.h>
 #include "types.h"
 
-//	#define DEBUG_MODE
+#define DEBUG_MODE
+#define YYDEBUG 10
 
 extern FILE* yyin;
 extern char* yytext;
@@ -93,6 +94,7 @@ void make_variable(char* type, char* name, void* value = NULL)
 	char* strvalue;	
 	Language::Type typevalue;
 	Language::Value exprvalue;
+	std::vector<Language::Variable*>* decllist;
 }
 
 
@@ -100,168 +102,255 @@ void make_variable(char* type, char* name, void* value = NULL)
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
 %token QUOTE 
-%token ENTER LET BE THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT COMMA UP TO DOWN LOWER GREATER THAN EXEUNT SUMMONED NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE UNTRUTH INDEED
+%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT UP TO DOWN LOWER GREATER THAN EXEUNT SUMMONED NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE UNTRUTH INDEED
 
 %type <typevalue>var_type
 %type <exprvalue>expression
+%type <exprvalue>predef_func
+%type <exprvalue>output
+%type <exprvalue>input
+%type <decllist>decl_list
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDED
 
-%start progr
+
+%start programm
 %%
-progr: 		lines {printf("program corect sintactic\n");}
-     		;
+programm
+	: statements {printf("program corect sintactic\n");}
+	;
 
 
-lines: 		line
-      		| lines line
-        	;
+statements 		
+	: statement
+	| statements statement
+	;
 
-line: 		declaration
-		| expression
-		| output
-		;
 
-var_type:	INT_TYPE { $$ = Language::Type::INT; }
-		| STR_TYPE { $$ = Language::Type::STR; }
-		| BOOLEAN_TYPE { $$ = Language::Type::BOOLEAN; }
-		;
-	
-declaration:	ENTER var_type ID
-	        {
-			//make_variable($<strvalue>2, $<strvalue>3);
-		}
-		;
+statement 		
+	: expression
+	| declaration
+	| struct_decl
+	;
 
-expression: 	'<' expression '>' 
+declaration	
+	: ENTER var_type ID
+	| ENTER var_type ID TELLING expression
+	| ENTER FIXED var_type ID TELLING expression
+	;
+
+
+var_type	
+	: INT_TYPE { $$ = Language::Type::INT; }
+	| STR_TYPE { $$ = Language::Type::STR; }
+	| BOOLEAN_TYPE { $$ = Language::Type::BOOLEAN; }
+	;
+
+
+
+decl_list
+	: var_type ID 
+	{
+		#ifdef DEBUG_MODE
+			printf("Found struct item %d %s\n", $1, $2);
+		#endif
+		$$ = new std::vector<Language::Variable*>;
+		Language::Variable *v = new Language::Variable;
+		v->type = $1;
+		v->name = $2;
+		v->scope = currentScope.top();
+		v->isConstant = false;
+		v->data = NULL;
+		$$->push_back(v);	
+	}
+	| decl_list ',' var_type ID
+	{
+		#ifdef DEBUG_MODE
+			printf("Found struct item %d %s\n", $3, $4);
+		#endif
+		$$ = NULL;
+		$$ = $1;
+		Language::Variable *v = new Language::Variable;
+		v->type = $3;
+		v->name = $4;
+		v->scope = currentScope.top();
+		v->isConstant = false;
+		v->data = NULL;
+		$$->push_back(v);
+	}
+	;
+
+
+struct_decl	
+	: PROCLAIM ID '<' decl_list '>'
+	;
+
+
+expression
+	: '<' expression '>' 
 		{ 
 			$$ = $2; 
 		}
-		| expression ADDING expression
+	| expression ADDING expression
+	{
+		if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
 		{
-			if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
-			{
-				$$.type = Language::Type::INT;
-				$$.value.int_val = $1.value.int_val + $3.value.int_val;
-			}
-			else if ($1.type == Language::Type::STR && $3.type == Language::Type::STR) 
-			{
-				//Unite both strings "hey" + "mate" = "heymate"
-				$$.type == $1.type;
-				$$.value.str_val = (char*)calloc(strlen($1.value.str_val) + strlen($3.value.str_val) + 1, sizeof(char));
-				strncpy($$.value.str_val, $1.value.str_val, strlen($1.value.str_val));
-				strncpy($$.value.str_val + strlen($1.value.str_val), $3.value.str_val, strlen($3.value.str_val));
-				$$.value.str_val[strlen($1.value.str_val) + strlen($3.value.str_val)] = '\0';	
-			}
-			else
-			{
-				yyfmterror("Invalid types for adding");
-			}
+			$$.type = Language::Type::INT;
+			$$.value.int_val = $1.value.int_val + $3.value.int_val;
 		}
-		| expression CONSPIRING expression 
+		else if ($1.type == Language::Type::STR && $3.type == Language::Type::STR) 
 		{
-			if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
-			{
-				$$.type == Language::Type::INT;
-				$$.value.int_val = $1.value.int_val - $3.value.int_val;
-			}
-			else
-			{
-				yyfmterror("Invalid types for conspiring");
-			}
+			//Unite both strings "hey" + "mate" = "heymate"
+			$$.type == $1.type;
+			$$.value.str_val = (char*)calloc(strlen($1.value.str_val) + strlen($3.value.str_val) + 1, sizeof(char));
+			strncpy($$.value.str_val, $1.value.str_val, strlen($1.value.str_val));
+			strncpy($$.value.str_val + strlen($1.value.str_val), $3.value.str_val, strlen($3.value.str_val));
+			$$.value.str_val[strlen($1.value.str_val) + strlen($3.value.str_val)] = '\0';	
 		}
-		| expression DIVIDED expression
+		else
 		{
-			if ($1.type == Language::Type::INT && $3.type == Language::Type::INT) 
-			{
-				$$.type == Language::Type::INT;
-				$$.value.int_val = $1.value.int_val / $3.value.int_val;
-			}
-			else
-			{
-				yyfmterror("Invalid types for dividing");
-			}			
+			yyfmterror("Invalid types for adding");
 		}
-		| expression REMINDING expression
+	}
+	| expression CONSPIRING expression 
+	{
+		if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
 		{
-			if ($1.type == Language::Type::INT && $3.type == Language::Type::INT) 
-			{
-				$$.type == Language::Type::INT;
-				$$.value.int_val = $1.value.int_val % $3.value.int_val;
-			}
-			else
-			{
-				yyfmterror("Invalid types for reminding");
-			}		
+			$$.type == Language::Type::INT;
+			$$.value.int_val = $1.value.int_val - $3.value.int_val;
 		}
-		| expression EMPOWERING expression 
+		else
 		{
-			if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
+			yyfmterror("Invalid types for conspiring");
+		}
+	}
+	| expression DIVIDED expression
+	{
+		if ($1.type == Language::Type::INT && $3.type == Language::Type::INT) 
+		{
+			$$.type == Language::Type::INT;
+			$$.value.int_val = $1.value.int_val / $3.value.int_val;
+		}
+		else
+		{
+			yyfmterror("Invalid types for dividing");
+		}			
+	}
+	| expression REMINDING expression
+	{
+		if ($1.type == Language::Type::INT && $3.type == Language::Type::INT) 
+		{
+			$$.type == Language::Type::INT;
+			$$.value.int_val = $1.value.int_val % $3.value.int_val;
+		}
+		else
+		{
+			yyfmterror("Invalid types for reminding");
+		}		
+	}
+	| expression EMPOWERING expression 
+	{
+		if ($1.type == Language::Type::INT && $3.type == Language::Type::INT)
+		{
+			$$.type == Language::Type::INT;
+			$$.value.int_val = $1.value.int_val * $3.value.int_val;
+		}
+		else if (($1.type == Language::Type::INT && $3.type == Language::Type::STR)
+			||($1.type == Language::Type::STR && $3.type == Language::Type::INT))
+		{
+			$$.type = Language::Type::STR;
+			int slen = 0;
+			int ival = 0;
+			char* sval = NULL;
+			if ($1.type == Language::Type::STR) { sval = $1.value.str_val; slen = strlen(sval); ival = $3.value.int_val; }
+			else if ($1.type == Language::Type::INT) { sval = $3.value.str_val; slen = strlen(sval); ival = $1.value.int_val; }
+			
+			$$.value.str_val = (char*)calloc(slen * ival + 1, sizeof(char));
+			for (int i = 0; i < slen * ival; i++)
 			{
-				$$.type == Language::Type::INT;
-				$$.value.int_val = $1.value.int_val * $3.value.int_val;
-			}
-			else if (($1.type == Language::Type::INT && $3.type == Language::Type::STR)
-				||($1.type == Language::Type::STR && $3.type == Language::Type::INT))
-			{
-				$$.type = Language::Type::STR;
-				int slen = 0;
-				int ival = 0;
-				char* sval = NULL;
-				if ($1.type == Language::Type::STR) { sval = $1.value.str_val; slen = strlen(sval); ival = $3.value.int_val; }
-				else if ($1.type == Language::Type::INT) { sval = $3.value.str_val; slen = strlen(sval); ival = $1.value.int_val; }
-				
-				$$.value.str_val = (char*)calloc(slen * ival + 1, sizeof(char));
-				for (int i = 0; i < slen * ival; i++)
-				{
-					$$.value.str_val[i] = sval[i % slen];
-				}	
-			}
-			else 
-			{
-				yyfmterror("Invalid types for empowering");
-			}
+				$$.value.str_val[i] = sval[i % slen];
+			}	
 		}
-	     	| NUMBER 
-		{ 
-			$$.type = Language::Type::INT; $$.value.int_val = $<intvalue>1; 
-			#ifdef DEBUG_MODE
-				printf("Expr type: INT, value: %d\n", $$.value.int_val);
-			#endif
+		else 
+		{
+			yyfmterror("Invalid types for empowering");
 		}
-		| STRING 
-		{ 
-			$$.type = Language::Type::STR; $$.value.str_val = $<strvalue>1; 
-			$$.value.str_val[strlen($$.value.str_val) - 1 ] = '\0';
-			$$.value.str_val++;
-			#ifdef DEBUG_MODE
-				printf("Expr type: STR, value: %s\n", $$.value.str_val);
-			#endif
-		}
-		| BOOL_FALSE 
-		{ 
-			$$.type = Language::Type::BOOLEAN; $$.value.bool_val = false; 
-			#ifdef DEBUG_MODE
-				printf("Expr type: BOOL, value: %d\n", $$.value.bool_val);
-			#endif
-		}
-		| BOOL_TRUE 
-		{ 
-			$$.type = Language::Type::BOOLEAN; $$.value.bool_val = true; 
-			#ifdef DEBUG_MODE
-				printf("Expr type: BOOL, value: %d\n", $$.value.bool_val);
-			#endif
-		}
-		;
+	}
+     	| NUMBER 
+	{ 
+		$$.type = Language::Type::INT; $$.value.int_val = $<intvalue>1; 
+		#ifdef DEBUG_MODE
+			printf("Expr type: INT, value: %d\n", $$.value.int_val);
+		#endif
+	}
+	| STRING 
+	{ 
+		$$.type = Language::Type::STR; $$.value.str_val = $<strvalue>1; 
+		$$.value.str_val[strlen($$.value.str_val) - 1 ] = '\0';
+		$$.value.str_val++;
+		#ifdef DEBUG_MODE
+			printf("Expr type: STR, value: %s\n", $$.value.str_val);
+		#endif
+	}
+	| BOOL_FALSE 
+	{ 
+		$$.type = Language::Type::BOOLEAN; $$.value.bool_val = false; 
+		#ifdef DEBUG_MODE
+			printf("Expr type: BOOL, value: %d\n", $$.value.bool_val);
+		#endif
+	}
+	| BOOL_TRUE 
+	{ 
+		$$.type = Language::Type::BOOLEAN; $$.value.bool_val = true; 
+		#ifdef DEBUG_MODE
+			printf("Expr type: BOOL, value: %d\n", $$.value.bool_val);
+		#endif
+	}
+	| predef_func
+	;
 
-output:		QUOTE expression  
-		{ 
-			if ($2.type == Language::Type::STR) printf("[QUOTE] %s\n", $2.value.str_val);
-			if ($2.type == Language::Type::INT) printf("[QUOTE] %d\n", $2.value.int_val);
-			if ($2.type == Language::Type::BOOLEAN) printf("[QUOTE] %s\n", ($2.value.bool_val == true) ? "true" : "false");			
+predef_func
+	: output
+	| input
+	;
+
+
+output
+	: QUOTE '<' expression '>' 
+	{ 
+		$$.type = Language::Type::VOID;
+		if ($3.type == Language::Type::STR) printf("[QUOTE] %s\n", $3.value.str_val);
+		if ($3.type == Language::Type::INT) printf("[QUOTE] %d\n", $3.value.int_val);
+		if ($3.type == Language::Type::BOOLEAN) printf("[QUOTE] %s\n", ($3.value.bool_val == true) ? "true" : "false");			
+	}
+	| QUOTE ID
+	{
+		$$.type = Language::Type::VOID;
+		if (variables.find($2) != variables.end())
+		{
+			Language::Variable* var  = variables[$2];
+			if (var->type == Language::Type::STRUCT)
+			{
+				Language::Struct* s = (Language::Struct*)var->data;
+				printf("[QUOTE] Structure [%s] <", s->typeName.c_str());
+				for (auto p : s->vars)
+				{
+					printf(" %s ", p.first.c_str());					
+				}	
+				printf(">\n");			
+			}
 		}
-		;
+		else yyfmterror("Variable %s doesn't exist", $2);	
+	}
+	;
+
+input
+	: ID SUMMONED
+	{
+		$$.type = Language::Type::VOID;		
+	}
+	;
 
 
 %%
@@ -273,6 +362,7 @@ void leave()
 	}
 	exit(-1);
 }
+
 
 int yyfmterror(const char* fmt, ...)
 {

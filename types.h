@@ -12,10 +12,10 @@
 
 namespace Language
 {
-	enum Type { BOOLEAN, INT, STR, STRUCT };
+	enum Type { BOOLEAN, INT, STR, STRUCT, VOID };
 	struct Value
 	{
-		Type type;
+		Type 			type;
 		union {
 			int 		int_val;
 			bool 		bool_val;

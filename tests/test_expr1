@@ -1,14 +1,14 @@
 quote <<"|hey|" empowering 2> empowering <2 empowering 3>>
-quote 5 empowering "salut"
-quote 10 empowering " "
+quote <5 empowering "salut">
+quote <10 empowering " ">
 quote <"">
 quote <"hh">
-quote "hh"
-quote 54
-quote false
+quote <"hh">
+quote <54>
+quote <false>
 quote <false>
 quote <<false>>
 quote <true>
-quote <25 empowering 50 conspiring 1> reminding 521
-quote "abc" adding "dce" adding "heyy"
-quote "he" adding "l" empowering 5 adding "o"
+quote <<25> reminding 521>
+quote <"abc" adding "dce" adding "heyy">
+quote <"he" adding "l" empowering 5 adding "o">

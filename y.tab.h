@@ -57,8 +57,8 @@ extern int yydebug;
     BOOL_FALSE = 267,
     QUOTE = 268,
     ENTER = 269,
-    LET = 270,
-    BE = 271,
+    PROCLAIM = 270,
+    LET = 271,
     THERE = 272,
     EQUALLING = 273,
     UPON = 274,
@@ -75,32 +75,31 @@ extern int yydebug;
     IS = 285,
     LEFT = 286,
     RIGHT = 287,
-    COMMA = 288,
-    UP = 289,
-    TO = 290,
-    DOWN = 291,
-    LOWER = 292,
-    GREATER = 293,
-    THAN = 294,
-    EXEUNT = 295,
-    SUMMONED = 296,
-    NOT = 297,
-    SINCE = 298,
-    FROM = 299,
-    ASK = 300,
-    WHETHER = 301,
-    THEN = 302,
-    OTHERWISE = 303,
-    CHANGES = 304,
-    INCREASES = 305,
-    DECREASES = 306,
-    WHENEVER = 307,
-    DOES = 308,
-    NONE = 309,
-    ONE = 310,
-    TWICE = 311,
-    UNTRUTH = 312,
-    INDEED = 313
+    UP = 288,
+    TO = 289,
+    DOWN = 290,
+    LOWER = 291,
+    GREATER = 292,
+    THAN = 293,
+    EXEUNT = 294,
+    SUMMONED = 295,
+    NOT = 296,
+    SINCE = 297,
+    FROM = 298,
+    ASK = 299,
+    WHETHER = 300,
+    THEN = 301,
+    OTHERWISE = 302,
+    CHANGES = 303,
+    INCREASES = 304,
+    DECREASES = 305,
+    WHENEVER = 306,
+    DOES = 307,
+    NONE = 308,
+    ONE = 309,
+    TWICE = 310,
+    UNTRUTH = 311,
+    INDEED = 312
   };
 #endif
 /* Tokens.  */
@@ -116,8 +115,8 @@ extern int yydebug;
 #define BOOL_FALSE 267
 #define QUOTE 268
 #define ENTER 269
-#define LET 270
-#define BE 271
+#define PROCLAIM 270
+#define LET 271
 #define THERE 272
 #define EQUALLING 273
 #define UPON 274
@@ -134,47 +133,47 @@ extern int yydebug;
 #define IS 285
 #define LEFT 286
 #define RIGHT 287
-#define COMMA 288
-#define UP 289
-#define TO 290
-#define DOWN 291
-#define LOWER 292
-#define GREATER 293
-#define THAN 294
-#define EXEUNT 295
-#define SUMMONED 296
-#define NOT 297
-#define SINCE 298
-#define FROM 299
-#define ASK 300
-#define WHETHER 301
-#define THEN 302
-#define OTHERWISE 303
-#define CHANGES 304
-#define INCREASES 305
-#define DECREASES 306
-#define WHENEVER 307
-#define DOES 308
-#define NONE 309
-#define ONE 310
-#define TWICE 311
-#define UNTRUTH 312
-#define INDEED 313
+#define UP 288
+#define TO 289
+#define DOWN 290
+#define LOWER 291
+#define GREATER 292
+#define THAN 293
+#define EXEUNT 294
+#define SUMMONED 295
+#define NOT 296
+#define SINCE 297
+#define FROM 298
+#define ASK 299
+#define WHETHER 300
+#define THEN 301
+#define OTHERWISE 302
+#define CHANGES 303
+#define INCREASES 304
+#define DECREASES 305
+#define WHENEVER 306
+#define DOES 307
+#define NONE 308
+#define ONE 309
+#define TWICE 310
+#define UNTRUTH 311
+#define INDEED 312
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 90 "limbaj.ypp" /* yacc.c:1909  */
+#line 91 "limbaj.ypp" /* yacc.c:1909  */
 
 	int intvalue;
 	bool boolvalue;
 	char* strvalue;	
 	Language::Type typevalue;
 	Language::Value exprvalue;
+	std::vector<Language::Variable*>* decllist;
 
-#line 178 "y.tab.h" /* yacc.c:1909  */
+#line 177 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
