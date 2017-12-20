@@ -10,25 +10,26 @@
 #include <stack>
 #include <algorithm>
 #include <unordered_map>
+#include <set>
 
 namespace Language
 {
 	enum Type { BOOLEAN, INT, STR, COMPLEX, VOID };
 	struct Value
 	{
-		std::string 		type;
+		std::string 	type;
 		int 			int_val;
 		bool 			bool_val;
-		std::string 		str_val;
+		std::string 	str_val;
 		void* 			data;
 	};
 
 	struct Variable
 	{
-		std::string 		type;
+		std::string 	type;
 		std::string		name;
 		std::string		scope;
-		std::string 		scopedName;
+		std::string 	scopedName;
 		bool 			isConstant;
 		bool			isComplex;
 		void*			data;

@@ -97,9 +97,7 @@ extern int yydebug;
     DOES = 307,
     NONE = 308,
     ONE = 309,
-    TWICE = 310,
-    UNTRUTH = 311,
-    INDEED = 312
+    TWICE = 310
   };
 #endif
 /* Tokens.  */
@@ -156,15 +154,13 @@ extern int yydebug;
 #define NONE 308
 #define ONE 309
 #define TWICE 310
-#define UNTRUTH 311
-#define INDEED 312
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 51 "limbaj.ypp" /* yacc.c:1909  */
+#line 71 "limbaj.ypp" /* yacc.c:1909  */
 
 	int intvalue;
 	bool boolvalue;
@@ -174,7 +170,7 @@ union YYSTYPE
 	Language::Variable* varptrvalue;
 	std::vector<Language::Variable*>* decllist;
 
-#line 178 "y.tab.h" /* yacc.c:1909  */
+#line 174 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

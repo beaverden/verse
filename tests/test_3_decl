@@ -1,0 +1,12 @@
+proclaim ins
+< 
+	enter saying s telling "hello"
+>
+proclaim _st 
+<
+	enter whole i telling 5,
+	enter ins str
+>
+enter _st var
+let s from str from var be "hi"
+quote<var>
