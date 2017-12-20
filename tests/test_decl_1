@@ -1,1 +1,8 @@
-proclaim st <whole _one,whole _two,doubting _three>
+enter fixed saying str telling "hey" empowering 5
+enter saying s telling "hey"
+quote str
+
+proclaim _struct <
+	enter whole _s1 telling 5,
+	enter saying _s2 telling "hey"
+>
