@@ -3,9 +3,7 @@
 
 #include "types.h"
 #include "code.h"
-
-#define DEBUG_MODE
-#define YYDEBUG 10
+#define YYDEBUG 1
 
 extern FILE* yyin;
 extern char* yytext;
@@ -15,10 +13,9 @@ int yylex(void);
 %}
 
 %union {
-	int intvalue;
-	bool boolvalue;
+	int* intvalue;
+	bool* boolvalue;
 	std::string* strvalue;
-	Language::Type typevalue;
 	Language::Value* exprptrvalue;
 	Language::Variable* varptrvalue;
 	
@@ -54,14 +51,14 @@ programm:
 
 
 statements: 
-	statement { printf("Statement"); }
+	statement
 	| statements statement
 	;
 
 
 statement: 
-	expression { printf("Expression"); }
-	| declaration { printf("Declaration"); }
+	expression
+	| declaration
 	| struct_decl
 	| assign
 	;
@@ -154,54 +151,44 @@ expression:
 	}
 	| expression ADDING expression
 	{
-		printf("a");
 		$$ = make_addition($1, $3);
 	}
 	| expression CONSPIRING expression 
 	{
-		printf("a");
 		$$ = make_substraction($1, $3);
 	}
 	| expression DIVIDED expression
 	{
-		printf("a");
 		$$ = make_division($1, $3);		
 	}
 	| expression REMINDING expression
 	{
-		printf("a");
 		$$ = make_reminder($1, $3);	
 	}
 	| expression EMPOWERING expression 
 	{
-		printf("a");
 		$$ = make_multiplication($1, $3);
 	}
 	| complex_identifier
 	{
-		printf("a");
-
 		$$ = $1;
 	}
 	| NUMBER
 	{ 
-		printf("a");
-		$$ = make_expression("$INT", &$1);
+		$$ = make_expression("$INT", new int(INT($1)));
 	}
 	| STRING 
 	{ 
-		printf("a");
-		$$ = make_expression("$STR", &$1);
+		$$ = make_expression("$STR", new std::string(STR($1)));
 	}
 	| BOOL_FALSE 
 	{ 
-		printf("a");
-		$$ = make_expression("$BOOL", &$1);
+		;
+		$$ = make_expression("$BOOL", new bool(BOOL($1)));
 	}
 	| BOOL_TRUE 
 	{ 
-		printf("a");
-		$$ = make_expression("$BOOL", &$1);
+		$$ = make_expression("$BOOL", new bool(BOOL($1)));
 	}
 	| predef_func
 	;
@@ -230,7 +217,6 @@ input:
 
 
 int main(int argc, char** argv){
-	printf("hey0");
 	add_scope("$main");
 	yyin=fopen(argv[1],"r");
 	yyparse();

@@ -68,9 +68,7 @@
 
 #include "types.h"
 #include "code.h"
-
-#define DEBUG_MODE
-#define YYDEBUG 10
+#define YYDEBUG 1
 
 extern FILE* yyin;
 extern char* yytext;
@@ -78,7 +76,7 @@ extern int yylineno;
 int yylex(void);
 
 
-#line 82 "y.tab.c" /* yacc.c:339  */
+#line 80 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -228,18 +226,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "limbaj.ypp" /* yacc.c:355  */
+#line 15 "limbaj.ypp" /* yacc.c:355  */
 
-	int intvalue;
-	bool boolvalue;
+	int* intvalue;
+	bool* boolvalue;
 	std::string* strvalue;
-	Language::Type typevalue;
 	Language::Value* exprptrvalue;
 	Language::Variable* varptrvalue;
 	
 	std::vector<Language::Variable*>* decllist;
 
-#line 243 "y.tab.c" /* yacc.c:355  */
+#line 240 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -256,7 +253,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 260 "y.tab.c" /* yacc.c:358  */
+#line 257 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -559,10 +556,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    57,    58,    63,    64,    65,    66,    70,
-      74,    82,    86,    90,    94,   102,   109,   113,   117,   121,
-     130,   134,   143,   151,   155,   160,   165,   170,   175,   180,
-     186,   191,   196,   201,   206,   210,   211,   216,   223
+       0,    49,    49,    54,    55,    60,    61,    62,    63,    67,
+      71,    79,    83,    87,    91,    99,   106,   110,   114,   118,
+     127,   131,   140,   148,   152,   156,   160,   164,   168,   172,
+     176,   180,   184,   189,   193,   197,   198,   203,   210
 };
 #endif
 
@@ -1382,258 +1379,230 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 52 "limbaj.ypp" /* yacc.c:1646  */
+#line 49 "limbaj.ypp" /* yacc.c:1646  */
     {printf("program corect sintactic\n");}
-#line 1388 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 3:
-#line 57 "limbaj.ypp" /* yacc.c:1646  */
-    { printf("Statement"); }
-#line 1394 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 63 "limbaj.ypp" /* yacc.c:1646  */
-    { printf("Expression"); }
-#line 1400 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 64 "limbaj.ypp" /* yacc.c:1646  */
-    { printf("Declaration"); }
-#line 1406 "y.tab.c" /* yacc.c:1646  */
+#line 1385 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 71 "limbaj.ypp" /* yacc.c:1646  */
+#line 68 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = get_var(STR((yyvsp[0].strvalue)), NULL);
 	}
-#line 1414 "y.tab.c" /* yacc.c:1646  */
+#line 1393 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 75 "limbaj.ypp" /* yacc.c:1646  */
+#line 72 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = get_var(STR((yyvsp[-2].strvalue)), (yyvsp[0].varptrvalue));
 	}
-#line 1422 "y.tab.c" /* yacc.c:1646  */
+#line 1401 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 83 "limbaj.ypp" /* yacc.c:1646  */
+#line 80 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.strvalue) = make_type("$INT"); 
 	}
-#line 1430 "y.tab.c" /* yacc.c:1646  */
+#line 1409 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 87 "limbaj.ypp" /* yacc.c:1646  */
+#line 84 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.strvalue) = make_type("$STR"); 
 	}
-#line 1438 "y.tab.c" /* yacc.c:1646  */
+#line 1417 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 91 "limbaj.ypp" /* yacc.c:1646  */
+#line 88 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.strvalue) = make_type("$BOOL"); 
 	}
-#line 1446 "y.tab.c" /* yacc.c:1646  */
+#line 1425 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 95 "limbaj.ypp" /* yacc.c:1646  */
+#line 92 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.strvalue) = make_type(STR((yyvsp[0].strvalue))); 
 	}
-#line 1454 "y.tab.c" /* yacc.c:1646  */
+#line 1433 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 103 "limbaj.ypp" /* yacc.c:1646  */
+#line 100 "limbaj.ypp" /* yacc.c:1646  */
     {
 		make_assign((yyvsp[-1].varptrvalue), (yyvsp[0].varptrvalue));
 	}
-#line 1462 "y.tab.c" /* yacc.c:1646  */
+#line 1441 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 110 "limbaj.ypp" /* yacc.c:1646  */
+#line 107 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = make_variable(STR((yyvsp[-1].strvalue)), STR((yyvsp[0].strvalue)), false, NULL);	
 	}
-#line 1470 "y.tab.c" /* yacc.c:1646  */
+#line 1449 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 114 "limbaj.ypp" /* yacc.c:1646  */
+#line 111 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = make_variable(STR((yyvsp[-2].strvalue)), STR((yyvsp[-1].strvalue)), true, NULL);	
 	}
-#line 1478 "y.tab.c" /* yacc.c:1646  */
+#line 1457 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 118 "limbaj.ypp" /* yacc.c:1646  */
+#line 115 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = make_variable(STR((yyvsp[-3].strvalue)), STR((yyvsp[-2].strvalue)), false, (yyvsp[0].varptrvalue));	
 	}
-#line 1486 "y.tab.c" /* yacc.c:1646  */
+#line 1465 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 122 "limbaj.ypp" /* yacc.c:1646  */
+#line 119 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = make_variable(STR((yyvsp[-3].strvalue)), STR((yyvsp[-2].strvalue)), true, (yyvsp[0].varptrvalue));	
 	}
-#line 1494 "y.tab.c" /* yacc.c:1646  */
+#line 1473 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 131 "limbaj.ypp" /* yacc.c:1646  */
+#line 128 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.decllist) = make_list((yyvsp[0].varptrvalue), NULL);
 	}
-#line 1502 "y.tab.c" /* yacc.c:1646  */
+#line 1481 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 135 "limbaj.ypp" /* yacc.c:1646  */
+#line 132 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.decllist) = make_list((yyvsp[0].varptrvalue), (yyvsp[-2].decllist));
 	}
-#line 1510 "y.tab.c" /* yacc.c:1646  */
+#line 1489 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 144 "limbaj.ypp" /* yacc.c:1646  */
+#line 141 "limbaj.ypp" /* yacc.c:1646  */
     {
 		make_struct(STR((yyvsp[-3].strvalue)), (yyvsp[-1].decllist));
 	}
-#line 1518 "y.tab.c" /* yacc.c:1646  */
+#line 1497 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 152 "limbaj.ypp" /* yacc.c:1646  */
+#line 149 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.varptrvalue) = (yyvsp[-1].varptrvalue); 
 	}
-#line 1526 "y.tab.c" /* yacc.c:1646  */
+#line 1505 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 156 "limbaj.ypp" /* yacc.c:1646  */
+#line 153 "limbaj.ypp" /* yacc.c:1646  */
     {
-		printf("a");
 		(yyval.varptrvalue) = make_addition((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));
 	}
-#line 1535 "y.tab.c" /* yacc.c:1646  */
+#line 1513 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 161 "limbaj.ypp" /* yacc.c:1646  */
+#line 157 "limbaj.ypp" /* yacc.c:1646  */
     {
-		printf("a");
 		(yyval.varptrvalue) = make_substraction((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));
 	}
-#line 1544 "y.tab.c" /* yacc.c:1646  */
+#line 1521 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 166 "limbaj.ypp" /* yacc.c:1646  */
+#line 161 "limbaj.ypp" /* yacc.c:1646  */
     {
-		printf("a");
 		(yyval.varptrvalue) = make_division((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));		
+	}
+#line 1529 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 165 "limbaj.ypp" /* yacc.c:1646  */
+    {
+		(yyval.varptrvalue) = make_reminder((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));	
+	}
+#line 1537 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 169 "limbaj.ypp" /* yacc.c:1646  */
+    {
+		(yyval.varptrvalue) = make_multiplication((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));
+	}
+#line 1545 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 29:
+#line 173 "limbaj.ypp" /* yacc.c:1646  */
+    {
+		(yyval.varptrvalue) = (yyvsp[0].varptrvalue);
 	}
 #line 1553 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 171 "limbaj.ypp" /* yacc.c:1646  */
-    {
-		printf("a");
-		(yyval.varptrvalue) = make_reminder((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));	
-	}
-#line 1562 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 28:
-#line 176 "limbaj.ypp" /* yacc.c:1646  */
-    {
-		printf("a");
-		(yyval.varptrvalue) = make_multiplication((yyvsp[-2].varptrvalue), (yyvsp[0].varptrvalue));
-	}
-#line 1571 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 29:
-#line 181 "limbaj.ypp" /* yacc.c:1646  */
-    {
-		printf("a");
-
-		(yyval.varptrvalue) = (yyvsp[0].varptrvalue);
-	}
-#line 1581 "y.tab.c" /* yacc.c:1646  */
-    break;
-
   case 30:
-#line 187 "limbaj.ypp" /* yacc.c:1646  */
+#line 177 "limbaj.ypp" /* yacc.c:1646  */
     { 
-		printf("a");
-		(yyval.varptrvalue) = make_expression("$INT", &(yyvsp[0].intvalue));
+		(yyval.varptrvalue) = make_expression("$INT", new int(INT((yyvsp[0].intvalue))));
 	}
-#line 1590 "y.tab.c" /* yacc.c:1646  */
+#line 1561 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 192 "limbaj.ypp" /* yacc.c:1646  */
+#line 181 "limbaj.ypp" /* yacc.c:1646  */
     { 
-		printf("a");
-		(yyval.varptrvalue) = make_expression("$STR", &(yyvsp[0].strvalue));
+		(yyval.varptrvalue) = make_expression("$STR", new std::string(STR((yyvsp[0].strvalue))));
 	}
-#line 1599 "y.tab.c" /* yacc.c:1646  */
+#line 1569 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 197 "limbaj.ypp" /* yacc.c:1646  */
+#line 185 "limbaj.ypp" /* yacc.c:1646  */
     { 
-		printf("a");
-		(yyval.varptrvalue) = make_expression("$BOOL", &(yyvsp[0].boolvalue));
+		;
+		(yyval.varptrvalue) = make_expression("$BOOL", new bool(BOOL((yyvsp[0].boolvalue))));
 	}
-#line 1608 "y.tab.c" /* yacc.c:1646  */
+#line 1578 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 202 "limbaj.ypp" /* yacc.c:1646  */
+#line 190 "limbaj.ypp" /* yacc.c:1646  */
     { 
-		printf("a");
-		(yyval.varptrvalue) = make_expression("$BOOL", &(yyvsp[0].boolvalue));
+		(yyval.varptrvalue) = make_expression("$BOOL", new bool(BOOL((yyvsp[0].boolvalue))));
 	}
-#line 1617 "y.tab.c" /* yacc.c:1646  */
+#line 1586 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 217 "limbaj.ypp" /* yacc.c:1646  */
+#line 204 "limbaj.ypp" /* yacc.c:1646  */
     { 
 		(yyval.varptrvalue) = make_print((yyvsp[-1].varptrvalue));
 		}
-#line 1625 "y.tab.c" /* yacc.c:1646  */
+#line 1594 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 224 "limbaj.ypp" /* yacc.c:1646  */
+#line 211 "limbaj.ypp" /* yacc.c:1646  */
     {
 		(yyval.varptrvalue) = make_input(STR((yyvsp[-1].strvalue)));
 	}
-#line 1633 "y.tab.c" /* yacc.c:1646  */
+#line 1602 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1637 "y.tab.c" /* yacc.c:1646  */
+#line 1606 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1861,12 +1830,11 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 229 "limbaj.ypp" /* yacc.c:1906  */
+#line 216 "limbaj.ypp" /* yacc.c:1906  */
 
 
 
 int main(int argc, char** argv){
-	printf("hey0");
 	add_scope("$main");
 	yyin=fopen(argv[1],"r");
 	yyparse();

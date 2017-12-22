@@ -11,8 +11,8 @@
 "doubting" { return BOOLEAN_TYPE; };
 "fixed" { return FIXED; }
 "telling" { return TELLING; }
-"indeed|" { return BOOL_TRUE; }
-"untruth" { return BOOL_FALSE; }
+"indeed" { yylval.boolvalue = new bool(true); return BOOL_TRUE; }
+"untruth" { yylval.boolvalue = new bool(false); return BOOL_FALSE; }
 "quote" {return QUOTE;}
 "enter" {return ENTER;}
 "proclaim" {return PROCLAIM;}
@@ -57,7 +57,7 @@
 \"(\\.|[^"\\])*\" { yylval.strvalue = new std::string(yytext); return STRING;}
 [ \t]|"the"|"be"|"a"|"an"|"'s" ;
 [_a-zA-Z][_a-zA-Z0-9]* { yylval.strvalue = new std::string(yytext); return ID;}
-(\-|\+)?([0-9]|([1-9][0-9]*)) { yylval.intvalue = atoi(yytext); return NUMBER;}
+(\-|\+)?([0-9]|([1-9][0-9]*)) { yylval.intvalue = new int(atoi(yytext)); return NUMBER;}
 \n {yylineno++;}
 . {return yytext[0];}
 

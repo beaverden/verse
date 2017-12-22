@@ -3,7 +3,7 @@
 
 #ifndef CODE_H
 #define CODE_H
-
+#define DEBUG_MODE
 #define STR(ptr) (*(std::string*)(ptr))
 #define INT(ptr) (*(int*)(ptr))
 #define BOOL(ptr) (*(bool*)(ptr))
@@ -37,4 +37,5 @@ void leave();
 int yyerror(const char* s);
 int yyfmterror(const char* fmt, ...);
 
+void init();
 #endif

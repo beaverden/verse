@@ -1,28 +1,26 @@
 #include "code.h"
 
-static std::stack<std::string>* currentScope;
-static std::map<std::string, Language::Variable*>* variables;
-static std::map<std::string, Language::Type>* actualTypes;
-static std::map<std::string, Language::ComplexType*>* complexTypes;
+static std::stack<std::string> currentScope;
+static std::map<std::string, Language::Variable*> variables;
+static std::map<std::string, Language::Type> actualTypes;
+static std::map<std::string, Language::ComplexType*> complexTypes;
 static unsigned int temp_count = 0;
 
 
 void add_scope(std::string name)
 {
-    printf("hey1");
-    currentScope->push(name);
-    printf("hey2");
+    currentScope.push(name);
 }
 
 void pop_scope()
 {
-    currentScope->pop();
+    currentScope.pop();
 }
 
 Language::Variable* make_variable(std::string type, std::string name, bool isConst, Language::Variable* value) 
 {
-	std::string tempName = currentScope->top() + "$$" + name;
-	if (variables->find(tempName) != variables->end())
+	std::string tempName = currentScope.top() + "$$" + name;
+	if (variables.find(tempName) != variables.end())
 	{
 		yyfmterror("Two variables with the same name in the same scope");
 	}
@@ -30,7 +28,7 @@ Language::Variable* make_variable(std::string type, std::string name, bool isCon
 	newVar->type = type;
 	newVar->name = name;
 	newVar->isConstant = isConst;
-	newVar->scope = currentScope->top();
+	newVar->scope = currentScope.top();
 	newVar->scopedName = tempName;
 	if (type.at(0) == '$') 
 	{
@@ -41,7 +39,7 @@ Language::Variable* make_variable(std::string type, std::string name, bool isCon
 	{
 		newVar->isComplex = true;
 		Language::ComplexType* t = new Language::ComplexType;
-		Language::ComplexType* model = complexTypes->at(type);
+		Language::ComplexType* model = complexTypes.at(type);
 		t->typeName = model->typeName;
 		t->vars = model->vars;
 		newVar->data = (void*)t;
@@ -51,7 +49,7 @@ Language::Variable* make_variable(std::string type, std::string name, bool isCon
 	#ifdef DEBUG_MODE
 		printf("Variable:\n\tTYPE: %s\n\tNAME: %s\n\tFULL: %s\n", type.c_str(), name.c_str(), tempName.c_str());
 	#endif
-	variables->at(tempName) = newVar;
+	variables.at(tempName) = newVar;
 	return newVar;
 }
 
@@ -64,7 +62,7 @@ std::string* make_type(std::string name)
     }
     else
     {
-        if (complexTypes->find(name) != complexTypes->end())
+        if (complexTypes.find(name) != complexTypes.end())
 		{
 			return new std::string(name);	
 		}
@@ -83,11 +81,8 @@ Language::Variable* make_expression(std::string type, void* value)
     var->data = value;
     var->isConstant = false;
     var->isComplex = false;
-    var->scope = currentScope->top();
+    var->scope = currentScope.top();
     var->scopedName = var->scope + "$$" + var->name;
-    #ifdef DEBUG_MODE
-        printf("Expression:\n\tType: %s\n", type.c_str());
-    #endif
     return var;
 }
 
@@ -212,9 +207,9 @@ Language::Variable* get_var(std::string name, Language::Variable* complex)
 {
     if (complex == NULL)
     {
-        if (variables->find(name) != variables->end())
+        if (variables.find(name) != variables.end())
         {
-            return variables->at(name);
+            return variables.at(name);
         }
         else
         {
@@ -261,7 +256,7 @@ std::vector<Language::Variable*>* make_list(Language::Variable* initial, std::ve
 
 void make_struct(std::string typeName, std::vector<Language::Variable*>* vars)
 {
-    if (complexTypes->find(typeName) != complexTypes->end())
+    if (complexTypes.find(typeName) != complexTypes.end())
 		{
 			std::vector<Language::Variable*> varvector = *(vars);
 			std::reverse(varvector.begin(), varvector.end());
@@ -276,7 +271,7 @@ void make_struct(std::string typeName, std::vector<Language::Variable*>* vars)
 				} else yyfmterror("There already exists a variable with name %s", v->name.c_str());
 							
 			}
-			complexTypes->at(typeName) = s;
+			complexTypes.at(typeName) = s;
 			#ifdef DEBUG_MODE
 				printf("Complex type [%s] defined:\n", s->typeName.c_str());
 				for (auto p : s->vars)
@@ -334,7 +329,7 @@ Language::Variable* make_input(std::string name)
 
 void leave()
 {
-	for (auto var : (*variables))
+	for (auto var : (variables))
 	{
 		delete var.second;		
 	}
