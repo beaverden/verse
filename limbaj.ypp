@@ -1,7 +1,8 @@
 %{
 #include <stdio.h>
-#include <stdarg.h>
+
 #include "types.h"
+#include "code.h"
 
 #define DEBUG_MODE
 #define YYDEBUG 10
@@ -9,72 +10,18 @@
 extern FILE* yyin;
 extern char* yytext;
 extern int yylineno;
-int yyerror(const char* s);
-int yyfmterror(const char* fmt, ...);
 int yylex(void);
-void leave();
-
-/* IMPORTANT VARIABLES */
-std::stack<std::string> currentScope;
-std::map<std::string, Language::Variable*> variables;
-std::map<std::string, Language::Type> actualTypes;
-std::map<std::string, Language::ComplexType*> complexTypes;
-
-
-Language::Variable* make_variable(std::string type, std::string name, bool isConst, void* value = NULL) 
-{
-	std::string tempName = currentScope.top() + "$$" + name;
-	if (variables.find(tempName) != variables.end())
-	{
-		yyerror("Two variables with the same name in the same scope");
-	}
-	Language::Variable* newVar = new Language::Variable;
-	newVar->type = type;
-	newVar->name = name;
-	newVar->isConstant = isConst;
-	
-	newVar->scope = currentScope.top();
-	newVar->scopedName = tempName;
-	if (type.at(0) == '$') 
-	{
-		newVar->isComplex = false;
-		newVar->data = value;
-	} 
-	else
-	{
-		newVar->isComplex = true;
-		Language::ComplexType* t = new Language::ComplexType;
-		Language::ComplexType* model = complexTypes[type];
-		t->typeName = model->typeName;
-		t->vars = model->vars;
-
-		newVar->data = (void*)t;
-
-	}
-
-	#ifdef DEBUG_MODE
-		printf("Variable:\n\tTYPE: %s\n\tNAME: %s\n\tFULL: %s\n", type.c_str(), name.c_str(), tempName.c_str());
-	#endif
-	variables[tempName] = newVar;
-	return newVar;
-}
-
-Language::Variable* findVar(std::string name)
-{
-	std::string temp = currentScope.top() + "$$" + name;
-	if (variables.find(temp) != variables.end()) return variables[temp];
-	else return nullptr;
-}
 
 %}
 
 %union {
 	int intvalue;
 	bool boolvalue;
-	const char* strvalue;	
+	std::string* strvalue;
 	Language::Type typevalue;
 	Language::Value* exprptrvalue;
 	Language::Variable* varptrvalue;
+	
 	std::vector<Language::Variable*>* decllist;
 }
 
@@ -86,10 +33,10 @@ Language::Variable* findVar(std::string name)
 %token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT UP TO DOWN LOWER GREATER THAN EXEUNT SUMMONED NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
 
 %type <strvalue>var_type
-%type <exprptrvalue>expression
-%type <exprptrvalue>predef_func
-%type <exprptrvalue>output
-%type <exprptrvalue>input
+%type <varptrvalue>expression
+%type <varptrvalue>predef_func
+%type <varptrvalue>output
+%type <varptrvalue>input
 %type <decllist>decl_list
 %type <varptrvalue>declaration
 %type <varptrvalue>complex_identifier
@@ -107,14 +54,14 @@ programm:
 
 
 statements: 
-	statement
+	statement { printf("Statement"); }
 	| statements statement
 	;
 
 
 statement: 
-	expression
-	| declaration
+	expression { printf("Expression"); }
+	| declaration { printf("Declaration"); }
 	| struct_decl
 	| assign
 	;
@@ -122,31 +69,31 @@ statement:
 complex_identifier:
 	ID 
 	{
-		Language::Variable* var = findVar($1);
-		if (var == nullptr) yyfmterror("Identifier %s doesn't exist", $1);
-		$$ = var;
+		$$ = get_var(STR($1), NULL);
 	}
 	| ID FROM complex_identifier 
 	{
-		Language::Variable* var = $3;
-		if (!var->isComplex) yyfmterror("Variable %s doesn't have members", $3->name.c_str());
-		Language::ComplexType* t = (Language::ComplexType*)var->data;
-		if (t->vars.find($1) == t->vars.end()) yyfmterror("There is no %s in %s", $1, var->name.c_str());
-		$$ = t->vars[$1];
+		$$ = get_var(STR($1), $3);
 	}
 	;
 
 
 var_type: 
-	INT_TYPE { $$ = "$INT"; }
-	| STR_TYPE { $$ = "$STR"; }
-	| BOOLEAN_TYPE { $$ = "$BOOL"; }
+	INT_TYPE 
+	{ 
+		$$ = make_type("$INT"); 
+	}
+	| STR_TYPE 
+	{ 
+		$$ = make_type("$STR"); 
+	}
+	| BOOLEAN_TYPE 
+	{ 
+		$$ = make_type("$BOOL"); 
+	}
 	| ID 
-	{
-		if (complexTypes.find($1) != complexTypes.end())
-		{
-			$$ = $1;	
-		} else yyfmterror("Type %s doesn't exist", $1);
+	{ 
+		$$ = make_type(STR($1)); 
 	}
 	;
 
@@ -154,49 +101,26 @@ var_type:
 assign:
 	LET complex_identifier expression
 	{
-		Language::Value* exp = $3;
-		Language::Variable* var = $2;
-
-		if (var->isConstant) yyfmterror("Can't assign to a constant variable");
-		if (var->type == exp->type)
-		{
-			if (exp->type == "$INT") var->data = &exp->int_val;
-			if (exp->type == "$STR") var->data = &exp->str_val;
-			if (exp->type == "$BOOL") var->data = &exp->bool_val;
-		} else yyfmterror("Incorrect expression type for variable %s", $2);
+		make_assign($2, $3);
 	}
 	;
 
 declaration:	
 	ENTER var_type ID
 	{
-		$$ = make_variable($2, $3, false, NULL);	
+		$$ = make_variable(STR($2), STR($3), false, NULL);	
 	}
 	| ENTER FIXED var_type ID
 	{
-		$$ = make_variable($2, $3, true, NULL);	
+		$$ = make_variable(STR($2), STR($3), true, NULL);	
 	}
 	| ENTER var_type ID TELLING expression
 	{
-		Language::Value* val = $5;
-		if ($2 != val->type) yyfmterror("Uncompatible type of variable %s and expression", $3);
-		void* ptr = NULL;
-		
-		if (val->type == "$INT") ptr = (void*)&val->int_val;
-		if (val->type == "$STR") ptr = (void*)&val->str_val;
-		if (val->type == "$BOOL") ptr = (void*)&val->bool_val;
-		$$ = make_variable($2, $3, false, ptr);	
+		$$ = make_variable(STR($2), STR($3), false, $5);	
 	}
 	| ENTER FIXED var_type ID TELLING expression
 	{
-		Language::Value* val = $6;
-		if ($3 != val->type) yyfmterror("Uncompatible type of variable %s and expression", $4);
-		void* ptr = NULL;
-		
-		if (val->type == "$INT") ptr = (void*)&(val->int_val);
-		if (val->type == "$STR") ptr = (void*)&(val->str_val);
-		if (val->type == "$BOOL") ptr = (void*)&(val->bool_val);
-		$$ = make_variable($3, $4, true, ptr);	
+		$$ = make_variable(STR($3), STR($4), true, $6);	
 	}
 	;
 
@@ -205,50 +129,20 @@ declaration:
 decl_list:
 	declaration
 	{
-		Language::Variable* var = $1;
-		$$ = new std::vector<Language::Variable*>;
-		$$->push_back(var);	
+		$$ = make_list($1, NULL);
 	}
 	| decl_list ',' declaration
 	{
-		Language::Variable* var = $3;
-		$$ = $1;
-		$$->push_back(var);
+		$$ = make_list($3, $1);
 	}
 	;
 
 
+
 struct_decl:	
-	PROCLAIM ID  { currentScope.push($2); } '<' decl_list '>'
+	PROCLAIM ID '<' decl_list '>'
 	{
-		std::string typeName = $2;
-		if (complexTypes.find(typeName) == complexTypes.end())
-		{
-			std::vector<Language::Variable*> varvector = *($5);
-			std::reverse(varvector.begin(), varvector.end());
-			Language::ComplexType* s = new Language::ComplexType;
-			s->typeName = typeName;
-			for (Language::Variable* v : varvector)
-			{
-				v->scope = typeName;
-				if (s->vars.find(v->name) == s->vars.end())
-				{
-					s->vars[v->name] = v;
-				} else yyfmterror("There already exists a variable with name %s", v->name.c_str());
-							
-			}
-			complexTypes[$2] = s;
-			#ifdef DEBUG_MODE
-				printf("Complex type [%s] defined:\n", s->typeName.c_str());
-				for (auto p : s->vars)
-				{
-					printf("\t%s %s;\n", p.second->type.c_str(), p.first.c_str());				
-				}
-			#endif
-		
-		}
-		else yyfmterror("There already exists a type named %s", $2);	
-		currentScope.pop();
+		make_struct(STR($2), $4);
 	}
 	;
 
@@ -260,137 +154,54 @@ expression:
 	}
 	| expression ADDING expression
 	{
-		if ($1->type == "$INT" && $3->type == "$INT")
-		{
-			$$ = new Language::Value;
-			$$->type = "$INT";
-			$$->int_val = $1->int_val + $3->int_val;
-		}
-		else if ($1->type == "$STR" && $3->type == "$STR") 
-		{
-			$$ = new Language::Value;
-			$$->type = "$STR";
-			$$->str_val = $1->str_val + $3->str_val;
-		}
-		else
-		{
-			yyfmterror("Invalid types for adding");
-		}
+		printf("a");
+		$$ = make_addition($1, $3);
 	}
 	| expression CONSPIRING expression 
 	{
-		if ($1->type == "$INT" && $3->type == "$INT")
-		{
-			$$ = new Language::Value;
-			$$->type = "$INT";
-			$$->int_val = $1->int_val - $3->int_val;
-		}
-		else
-		{
-			yyfmterror("Invalid types for conspiring");
-		}
+		printf("a");
+		$$ = make_substraction($1, $3);
 	}
 	| expression DIVIDED expression
 	{
-		if ($1->type == "$INT" && $3->type == "$INT") 
-		{
-			$$ = new Language::Value;
-			$$->type = "$INT";
-			$$->int_val = $1->int_val / $3->int_val;
-		}
-		else
-		{
-			yyfmterror("Invalid types for dividing");
-		}			
+		printf("a");
+		$$ = make_division($1, $3);		
 	}
 	| expression REMINDING expression
 	{
-		if ($1->type == "$INT" && $3->type == "$INT") 
-		{
-			$$ = new Language::Value;
-			$$->type = "$INT";
-			$$->int_val = $1->int_val % $3->int_val;
-		}
-		else
-		{
-			yyfmterror("Invalid types for reminding");
-		}		
+		printf("a");
+		$$ = make_reminder($1, $3);	
 	}
 	| expression EMPOWERING expression 
 	{
-		if ($1->type == "$INT" && $3->type == "$INT")
-		{
-			$$ = new Language::Value;
-			$$->type = "$INT";
-			$$->int_val = $1->int_val * $3->int_val;
-		}
-		else if (  ($1->type == "$INT" && $3->type == "$STR")
-			|| ($1->type == "$STR" && $3->type == "$INT"))
-		{
-			$$ = new Language::Value;
-			$$->type = "$STR";
-			std::string str = "";
-			int value = 0;
-
-			if ($1->type == "$STR") { str = $1->str_val; value = $3->int_val; }
-			else if ($1->type == "$INT") { str = $3->str_val; value = $1->int_val; }
-			
-			$$->str_val = "";
-			for (int i = 0; i < value; i++) $$->str_val += str;	
-		}
-		else 
-		{
-			yyfmterror("Invalid types for empowering");
-		}
+		printf("a");
+		$$ = make_multiplication($1, $3);
 	}
 	| complex_identifier
 	{
-		Language::Variable* var = $1;
-		$$ = new Language::Value;
-		if (var->type.at(0) == '$')
-		{
-			$$->type = var->type;
-			if (var->type == "$STR") $$->str_val = *(std::string*)(var->data);
-			if (var->type == "$INT") $$->int_val = *(int*)(var->data);
-			if (var->type == "$BOOL") $$->bool_val = *(bool*)(var->data);
-		} else yyfmterror("Can't use type %s in an expression", var->type.c_str());
+		printf("a");
+
+		$$ = $1;
 	}
-	| NUMBER 
+	| NUMBER
 	{ 
-		$$ = new Language::Value;
-		$$->type = "$INT"; 
-		$$->int_val = $<intvalue>1; 
-		#ifdef DEBUG_MODE
-			//printf("Expression type: INT, value: %d\n", $$->int_val);
-		#endif
+		printf("a");
+		$$ = make_expression("$INT", &$1);
 	}
 	| STRING 
 	{ 
-		$$ = new Language::Value;
-		$$->type = "$STR"; 
-		$$->str_val = $<strvalue>1; 
-		$$->str_val = $$->str_val.substr(1, $$->str_val.length() - 2);
-		#ifdef DEBUG_MODE
-			//printf("Expression type: STR, value: %s\n", $$->str_val.c_str());
-		#endif
+		printf("a");
+		$$ = make_expression("$STR", &$1);
 	}
 	| BOOL_FALSE 
 	{ 
-		$$ = new Language::Value;
-		$$->type = "$BOOL"; 
-		$$->bool_val = false; 
-		#ifdef DEBUG_MODE
-			//printf("Expression type: BOOL, value: %d\n", $$->bool_val);
-		#endif
+		printf("a");
+		$$ = make_expression("$BOOL", &$1);
 	}
 	| BOOL_TRUE 
 	{ 
-		$$ = new Language::Value;
-		$$->type = "$BOOL"; 
-		$$->bool_val = true; 
-		#ifdef DEBUG_MODE
-			//printf("Expression type: BOOL, value: %d\n", $$->bool_val);
-		#endif
+		printf("a");
+		$$ = make_expression("$BOOL", &$1);
 	}
 	| predef_func
 	;
@@ -404,51 +215,23 @@ predef_func:
 output:
 	QUOTE '<' expression '>' 
 	{ 
-		$$ = new Language::Value;
-		$$->type = "$VOID";
-		if ($3->type == "$STR") printf("[QUOTE] %s\n", $3->str_val.c_str());
-		if ($3->type == "$INT") printf("[QUOTE] %d\n", $3->int_val);
-		if ($3->type == "$BOOL") printf("[QUOTE] %s\n", ($3->bool_val == true) ? "indeed" : "untruth");			
-	}
+		$$ = make_print($3);
+		}
 	;
 
 input:
 	ID SUMMONED
 	{
-		$$ = new Language::Value;
-		$$->type = "$VOID";
+		$$ = make_input(STR($1));
 	}
 	;
 
 %%
 
-void leave()
-{
-	for (auto var : variables)
-	{
-		delete var.second;		
-	}
-	exit(-1);
-}
-
-
-int yyfmterror(const char* fmt, ...)
-{
-	char str[200];
-	va_list args;
-	va_start(args, fmt);
-	vsprintf(str, fmt, args);
-	yyerror(str);
-}
-
-int yyerror(const char* s)
-{
-	printf("Error on line %d: [%s]\n",yylineno, s);
-	leave();
-}
 
 int main(int argc, char** argv){
-	currentScope.push("$main");
+	printf("hey0");
+	add_scope("$main");
 	yyin=fopen(argv[1],"r");
 	yyparse();
 	return 0;

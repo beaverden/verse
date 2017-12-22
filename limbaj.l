@@ -1,17 +1,17 @@
 %{
 #include <stdio.h>
 #include "types.h"
+#include "code.h"
 #include "y.tab.h"
 
 %}
-%x string
 %%
-"whole"|"full"|"discrete" {yylval.strvalue=strdup(yytext); return INT_TYPE;}
-"saying" { yylval.strvalue=strdup(yytext); return STR_TYPE; };
-"doubting" { yylval.strvalue=strdup(yytext); return BOOLEAN_TYPE; };
+"whole"|"full"|"discrete" { return INT_TYPE; }
+"saying" { return STR_TYPE; };
+"doubting" { return BOOLEAN_TYPE; };
 "fixed" { return FIXED; }
 "telling" { return TELLING; }
-"indeed" { return BOOL_TRUE; }
+"indeed|" { return BOOL_TRUE; }
 "untruth" { return BOOL_FALSE; }
 "quote" {return QUOTE;}
 "enter" {return ENTER;}
@@ -54,10 +54,10 @@
 "none" {return NONE;}
 "one" {return ONE;}
 "twice" {return TWICE;}
-\"(\\.|[^"\\])*\" { yylval.strvalue=strdup(yytext); return STRING;}
+\"(\\.|[^"\\])*\" { yylval.strvalue = new std::string(yytext); return STRING;}
 [ \t]|"the"|"be"|"a"|"an"|"'s" ;
-[_a-zA-Z][_a-zA-Z0-9]* { yylval.strvalue=strdup(yytext); return ID;}
-(\-|\+)?([0-9]|([1-9][0-9]*)) {yylval.intvalue=atoi(yytext); return NUMBER;}
+[_a-zA-Z][_a-zA-Z0-9]* { yylval.strvalue = new std::string(yytext); return ID;}
+(\-|\+)?([0-9]|([1-9][0-9]*)) { yylval.intvalue = atoi(yytext); return NUMBER;}
 \n {yylineno++;}
 . {return yytext[0];}
 

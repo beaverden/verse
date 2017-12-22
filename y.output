@@ -66,51 +66,49 @@ Grammar
    19 decl_list: declaration
    20          | decl_list ',' declaration
 
-   21 $@1: %empty
+   21 struct_decl: PROCLAIM ID '<' decl_list '>'
 
-   22 struct_decl: PROCLAIM ID $@1 '<' decl_list '>'
+   22 expression: '<' expression '>'
+   23           | expression ADDING expression
+   24           | expression CONSPIRING expression
+   25           | expression DIVIDED expression
+   26           | expression REMINDING expression
+   27           | expression EMPOWERING expression
+   28           | complex_identifier
+   29           | NUMBER
+   30           | STRING
+   31           | BOOL_FALSE
+   32           | BOOL_TRUE
+   33           | predef_func
 
-   23 expression: '<' expression '>'
-   24           | expression ADDING expression
-   25           | expression CONSPIRING expression
-   26           | expression DIVIDED expression
-   27           | expression REMINDING expression
-   28           | expression EMPOWERING expression
-   29           | complex_identifier
-   30           | NUMBER
-   31           | STRING
-   32           | BOOL_FALSE
-   33           | BOOL_TRUE
-   34           | predef_func
+   34 predef_func: output
+   35            | input
 
-   35 predef_func: output
-   36            | input
+   36 output: QUOTE '<' expression '>'
 
-   37 output: QUOTE '<' expression '>'
-
-   38 input: ID SUMMONED
+   37 input: ID SUMMONED
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 ',' (44) 20
-'<' (60) 22 23 37
-'>' (62) 22 23 37
+'<' (60) 21 22 36
+'>' (62) 21 22 36
 error (256)
-ID (258) 8 9 13 15 16 17 18 22 38
+ID (258) 8 9 13 15 16 17 18 21 37
 TELLING (259) 17 18
 FIXED (260) 16 18
 INT_TYPE (261) 10
 STR_TYPE (262) 11
 BOOLEAN_TYPE (263) 12
-NUMBER (264) 30
-STRING (265) 31
-BOOL_TRUE (266) 33
-BOOL_FALSE (267) 32
-QUOTE (268) 37
+NUMBER (264) 29
+STRING (265) 30
+BOOL_TRUE (266) 32
+BOOL_FALSE (267) 31
+QUOTE (268) 36
 ENTER (269) 15 16 17 18
-PROCLAIM (270) 22
+PROCLAIM (270) 21
 LET (271) 14
 THERE (272)
 EQUALLING (273)
@@ -120,11 +118,11 @@ ASCEND (276)
 DESCEND (277)
 CRY (278)
 FOR (279)
-DIVIDED (280) 26
-REMINDING (281) 27
-ADDING (282) 24
-CONSPIRING (283) 25
-EMPOWERING (284) 28
+DIVIDED (280) 25
+REMINDING (281) 26
+ADDING (282) 23
+CONSPIRING (283) 24
+EMPOWERING (284) 27
 IS (285)
 LEFT (286)
 RIGHT (287)
@@ -135,7 +133,7 @@ LOWER (291)
 GREATER (292)
 THAN (293)
 EXEUNT (294)
-SUMMONED (295) 38
+SUMMONED (295) 37
 NOT (296)
 SINCE (297)
 FROM (298) 9
@@ -164,7 +162,7 @@ statements (61)
 statement (62)
     on left: 4 5 6 7, on right: 2 3
 complex_identifier (63)
-    on left: 8 9, on right: 9 14 29
+    on left: 8 9, on right: 9 14 28
 var_type (64)
     on left: 10 11 12 13, on right: 15 16 17 18
 assign (65)
@@ -172,20 +170,18 @@ assign (65)
 declaration (66)
     on left: 15 16 17 18, on right: 5 19 20
 decl_list (67)
-    on left: 19 20, on right: 20 22
+    on left: 19 20, on right: 20 21
 struct_decl (68)
-    on left: 22, on right: 6
-$@1 (69)
-    on left: 21, on right: 22
-expression (70)
-    on left: 23 24 25 26 27 28 29 30 31 32 33 34, on right: 4 14 17
-    18 23 24 25 26 27 28 37
-predef_func (71)
-    on left: 35 36, on right: 34
-output (72)
+    on left: 21, on right: 6
+expression (69)
+    on left: 22 23 24 25 26 27 28 29 30 31 32 33, on right: 4 14 17
+    18 22 23 24 25 26 27 36
+predef_func (70)
+    on left: 34 35, on right: 33
+output (71)
+    on left: 36, on right: 34
+input (72)
     on left: 37, on right: 35
-input (73)
-    on left: 38, on right: 36
 
 
 State 0
@@ -220,7 +216,7 @@ State 1
 
     8 complex_identifier: ID .
     9                   | ID . FROM complex_identifier
-   38 input: ID . SUMMONED
+   37 input: ID . SUMMONED
 
     SUMMONED  shift, and go to state 22
     FROM      shift, and go to state 23
@@ -230,35 +226,35 @@ State 1
 
 State 2
 
-   30 expression: NUMBER .
+   29 expression: NUMBER .
 
-    $default  reduce using rule 30 (expression)
+    $default  reduce using rule 29 (expression)
 
 
 State 3
 
-   31 expression: STRING .
+   30 expression: STRING .
 
-    $default  reduce using rule 31 (expression)
+    $default  reduce using rule 30 (expression)
 
 
 State 4
 
-   33 expression: BOOL_TRUE .
-
-    $default  reduce using rule 33 (expression)
-
-
-State 5
-
-   32 expression: BOOL_FALSE .
+   32 expression: BOOL_TRUE .
 
     $default  reduce using rule 32 (expression)
 
 
+State 5
+
+   31 expression: BOOL_FALSE .
+
+    $default  reduce using rule 31 (expression)
+
+
 State 6
 
-   37 output: QUOTE . '<' expression '>'
+   36 output: QUOTE . '<' expression '>'
 
     '<'  shift, and go to state 24
 
@@ -281,7 +277,7 @@ State 7
 
 State 8
 
-   22 struct_decl: PROCLAIM . ID $@1 '<' decl_list '>'
+   21 struct_decl: PROCLAIM . ID '<' decl_list '>'
 
     ID  shift, and go to state 31
 
@@ -297,7 +293,7 @@ State 9
 
 State 10
 
-   23 expression: '<' . expression '>'
+   22 expression: '<' . expression '>'
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -359,9 +355,9 @@ State 13
 
 State 14
 
-   29 expression: complex_identifier .
+   28 expression: complex_identifier .
 
-    $default  reduce using rule 29 (expression)
+    $default  reduce using rule 28 (expression)
 
 
 State 15
@@ -388,11 +384,11 @@ State 17
 State 18
 
     4 statement: expression .
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -405,30 +401,30 @@ State 18
 
 State 19
 
-   34 expression: predef_func .
+   33 expression: predef_func .
 
-    $default  reduce using rule 34 (expression)
+    $default  reduce using rule 33 (expression)
 
 
 State 20
 
-   35 predef_func: output .
+   34 predef_func: output .
 
-    $default  reduce using rule 35 (predef_func)
+    $default  reduce using rule 34 (predef_func)
 
 
 State 21
 
-   36 predef_func: input .
+   35 predef_func: input .
 
-    $default  reduce using rule 36 (predef_func)
+    $default  reduce using rule 35 (predef_func)
 
 
 State 22
 
-   38 input: ID SUMMONED .
+   37 input: ID SUMMONED .
 
-    $default  reduce using rule 38 (input)
+    $default  reduce using rule 37 (input)
 
 
 State 23
@@ -442,7 +438,7 @@ State 23
 
 State 24
 
-   37 output: QUOTE '<' . expression '>'
+   36 output: QUOTE '<' . expression '>'
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -510,11 +506,9 @@ State 30
 
 State 31
 
-   22 struct_decl: PROCLAIM ID . $@1 '<' decl_list '>'
+   21 struct_decl: PROCLAIM ID . '<' decl_list '>'
 
-    $default  reduce using rule 21 ($@1)
-
-    $@1  go to state 46
+    '<'  shift, and go to state 46
 
 
 State 32
@@ -548,12 +542,12 @@ State 33
 
 State 34
 
-   23 expression: '<' expression . '>'
-   24           | expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   22 expression: '<' expression . '>'
+   23           | expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -579,7 +573,7 @@ State 36
 
 State 37
 
-   26 expression: expression DIVIDED . expression
+   25 expression: expression DIVIDED . expression
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -598,7 +592,7 @@ State 37
 
 State 38
 
-   27 expression: expression REMINDING . expression
+   26 expression: expression REMINDING . expression
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -617,7 +611,7 @@ State 38
 
 State 39
 
-   24 expression: expression ADDING . expression
+   23 expression: expression ADDING . expression
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -636,7 +630,7 @@ State 39
 
 State 40
 
-   25 expression: expression CONSPIRING . expression
+   24 expression: expression CONSPIRING . expression
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -655,7 +649,7 @@ State 40
 
 State 41
 
-   28 expression: expression EMPOWERING . expression
+   27 expression: expression EMPOWERING . expression
 
     ID          shift, and go to state 1
     NUMBER      shift, and go to state 2
@@ -681,12 +675,12 @@ State 42
 
 State 43
 
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
-   37 output: QUOTE '<' expression . '>'
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
+   36 output: QUOTE '<' expression . '>'
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -716,19 +710,22 @@ State 45
 
 State 46
 
-   22 struct_decl: PROCLAIM ID $@1 . '<' decl_list '>'
+   21 struct_decl: PROCLAIM ID '<' . decl_list '>'
 
-    '<'  shift, and go to state 57
+    ENTER  shift, and go to state 7
+
+    declaration  go to state 57
+    decl_list    go to state 58
 
 
 State 47
 
    14 assign: LET complex_identifier expression .
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -741,43 +738,59 @@ State 47
 
 State 48
 
-   23 expression: '<' expression '>' .
+   22 expression: '<' expression '>' .
 
-    $default  reduce using rule 23 (expression)
+    $default  reduce using rule 22 (expression)
 
 
 State 49
 
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   26           | expression DIVIDED expression .
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   25           | expression DIVIDED expression .
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
-    $default  reduce using rule 26 (expression)
+    $default  reduce using rule 25 (expression)
 
 
 State 50
 
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   27           | expression REMINDING expression .
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   26           | expression REMINDING expression .
+   27           | expression . EMPOWERING expression
 
-    $default  reduce using rule 27 (expression)
+    $default  reduce using rule 26 (expression)
 
 
 State 51
 
-   24 expression: expression . ADDING expression
-   24           | expression ADDING expression .
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   23           | expression ADDING expression .
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
+
+    DIVIDED     shift, and go to state 37
+    REMINDING   shift, and go to state 38
+    EMPOWERING  shift, and go to state 41
+
+    $default  reduce using rule 23 (expression)
+
+
+State 52
+
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   24           | expression CONSPIRING expression .
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -786,39 +799,23 @@ State 51
     $default  reduce using rule 24 (expression)
 
 
-State 52
-
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   25           | expression CONSPIRING expression .
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
-
-    DIVIDED     shift, and go to state 37
-    REMINDING   shift, and go to state 38
-    EMPOWERING  shift, and go to state 41
-
-    $default  reduce using rule 25 (expression)
-
-
 State 53
 
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
-   28           | expression EMPOWERING expression .
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
+   27           | expression EMPOWERING expression .
 
-    $default  reduce using rule 28 (expression)
+    $default  reduce using rule 27 (expression)
 
 
 State 54
 
-   37 output: QUOTE '<' expression '>' .
+   36 output: QUOTE '<' expression '>' .
 
-    $default  reduce using rule 37 (output)
+    $default  reduce using rule 36 (output)
 
 
 State 55
@@ -826,7 +823,7 @@ State 55
    16 declaration: ENTER FIXED var_type ID .
    18            | ENTER FIXED var_type ID . TELLING expression
 
-    TELLING  shift, and go to state 58
+    TELLING  shift, and go to state 59
 
     $default  reduce using rule 16 (declaration)
 
@@ -844,7 +841,7 @@ State 56
     '<'         shift, and go to state 10
 
     complex_identifier  go to state 14
-    expression          go to state 59
+    expression          go to state 60
     predef_func         go to state 19
     output              go to state 20
     input               go to state 21
@@ -852,15 +849,21 @@ State 56
 
 State 57
 
-   22 struct_decl: PROCLAIM ID $@1 '<' . decl_list '>'
+   19 decl_list: declaration .
 
-    ENTER  shift, and go to state 7
-
-    declaration  go to state 60
-    decl_list    go to state 61
+    $default  reduce using rule 19 (decl_list)
 
 
 State 58
+
+   20 decl_list: decl_list . ',' declaration
+   21 struct_decl: PROCLAIM ID '<' decl_list . '>'
+
+    ','  shift, and go to state 61
+    '>'  shift, and go to state 62
+
+
+State 59
 
    18 declaration: ENTER FIXED var_type ID TELLING . expression
 
@@ -873,20 +876,20 @@ State 58
     '<'         shift, and go to state 10
 
     complex_identifier  go to state 14
-    expression          go to state 62
+    expression          go to state 63
     predef_func         go to state 19
     output              go to state 20
     input               go to state 21
 
 
-State 59
+State 60
 
    17 declaration: ENTER var_type ID TELLING expression .
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -897,30 +900,30 @@ State 59
     $default  reduce using rule 17 (declaration)
 
 
-State 60
-
-   19 decl_list: declaration .
-
-    $default  reduce using rule 19 (decl_list)
-
-
 State 61
 
-   20 decl_list: decl_list . ',' declaration
-   22 struct_decl: PROCLAIM ID $@1 '<' decl_list . '>'
+   20 decl_list: decl_list ',' . declaration
 
-    ','  shift, and go to state 63
-    '>'  shift, and go to state 64
+    ENTER  shift, and go to state 7
+
+    declaration  go to state 64
 
 
 State 62
 
+   21 struct_decl: PROCLAIM ID '<' decl_list '>' .
+
+    $default  reduce using rule 21 (struct_decl)
+
+
+State 63
+
    18 declaration: ENTER FIXED var_type ID TELLING expression .
-   24 expression: expression . ADDING expression
-   25           | expression . CONSPIRING expression
-   26           | expression . DIVIDED expression
-   27           | expression . REMINDING expression
-   28           | expression . EMPOWERING expression
+   23 expression: expression . ADDING expression
+   24           | expression . CONSPIRING expression
+   25           | expression . DIVIDED expression
+   26           | expression . REMINDING expression
+   27           | expression . EMPOWERING expression
 
     DIVIDED     shift, and go to state 37
     REMINDING   shift, and go to state 38
@@ -931,23 +934,7 @@ State 62
     $default  reduce using rule 18 (declaration)
 
 
-State 63
-
-   20 decl_list: decl_list ',' . declaration
-
-    ENTER  shift, and go to state 7
-
-    declaration  go to state 65
-
-
 State 64
-
-   22 struct_decl: PROCLAIM ID $@1 '<' decl_list '>' .
-
-    $default  reduce using rule 22 (struct_decl)
-
-
-State 65
 
    20 decl_list: decl_list ',' declaration .
 

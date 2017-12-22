@@ -160,17 +160,18 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 71 "limbaj.ypp" /* yacc.c:1909  */
+#line 17 "limbaj.ypp" /* yacc.c:1909  */
 
 	int intvalue;
 	bool boolvalue;
-	const char* strvalue;	
+	std::string* strvalue;
 	Language::Type typevalue;
 	Language::Value* exprptrvalue;
 	Language::Variable* varptrvalue;
+	
 	std::vector<Language::Variable*>* decllist;
 
-#line 174 "y.tab.h" /* yacc.c:1909  */
+#line 175 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
