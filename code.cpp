@@ -17,6 +17,24 @@ void pop_scope()
     currentScope.pop();
 }
 
+void* make_default(std::string type)
+{
+    if (type == "$INT")
+    {
+        return new int(0);
+    }
+    else if (type == "$STR")
+    {
+        return new std::string("");
+    }
+    else if (type == "$BOOL")
+    {
+        return new bool(false);
+    }
+    else yyfmterror("Invalid default type");
+    return NULL;
+}
+
 void free_var(Language::Variable* old)
 {
     if (old->data != NULL)
@@ -93,7 +111,6 @@ Language::Variable* make_copy(Language::Variable* old)
         newType->typeName = oldType->typeName;
         for (auto p : oldType->vars)
         {
-            printf("Copy var %s\n", p.second->name.c_str());
             newType->vars[p.first] = make_copy(p.second);
         }
         newVar->data = (void*)(newType);
@@ -117,23 +134,37 @@ Language::Variable* make_variable(std::string type, std::string name, bool isCon
 	if (type.at(0) == '$') 
 	{
 		newVar->isComplex = false;
-		newVar->data = value->data;
+        if (value == NULL)
+        {
+            newVar->data = make_default(type);
+        }
+		else
+        {
+            newVar->data = value->data;
+        }
 	} 
 	else
 	{
 		newVar->isComplex = true;
-        if (complexTypes.find(type) == complexTypes.end())
+        if (value == NULL)
         {
-            yyfmterror("Invalid type %s", type.c_str());
+            if (complexTypes.find(type) == complexTypes.end())
+            {
+                yyfmterror("Invalid type %s", type.c_str());
+            }
+            Language::ComplexType* t = new Language::ComplexType;
+            Language::ComplexType* model = complexTypes[type];
+            t->typeName = model->typeName;
+            for (auto v : model->vars)
+            {
+                t->vars[v.first] = make_copy(v.second);
+            }
+            newVar->data = (void*)t;
         }
-		Language::ComplexType* t = new Language::ComplexType;
-		Language::ComplexType* model = complexTypes[type];
-		t->typeName = model->typeName;
-        for (auto v : model->vars)
+        else 
         {
-            t->vars[v.first] = make_copy(v.second);
+            newVar->data = value->data;
         }
-		newVar->data = (void*)t;
 
 	}
 	#ifdef DEBUG_MODE

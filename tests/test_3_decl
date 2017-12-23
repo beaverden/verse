@@ -1,16 +1,16 @@
 proclaim ins
 < 
-	enter saying s telling "hello"
+	enter saying s
 >
 proclaim _st 
 <
-	enter whole i telling 5,
-	enter ins str
+	enter ins str,
+	enter whole i
 >
 enter _st var
 enter _st var2 telling var
-let s from str from var2 be "hi"
-let s from str from var be "nope"
+
+let s from str from var be "hi"
 quote<s from str from var>
 quote<s from str from var2>
 

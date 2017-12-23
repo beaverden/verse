@@ -16,6 +16,7 @@ Language::Variable* make_variable(std::string type, std::string name, bool isCon
 std::string* make_type(std::string name);
 Language::Variable* make_expression(std::string type, unsigned int valueSize, void* value = NULL);
 Language::Variable* make_unnamed(Language::Variable* proto);
+void* make_default(std::string type);
 
 Language::Variable* make_addition(Language::Variable* first, Language::Variable* second);
 Language::Variable* make_substraction(Language::Variable* first, Language::Variable* second);
