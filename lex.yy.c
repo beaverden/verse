@@ -1015,37 +1015,37 @@ YY_RULE_SETUP
 case 25:
 YY_RULE_SETUP
 #line 33 "limbaj.l"
-{return IS;}
+{return BOOL_IS;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 34 "limbaj.l"
-{return UP;}
+{return BOOL_UP;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 35 "limbaj.l"
-{return TO;}
+{return BOOL_TO;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 36 "limbaj.l"
-{return DOWN;}
+{return BOOL_DOWN;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 37 "limbaj.l"
-{return LOWER;}
+{return BOOL_LOWER;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 38 "limbaj.l"
-{return GREATER;}
+{return BOOL_GREATER;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 39 "limbaj.l"
-{return THAN;}
+{return BOOL_THAN;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP

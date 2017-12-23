@@ -23,6 +23,10 @@ Language::Variable* make_substraction(Language::Variable* first, Language::Varia
 Language::Variable* make_division(Language::Variable* first, Language::Variable* second);
 Language::Variable* make_reminder(Language::Variable* first, Language::Variable* second);
 Language::Variable* make_multiplication(Language::Variable* first, Language::Variable* second);
+Language::Variable* make_boolean(Language::Variable* first, Language::Variable* second, Language::BOOL_OP op);
+
+void make_if(Language::Variable* var);
+
 void make_assign(Language::Variable* var, Language::Variable* value);
 std::vector<Language::Variable*>* make_list(Language::Variable* initial, std::vector<Language::Variable*>* old);
 void make_struct(std::string typeName, std::vector<Language::Variable*>* vars);

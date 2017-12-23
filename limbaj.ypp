@@ -21,11 +21,13 @@ int yylex(void);
 	std::vector<Language::Variable*>* decllist;
 }
 
+%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+
 %token <strvalue>ID TELLING FIXED
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
-%token QUOTE 
-%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT UP TO DOWN LOWER GREATER THAN EXEUNT SUMMON NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+%token QUOTE SUMMON
+%token BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN
 
 %type <strvalue>var_type
 %type <varptrvalue>expression
@@ -38,7 +40,7 @@ int yylex(void);
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDED
-
+%nonassoc BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN NOT
 
 %start programm
 
@@ -56,6 +58,7 @@ statements:
 
 statement: 
 	expression
+	| if_statement
 	| declaration
 	| struct_decl
 	| assign
@@ -141,6 +144,16 @@ struct_decl:
 	}
 	;
 
+if_statement:
+	ASK WHETHER '<' expression '>' THEN '<' statements '>'  
+	{
+		make_if($4);
+	}
+	| ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+	{
+		make_if($4);
+	}
+	;
 
 expression:
 	'<' expression '>' 
@@ -166,6 +179,30 @@ expression:
 	| expression EMPOWERING expression 
 	{
 		$$ = make_multiplication($1, $3);
+	}
+	| expression BOOL_IS expression
+	{
+		$$ = make_boolean($1, $3, Language::BOOL_OP::EQUAL);
+	}
+	| expression BOOL_IS NOT expression
+	{
+		$$ = make_boolean($1, $4, Language::BOOL_OP::NEQUAL);
+	}
+	| expression BOOL_LOWER BOOL_THAN expression
+	{
+		$$ = make_boolean($1, $4, Language::BOOL_OP::LOWER);
+	}	
+	| expression BOOL_GREATER BOOL_THAN expression
+	{
+		$$ = make_boolean($1, $4, Language::BOOL_OP::GREATER);
+	}	
+	| expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
+	{
+		$$ = make_boolean($1, $6, Language::BOOL_OP::LOWEREQ);
+	}	
+	| expression BOOL_UP BOOL_TO BOOL_GREATER BOOL_THAN expression
+	{
+		$$ = make_boolean($1, $6, Language::BOOL_OP::GREATEREQ);
 	}
 	| complex_identifier
 	{

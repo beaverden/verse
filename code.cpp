@@ -344,6 +344,70 @@ Language::Variable* make_multiplication(Language::Variable* first, Language::Var
     return res;
 }
 
+Language::Variable* make_boolean(Language::Variable* first, Language::Variable* second, Language::BOOL_OP op)
+{
+    Language::Variable* res = new Language::Variable;
+    if (first->isComplex || second->isComplex)
+    {
+        yyfmterror("Cannot compare complex types");
+    }
+    res->type = "$BOOL";
+    if (first->type == second->type)
+    {
+        bool* result = new bool(false);
+        if (op == Language::BOOL_OP::EQUAL)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) == INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) == STR(second->data));
+            if (first->type == "$BOOL") (*result) = (BOOL(first->data) == BOOL(second->data));
+        }
+        if (op == Language::BOOL_OP::NEQUAL)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) != INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) != STR(second->data));
+            if (first->type == "$BOOL") (*result) = (BOOL(first->data) != BOOL(second->data));
+        }
+        if (op == Language::BOOL_OP::LOWER)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) < INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) < STR(second->data));
+            if (first->type == "$BOOL") yyfmterror("Cannot use lower on boolean type");
+        }
+        if (op == Language::BOOL_OP::GREATER)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) > INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) > STR(second->data));
+            if (first->type == "$BOOL") yyfmterror("Cannot use greater on boolean type");
+        }
+        if (op == Language::BOOL_OP::LOWEREQ)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) <= INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) <= STR(second->data));
+            if (first->type == "$BOOL") yyfmterror("Cannot use lower equal on boolean type");
+        }
+        if (op == Language::BOOL_OP::GREATEREQ)
+        {
+            if (first->type == "$INT") (*result) = (INT(first->data) >= INT(second->data));
+            if (first->type == "$STR") (*result) = (STR(first->data) >= STR(second->data));
+            if (first->type == "$BOOL") yyfmterror("Cannot use greater equal on boolean type");
+        }
+    res->data = (void*)(result);
+    }
+    else yyfmterror("Cannot compare different types");
+
+    free_var(first);
+    free_var(second);
+    return res;
+}
+
+bool make_if(Language::Variable* var)
+{
+    if (var->type != "$BOOL")
+    {
+        yyfmterror("Expression type is not boolean");
+    }
+    return BOOL(var->data);
+}
 
 Language::Variable* get_var(std::string name, Language::Variable* complex)
 {

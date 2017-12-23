@@ -1,0 +1,11 @@
+enter whole i telling 5
+enter whole j telling 6
+
+ask whether <i lower than j> then
+< 
+	quote<"YES!">
+>
+otherwise
+<
+	quote<"NO:(">
+>

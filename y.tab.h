@@ -45,115 +45,111 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ID = 258,
-    TELLING = 259,
-    FIXED = 260,
-    INT_TYPE = 261,
-    STR_TYPE = 262,
-    BOOLEAN_TYPE = 263,
-    NUMBER = 264,
-    STRING = 265,
-    BOOL_TRUE = 266,
-    BOOL_FALSE = 267,
-    QUOTE = 268,
-    ENTER = 269,
-    PROCLAIM = 270,
-    LET = 271,
-    THERE = 272,
-    EQUALLING = 273,
-    UPON = 274,
-    ADDED = 275,
-    ASCEND = 276,
-    DESCEND = 277,
-    CRY = 278,
-    FOR = 279,
-    DIVIDED = 280,
-    REMINDING = 281,
-    ADDING = 282,
-    CONSPIRING = 283,
-    EMPOWERING = 284,
-    IS = 285,
-    LEFT = 286,
-    RIGHT = 287,
-    UP = 288,
-    TO = 289,
-    DOWN = 290,
-    LOWER = 291,
-    GREATER = 292,
-    THAN = 293,
-    EXEUNT = 294,
-    SUMMON = 295,
-    NOT = 296,
-    SINCE = 297,
-    FROM = 298,
-    ASK = 299,
-    WHETHER = 300,
-    THEN = 301,
-    OTHERWISE = 302,
-    CHANGES = 303,
-    INCREASES = 304,
-    DECREASES = 305,
-    WHENEVER = 306,
-    DOES = 307,
-    NONE = 308,
-    ONE = 309,
-    TWICE = 310
+    ENTER = 258,
+    PROCLAIM = 259,
+    LET = 260,
+    THERE = 261,
+    EQUALLING = 262,
+    UPON = 263,
+    ADDED = 264,
+    ASCEND = 265,
+    DESCEND = 266,
+    CRY = 267,
+    FOR = 268,
+    DIVIDED = 269,
+    REMINDING = 270,
+    ADDING = 271,
+    CONSPIRING = 272,
+    EMPOWERING = 273,
+    EXEUNT = 274,
+    NOT = 275,
+    SINCE = 276,
+    FROM = 277,
+    ASK = 278,
+    WHETHER = 279,
+    THEN = 280,
+    OTHERWISE = 281,
+    CHANGES = 282,
+    INCREASES = 283,
+    DECREASES = 284,
+    WHENEVER = 285,
+    DOES = 286,
+    NONE = 287,
+    ONE = 288,
+    TWICE = 289,
+    ID = 290,
+    TELLING = 291,
+    FIXED = 292,
+    INT_TYPE = 293,
+    STR_TYPE = 294,
+    BOOLEAN_TYPE = 295,
+    NUMBER = 296,
+    STRING = 297,
+    BOOL_TRUE = 298,
+    BOOL_FALSE = 299,
+    QUOTE = 300,
+    SUMMON = 301,
+    BOOL_IS = 302,
+    BOOL_UP = 303,
+    BOOL_TO = 304,
+    BOOL_DOWN = 305,
+    BOOL_LOWER = 306,
+    BOOL_GREATER = 307,
+    BOOL_THAN = 308
   };
 #endif
 /* Tokens.  */
-#define ID 258
-#define TELLING 259
-#define FIXED 260
-#define INT_TYPE 261
-#define STR_TYPE 262
-#define BOOLEAN_TYPE 263
-#define NUMBER 264
-#define STRING 265
-#define BOOL_TRUE 266
-#define BOOL_FALSE 267
-#define QUOTE 268
-#define ENTER 269
-#define PROCLAIM 270
-#define LET 271
-#define THERE 272
-#define EQUALLING 273
-#define UPON 274
-#define ADDED 275
-#define ASCEND 276
-#define DESCEND 277
-#define CRY 278
-#define FOR 279
-#define DIVIDED 280
-#define REMINDING 281
-#define ADDING 282
-#define CONSPIRING 283
-#define EMPOWERING 284
-#define IS 285
-#define LEFT 286
-#define RIGHT 287
-#define UP 288
-#define TO 289
-#define DOWN 290
-#define LOWER 291
-#define GREATER 292
-#define THAN 293
-#define EXEUNT 294
-#define SUMMON 295
-#define NOT 296
-#define SINCE 297
-#define FROM 298
-#define ASK 299
-#define WHETHER 300
-#define THEN 301
-#define OTHERWISE 302
-#define CHANGES 303
-#define INCREASES 304
-#define DECREASES 305
-#define WHENEVER 306
-#define DOES 307
-#define NONE 308
-#define ONE 309
-#define TWICE 310
+#define ENTER 258
+#define PROCLAIM 259
+#define LET 260
+#define THERE 261
+#define EQUALLING 262
+#define UPON 263
+#define ADDED 264
+#define ASCEND 265
+#define DESCEND 266
+#define CRY 267
+#define FOR 268
+#define DIVIDED 269
+#define REMINDING 270
+#define ADDING 271
+#define CONSPIRING 272
+#define EMPOWERING 273
+#define EXEUNT 274
+#define NOT 275
+#define SINCE 276
+#define FROM 277
+#define ASK 278
+#define WHETHER 279
+#define THEN 280
+#define OTHERWISE 281
+#define CHANGES 282
+#define INCREASES 283
+#define DECREASES 284
+#define WHENEVER 285
+#define DOES 286
+#define NONE 287
+#define ONE 288
+#define TWICE 289
+#define ID 290
+#define TELLING 291
+#define FIXED 292
+#define INT_TYPE 293
+#define STR_TYPE 294
+#define BOOLEAN_TYPE 295
+#define NUMBER 296
+#define STRING 297
+#define BOOL_TRUE 298
+#define BOOL_FALSE 299
+#define QUOTE 300
+#define SUMMON 301
+#define BOOL_IS 302
+#define BOOL_UP 303
+#define BOOL_TO 304
+#define BOOL_DOWN 305
+#define BOOL_LOWER 306
+#define BOOL_GREATER 307
+#define BOOL_THAN 308
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -169,7 +165,7 @@ union YYSTYPE
 	Language::Variable* varptrvalue;
 	std::vector<Language::Variable*>* decllist;
 
-#line 173 "y.tab.h" /* yacc.c:1909  */
+#line 169 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

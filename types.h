@@ -16,6 +16,7 @@
 
 namespace Language
 {
+	enum BOOL_OP { EQUAL, LOWER, GREATER, LOWEREQ, GREATEREQ, NEQUAL };
 	enum Type { BOOLEAN, INT, STR, COMPLEX, VOID };
 	struct Value
 	{
