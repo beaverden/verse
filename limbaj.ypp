@@ -25,7 +25,7 @@ int yylex(void);
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
 %token QUOTE 
-%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT UP TO DOWN LOWER GREATER THAN EXEUNT SUMMONED NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING IS LEFT RIGHT UP TO DOWN LOWER GREATER THAN EXEUNT SUMMON NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
 
 %type <strvalue>var_type
 %type <varptrvalue>expression
@@ -173,21 +173,24 @@ expression:
 	}
 	| NUMBER
 	{ 
-		$$ = make_expression("$INT", sizeof(int), new int(INT($1)));
+		$$ = make_expression("$INT", new int(INT($1)));
 	}
 	| STRING 
 	{ 
-		$$ = make_expression("$STR", sizeof(std::string), new std::string(STR($1)));
+		$$ = make_expression("$STR", new std::string(STR($1)));
 	}
 	| BOOL_FALSE 
 	{ 
-		$$ = make_expression("$BOOL", sizeof(bool), new bool(BOOL($1)));
+		$$ = make_expression("$BOOL", new bool(BOOL($1)));
 	}
 	| BOOL_TRUE 
 	{ 
-		$$ = make_expression("$BOOL", sizeof(bool), new bool(BOOL($1)));
+		$$ = make_expression("$BOOL", new bool(BOOL($1)));
 	}
 	| predef_func
+	{
+		$$ = make_copy($1);
+	}
 	;
 
 predef_func:
@@ -204,9 +207,9 @@ output:
 	;
 
 input:
-	ID SUMMONED
+	SUMMON '<' complex_identifier '>'
 	{
-		$$ = make_input(STR($1));
+		$$ = make_input($3);
 	}
 	;
 

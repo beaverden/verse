@@ -56,6 +56,10 @@ void free_var(Language::Variable* old)
                 bool* ptr = (bool*)(old->data);
                 delete ptr;
             }
+            else if (old->type == "$VOID")
+            {
+                // IGNORE
+            }
             else yyfmterror("Invalid dealloc type");
         }
         else
@@ -100,6 +104,10 @@ Language::Variable* make_copy(Language::Variable* old)
         {
             newData = new unsigned char[sizeof(bool)];
             BOOL(newData) = BOOL(old->data);
+        }
+        else if (old->type == "$VOID") 
+        {
+            // IGNORE   
         }
         else yyfmterror("Invalid copy type");
         newVar->data = (void*)(newData);
@@ -194,20 +202,20 @@ std::string* make_type(std::string name)
     }
 }
 
-Language::Variable* make_expression(std::string type, unsigned int valueSize, void* value)
+Language::Variable* make_expression(std::string type, void* value)
 {
     Language::Variable* var = new Language::Variable;
     var->name = "$" + std::to_string(temp_count++);
     var->type = type;
-    unsigned char* newData = new unsigned char[valueSize];
-    if (type == "$INT") INT(newData) = INT(value);
-    if (type == "$STR") STR(newData) = STR(value);
-    if (type == "$BOOL") BOOL(newData) = BOOL(value);
-    var->data = newData;
+    var->data = make_default(type);
+    if (type == "$INT")  INT(var->data) = INT(value);
+    if (type == "$STR") STR(var->data) = STR(value);
+    if (type == "$BOOL") BOOL(var->data) = BOOL(value);
     var->isConstant = true;
     var->isComplex = false;
     var->scope = currentScope.top();
     var->scopedName = var->scope + "$$" + var->name;
+    
     return var;
 }
 
@@ -426,6 +434,7 @@ Language::Variable* make_print(Language::Variable* var)
 {
     Language::Variable* ret = new Language::Variable;
     ret->type = "$VOID";
+    ret->data = NULL;
     if (var->type == "$STR") printf("[QUOTE] %s\n", STR(var->data).c_str());
     if (var->type == "$INT") printf("[QUOTE] %d\n", INT(var->data));
     if (var->type == "$BOOL") printf("[QUOTE] %s\n", (BOOL(var->data) == true) ? "indeed" : "untruth");			
@@ -433,9 +442,9 @@ Language::Variable* make_print(Language::Variable* var)
     return ret;
 }
 
-Language::Variable* make_input(std::string name)
+Language::Variable* make_input(Language::Variable* var)
 {
-    Language::Variable* var = get_var(name, NULL);
+    if (var->isConstant) yyfmterror("Can't read to constant variable");
     if (var->isComplex || var->type == "$VOID" || var->type == "$LIST")
     {
         yyfmterror("Can't read into %s: incorrect type", var->name.c_str());
@@ -446,13 +455,13 @@ Language::Variable* make_input(std::string name)
         std::cin >> (*val);
         var->data = (void*)val;
     }
-    if (var->type == "$INT")
+    else if (var->type == "$INT")
     {
         int* val = new int;
         std::cin >> (*val);
         var->data = (void*)val;
     }
-    if (var->type == "$BOOL")
+    else if (var->type == "$BOOL")
     {
         bool* val = new bool;
         std::cin >> (*val);

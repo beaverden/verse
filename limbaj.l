@@ -38,7 +38,7 @@
 "greater" {return GREATER;}
 "than" {return THAN;}
 "exeunt" {return EXEUNT;}
-"summoned" {return SUMMONED;}
+"summon" {return SUMMON;}
 "not" {return NOT;}
 "since" {return SINCE;}
 "from" {return FROM;}

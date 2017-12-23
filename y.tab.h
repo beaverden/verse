@@ -82,7 +82,7 @@ extern int yydebug;
     GREATER = 292,
     THAN = 293,
     EXEUNT = 294,
-    SUMMONED = 295,
+    SUMMON = 295,
     NOT = 296,
     SINCE = 297,
     FROM = 298,
@@ -138,7 +138,7 @@ extern int yydebug;
 #define GREATER 292
 #define THAN 293
 #define EXEUNT 294
-#define SUMMONED 295
+#define SUMMON 295
 #define NOT 296
 #define SINCE 297
 #define FROM 298

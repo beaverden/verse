@@ -86,17 +86,17 @@ Grammar
 
    36 output: QUOTE '<' expression '>'
 
-   37 input: ID SUMMONED
+   37 input: SUMMON '<' complex_identifier '>'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 ',' (44) 20
-'<' (60) 21 22 36
-'>' (62) 21 22 36
+'<' (60) 21 22 36 37
+'>' (62) 21 22 36 37
 error (256)
-ID (258) 8 9 13 15 16 17 18 21 37
+ID (258) 8 9 13 15 16 17 18 21
 TELLING (259) 17 18
 FIXED (260) 16 18
 INT_TYPE (261) 10
@@ -133,7 +133,7 @@ LOWER (291)
 GREATER (292)
 THAN (293)
 EXEUNT (294)
-SUMMONED (295) 37
+SUMMON (295) 37
 NOT (296)
 SINCE (297)
 FROM (298) 9
@@ -162,7 +162,7 @@ statements (61)
 statement (62)
     on left: 4 5 6 7, on right: 2 3
 complex_identifier (63)
-    on left: 8 9, on right: 9 14 28
+    on left: 8 9, on right: 9 14 28 37
 var_type (64)
     on left: 10 11 12 13, on right: 15 16 17 18
 assign (65)
@@ -197,29 +197,28 @@ State 0
     ENTER       shift, and go to state 7
     PROCLAIM    shift, and go to state 8
     LET         shift, and go to state 9
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    programm            go to state 11
-    statements          go to state 12
-    statement           go to state 13
-    complex_identifier  go to state 14
-    assign              go to state 15
-    declaration         go to state 16
-    struct_decl         go to state 17
-    expression          go to state 18
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    programm            go to state 12
+    statements          go to state 13
+    statement           go to state 14
+    complex_identifier  go to state 15
+    assign              go to state 16
+    declaration         go to state 17
+    struct_decl         go to state 18
+    expression          go to state 19
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 1
 
     8 complex_identifier: ID .
     9                   | ID . FROM complex_identifier
-   37 input: ID . SUMMONED
 
-    SUMMONED  shift, and go to state 22
-    FROM      shift, and go to state 23
+    FROM  shift, and go to state 23
 
     $default  reduce using rule 8 (complex_identifier)
 
@@ -286,12 +285,19 @@ State 9
 
    14 assign: LET . complex_identifier expression
 
-    ID  shift, and go to state 32
+    ID  shift, and go to state 1
 
-    complex_identifier  go to state 33
+    complex_identifier  go to state 32
 
 
 State 10
+
+   37 input: SUMMON . '<' complex_identifier '>'
+
+    '<'  shift, and go to state 33
+
+
+State 11
 
    22 expression: '<' . expression '>'
 
@@ -301,23 +307,24 @@ State 10
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
+    complex_identifier  go to state 15
     expression          go to state 34
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
-State 11
+State 12
 
     0 $accept: programm . $end
 
     $end  shift, and go to state 35
 
 
-State 12
+State 13
 
     1 programm: statements .
     3 statements: statements . statement
@@ -331,57 +338,58 @@ State 12
     ENTER       shift, and go to state 7
     PROCLAIM    shift, and go to state 8
     LET         shift, and go to state 9
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
     $default  reduce using rule 1 (programm)
 
     statement           go to state 36
-    complex_identifier  go to state 14
-    assign              go to state 15
-    declaration         go to state 16
-    struct_decl         go to state 17
-    expression          go to state 18
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    assign              go to state 16
+    declaration         go to state 17
+    struct_decl         go to state 18
+    expression          go to state 19
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
-State 13
+State 14
 
     2 statements: statement .
 
     $default  reduce using rule 2 (statements)
 
 
-State 14
+State 15
 
    28 expression: complex_identifier .
 
     $default  reduce using rule 28 (expression)
 
 
-State 15
+State 16
 
     7 statement: assign .
 
     $default  reduce using rule 7 (statement)
 
 
-State 16
+State 17
 
     5 statement: declaration .
 
     $default  reduce using rule 5 (statement)
 
 
-State 17
+State 18
 
     6 statement: struct_decl .
 
     $default  reduce using rule 6 (statement)
 
 
-State 18
+State 19
 
     4 statement: expression .
    23 expression: expression . ADDING expression
@@ -399,39 +407,32 @@ State 18
     $default  reduce using rule 4 (statement)
 
 
-State 19
+State 20
 
    33 expression: predef_func .
 
     $default  reduce using rule 33 (expression)
 
 
-State 20
+State 21
 
    34 predef_func: output .
 
     $default  reduce using rule 34 (predef_func)
 
 
-State 21
+State 22
 
    35 predef_func: input .
 
     $default  reduce using rule 35 (predef_func)
 
 
-State 22
-
-   37 input: ID SUMMONED .
-
-    $default  reduce using rule 37 (input)
-
-
 State 23
 
     9 complex_identifier: ID FROM . complex_identifier
 
-    ID  shift, and go to state 32
+    ID  shift, and go to state 1
 
     complex_identifier  go to state 42
 
@@ -446,13 +447,14 @@ State 24
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
+    complex_identifier  go to state 15
     expression          go to state 43
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 25
@@ -513,16 +515,6 @@ State 31
 
 State 32
 
-    8 complex_identifier: ID .
-    9                   | ID . FROM complex_identifier
-
-    FROM  shift, and go to state 23
-
-    $default  reduce using rule 8 (complex_identifier)
-
-
-State 33
-
    14 assign: LET complex_identifier . expression
 
     ID          shift, and go to state 1
@@ -531,13 +523,23 @@ State 33
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
+    complex_identifier  go to state 15
     expression          go to state 47
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
+
+
+State 33
+
+   37 input: SUMMON '<' . complex_identifier '>'
+
+    ID  shift, and go to state 1
+
+    complex_identifier  go to state 48
 
 
 State 34
@@ -554,7 +556,7 @@ State 34
     ADDING      shift, and go to state 39
     CONSPIRING  shift, and go to state 40
     EMPOWERING  shift, and go to state 41
-    '>'         shift, and go to state 48
+    '>'         shift, and go to state 49
 
 
 State 35
@@ -581,13 +583,14 @@ State 37
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 49
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 50
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 38
@@ -600,13 +603,14 @@ State 38
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 50
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 51
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 39
@@ -619,13 +623,14 @@ State 39
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 51
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 52
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 40
@@ -638,13 +643,14 @@ State 40
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 52
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 53
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 41
@@ -657,13 +663,14 @@ State 41
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 53
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 54
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
 State 42
@@ -687,7 +694,7 @@ State 43
     ADDING      shift, and go to state 39
     CONSPIRING  shift, and go to state 40
     EMPOWERING  shift, and go to state 41
-    '>'         shift, and go to state 54
+    '>'         shift, and go to state 55
 
 
 State 44
@@ -695,7 +702,7 @@ State 44
    16 declaration: ENTER FIXED var_type . ID
    18            | ENTER FIXED var_type . ID TELLING expression
 
-    ID  shift, and go to state 55
+    ID  shift, and go to state 56
 
 
 State 45
@@ -703,7 +710,7 @@ State 45
    15 declaration: ENTER var_type ID .
    17            | ENTER var_type ID . TELLING expression
 
-    TELLING  shift, and go to state 56
+    TELLING  shift, and go to state 57
 
     $default  reduce using rule 15 (declaration)
 
@@ -714,8 +721,8 @@ State 46
 
     ENTER  shift, and go to state 7
 
-    declaration  go to state 57
-    decl_list    go to state 58
+    declaration  go to state 58
+    decl_list    go to state 59
 
 
 State 47
@@ -738,12 +745,19 @@ State 47
 
 State 48
 
+   37 input: SUMMON '<' complex_identifier . '>'
+
+    '>'  shift, and go to state 60
+
+
+State 49
+
    22 expression: '<' expression '>' .
 
     $default  reduce using rule 22 (expression)
 
 
-State 49
+State 50
 
    23 expression: expression . ADDING expression
    24           | expression . CONSPIRING expression
@@ -755,7 +769,7 @@ State 49
     $default  reduce using rule 25 (expression)
 
 
-State 50
+State 51
 
    23 expression: expression . ADDING expression
    24           | expression . CONSPIRING expression
@@ -767,7 +781,7 @@ State 50
     $default  reduce using rule 26 (expression)
 
 
-State 51
+State 52
 
    23 expression: expression . ADDING expression
    23           | expression ADDING expression .
@@ -783,7 +797,7 @@ State 51
     $default  reduce using rule 23 (expression)
 
 
-State 52
+State 53
 
    23 expression: expression . ADDING expression
    24           | expression . CONSPIRING expression
@@ -799,7 +813,7 @@ State 52
     $default  reduce using rule 24 (expression)
 
 
-State 53
+State 54
 
    23 expression: expression . ADDING expression
    24           | expression . CONSPIRING expression
@@ -811,24 +825,24 @@ State 53
     $default  reduce using rule 27 (expression)
 
 
-State 54
+State 55
 
    36 output: QUOTE '<' expression '>' .
 
     $default  reduce using rule 36 (output)
 
 
-State 55
+State 56
 
    16 declaration: ENTER FIXED var_type ID .
    18            | ENTER FIXED var_type ID . TELLING expression
 
-    TELLING  shift, and go to state 59
+    TELLING  shift, and go to state 61
 
     $default  reduce using rule 16 (declaration)
 
 
-State 56
+State 57
 
    17 declaration: ENTER var_type ID TELLING . expression
 
@@ -838,32 +852,40 @@ State 56
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 60
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 62
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
-State 57
+State 58
 
    19 decl_list: declaration .
 
     $default  reduce using rule 19 (decl_list)
 
 
-State 58
+State 59
 
    20 decl_list: decl_list . ',' declaration
    21 struct_decl: PROCLAIM ID '<' decl_list . '>'
 
-    ','  shift, and go to state 61
-    '>'  shift, and go to state 62
+    ','  shift, and go to state 63
+    '>'  shift, and go to state 64
 
 
-State 59
+State 60
+
+   37 input: SUMMON '<' complex_identifier '>' .
+
+    $default  reduce using rule 37 (input)
+
+
+State 61
 
    18 declaration: ENTER FIXED var_type ID TELLING . expression
 
@@ -873,16 +895,17 @@ State 59
     BOOL_TRUE   shift, and go to state 4
     BOOL_FALSE  shift, and go to state 5
     QUOTE       shift, and go to state 6
-    '<'         shift, and go to state 10
+    SUMMON      shift, and go to state 10
+    '<'         shift, and go to state 11
 
-    complex_identifier  go to state 14
-    expression          go to state 63
-    predef_func         go to state 19
-    output              go to state 20
-    input               go to state 21
+    complex_identifier  go to state 15
+    expression          go to state 65
+    predef_func         go to state 20
+    output              go to state 21
+    input               go to state 22
 
 
-State 60
+State 62
 
    17 declaration: ENTER var_type ID TELLING expression .
    23 expression: expression . ADDING expression
@@ -900,23 +923,23 @@ State 60
     $default  reduce using rule 17 (declaration)
 
 
-State 61
+State 63
 
    20 decl_list: decl_list ',' . declaration
 
     ENTER  shift, and go to state 7
 
-    declaration  go to state 64
+    declaration  go to state 66
 
 
-State 62
+State 64
 
    21 struct_decl: PROCLAIM ID '<' decl_list '>' .
 
     $default  reduce using rule 21 (struct_decl)
 
 
-State 63
+State 65
 
    18 declaration: ENTER FIXED var_type ID TELLING expression .
    23 expression: expression . ADDING expression
@@ -934,7 +957,7 @@ State 63
     $default  reduce using rule 18 (declaration)
 
 
-State 64
+State 66
 
    20 decl_list: decl_list ',' declaration .
 
