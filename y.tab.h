@@ -167,10 +167,9 @@ union YYSTYPE
 	std::string* strvalue;
 	Language::Value* exprptrvalue;
 	Language::Variable* varptrvalue;
-	
 	std::vector<Language::Variable*>* decllist;
 
-#line 174 "y.tab.h" /* yacc.c:1909  */
+#line 173 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

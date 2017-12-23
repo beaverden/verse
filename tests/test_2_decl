@@ -1,12 +1,9 @@
-enter fixed saying str telling "hey" empowering 5
-enter saying s telling "hey"
+enter saying str telling <"hey" empowering 5>
+let str be "nope"
 quote <str>
 
-proclaim _struct <
-	enter whole _s1 telling 5,
-	enter saying _s2 telling "hey"
->
-
-enter fixed whole val telling 5 empowering 15
-enter _struct x1
-quote <val>
+enter whole int telling 5 empowering 20 adding 1
+quote<int>
+enter whole newvar telling  <int conspiring 1> empowering <int adding 5>
+quote<int>
+quote<newvar>

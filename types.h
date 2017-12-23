@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <set>
 #include <iostream>
+#include <memory>
 
 namespace Language
 {
@@ -19,9 +20,6 @@ namespace Language
 	struct Value
 	{
 		std::string 	type;
-		int 			int_val;
-		bool 			bool_val;
-		std::string 	str_val;
 		void* 			data;
 	};
 

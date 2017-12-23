@@ -25,6 +25,8 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "functional": "cpp",
+        "memory": "cpp"
     }
 }

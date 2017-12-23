@@ -54,10 +54,22 @@
 "none" {return NONE;}
 "one" {return ONE;}
 "twice" {return TWICE;}
-\"(\\.|[^"\\])*\" { yylval.strvalue = new std::string(yytext); return STRING;}
+
+\"(\\.|[^"\\])*\" { 
+        yylval.strvalue = new std::string(yytext); 
+        (*yylval.strvalue) = yylval.strvalue->substr(1, yylval.strvalue->length()-2);
+        return STRING;
+    }
+
 [ \t]|"the"|"be"|"a"|"an"|"'s" ;
-[_a-zA-Z][_a-zA-Z0-9]* { yylval.strvalue = new std::string(yytext); return ID;}
-(\-|\+)?([0-9]|([1-9][0-9]*)) { yylval.intvalue = new int(atoi(yytext)); return NUMBER;}
+[_a-zA-Z][_a-zA-Z0-9]* { 
+        yylval.strvalue = new std::string(yytext); 
+        return ID;
+    }
+(\-|\+)?([0-9]|([1-9][0-9]*)) { 
+        yylval.intvalue = new int(atoi(yytext)); 
+        return NUMBER;
+    }
 \n {yylineno++;}
 . {return yytext[0];}
 

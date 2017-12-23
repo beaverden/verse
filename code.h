@@ -14,7 +14,8 @@ extern int yylineno;
 
 Language::Variable* make_variable(std::string type, std::string name, bool isConst, Language::Variable* value = NULL);
 std::string* make_type(std::string name);
-Language::Variable* make_expression(std::string type, void* value = NULL);
+Language::Variable* make_expression(std::string type, unsigned int valueSize, void* value = NULL);
+Language::Variable* make_unnamed(Language::Variable* proto);
 
 Language::Variable* make_addition(Language::Variable* first, Language::Variable* second);
 Language::Variable* make_substraction(Language::Variable* first, Language::Variable* second);
@@ -30,8 +31,11 @@ Language::Variable* make_input(std::string name);
 Language::Variable* get_var(std::string name, Language::Variable* complex = NULL);
 
 
+Language::Variable* make_copy(Language::Variable* old);
+
 void add_scope(std::string name);
 void pop_scope();
+void free_var(Language::Variable* var);
 
 void leave();
 int yyerror(const char* s);

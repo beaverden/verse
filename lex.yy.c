@@ -1135,41 +1135,51 @@ YY_RULE_SETUP
 case 49:
 /* rule 49 can match eol */
 YY_RULE_SETUP
-#line 57 "limbaj.l"
-{ yylval.strvalue = new std::string(yytext); return STRING;}
+#line 58 "limbaj.l"
+{ 
+        yylval.strvalue = new std::string(yytext); 
+        (*yylval.strvalue) = yylval.strvalue->substr(1, yylval.strvalue->length()-2);
+        return STRING;
+    }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 58 "limbaj.l"
+#line 64 "limbaj.l"
 ;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 59 "limbaj.l"
-{ yylval.strvalue = new std::string(yytext); return ID;}
+#line 65 "limbaj.l"
+{ 
+        yylval.strvalue = new std::string(yytext); 
+        return ID;
+    }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 60 "limbaj.l"
-{ yylval.intvalue = new int(atoi(yytext)); return NUMBER;}
+#line 69 "limbaj.l"
+{ 
+        yylval.intvalue = new int(atoi(yytext)); 
+        return NUMBER;
+    }
 	YY_BREAK
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 61 "limbaj.l"
+#line 73 "limbaj.l"
 {yylineno++;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 62 "limbaj.l"
+#line 74 "limbaj.l"
 {return yytext[0];}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 65 "limbaj.l"
+#line 77 "limbaj.l"
 ECHO;
 	YY_BREAK
-#line 1173 "lex.yy.c"
+#line 1183 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2170,4 +2180,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 65 "limbaj.l"
+#line 77 "limbaj.l"

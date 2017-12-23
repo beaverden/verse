@@ -8,5 +8,10 @@ proclaim _st
 	enter ins str
 >
 enter _st var
-let s from str from var be "hi"
-quote<var>
+enter _st var2 telling var
+let s from str from var2 be "hi"
+let s from str from var be "nope"
+quote<s from str from var>
+quote<s from str from var2>
+
+
