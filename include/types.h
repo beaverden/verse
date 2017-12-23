@@ -2,7 +2,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define _GLOBAL_
 #include <string>
 #include <string.h>
 #include <map>
@@ -14,10 +13,16 @@
 #include <iostream>
 #include <memory>
 
+#define DEBUG_MODE
+
+#define STR(ptr) (*(std::string*)(ptr))
+#define INT(ptr) (*(int*)(ptr))
+#define BOOL(ptr) (*(bool*)(ptr))
+#define VARVECTOR(ptr) (*(std::vector<Language::Variable*>*)(ptr))
+#define AS_VECTOR(data) (*(std::vector<AS_TREE*>*)(data))
+
 namespace Language
 {
-	enum BOOL_OP { EQUAL, LOWER, GREATER, LOWEREQ, GREATEREQ, NEQUAL };
-	enum Type { BOOLEAN, INT, STR, COMPLEX, VOID };
 	struct Value
 	{
 		std::string 	type;

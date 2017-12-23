@@ -56,39 +56,39 @@ extern int yydebug;
     DESCEND = 266,
     CRY = 267,
     FOR = 268,
-    DIVIDED = 269,
-    REMINDING = 270,
-    ADDING = 271,
-    CONSPIRING = 272,
-    EMPOWERING = 273,
-    EXEUNT = 274,
-    NOT = 275,
-    SINCE = 276,
-    FROM = 277,
-    ASK = 278,
-    WHETHER = 279,
-    THEN = 280,
-    OTHERWISE = 281,
-    CHANGES = 282,
-    INCREASES = 283,
-    DECREASES = 284,
-    WHENEVER = 285,
-    DOES = 286,
-    NONE = 287,
-    ONE = 288,
-    TWICE = 289,
-    ID = 290,
-    TELLING = 291,
-    FIXED = 292,
-    INT_TYPE = 293,
-    STR_TYPE = 294,
-    BOOLEAN_TYPE = 295,
-    NUMBER = 296,
-    STRING = 297,
-    BOOL_TRUE = 298,
-    BOOL_FALSE = 299,
-    QUOTE = 300,
-    SUMMON = 301,
+    EXEUNT = 269,
+    NOT = 270,
+    SINCE = 271,
+    FROM = 272,
+    ASK = 273,
+    WHETHER = 274,
+    THEN = 275,
+    OTHERWISE = 276,
+    CHANGES = 277,
+    INCREASES = 278,
+    DECREASES = 279,
+    WHENEVER = 280,
+    DOES = 281,
+    NONE = 282,
+    ONE = 283,
+    TWICE = 284,
+    ID = 285,
+    TELLING = 286,
+    FIXED = 287,
+    INT_TYPE = 288,
+    STR_TYPE = 289,
+    BOOLEAN_TYPE = 290,
+    NUMBER = 291,
+    STRING = 292,
+    BOOL_TRUE = 293,
+    BOOL_FALSE = 294,
+    QUOTE = 295,
+    SUMMON = 296,
+    DIVIDED = 297,
+    REMINDING = 298,
+    ADDING = 299,
+    CONSPIRING = 300,
+    EMPOWERING = 301,
     BOOL_IS = 302,
     BOOL_UP = 303,
     BOOL_TO = 304,
@@ -110,39 +110,39 @@ extern int yydebug;
 #define DESCEND 266
 #define CRY 267
 #define FOR 268
-#define DIVIDED 269
-#define REMINDING 270
-#define ADDING 271
-#define CONSPIRING 272
-#define EMPOWERING 273
-#define EXEUNT 274
-#define NOT 275
-#define SINCE 276
-#define FROM 277
-#define ASK 278
-#define WHETHER 279
-#define THEN 280
-#define OTHERWISE 281
-#define CHANGES 282
-#define INCREASES 283
-#define DECREASES 284
-#define WHENEVER 285
-#define DOES 286
-#define NONE 287
-#define ONE 288
-#define TWICE 289
-#define ID 290
-#define TELLING 291
-#define FIXED 292
-#define INT_TYPE 293
-#define STR_TYPE 294
-#define BOOLEAN_TYPE 295
-#define NUMBER 296
-#define STRING 297
-#define BOOL_TRUE 298
-#define BOOL_FALSE 299
-#define QUOTE 300
-#define SUMMON 301
+#define EXEUNT 269
+#define NOT 270
+#define SINCE 271
+#define FROM 272
+#define ASK 273
+#define WHETHER 274
+#define THEN 275
+#define OTHERWISE 276
+#define CHANGES 277
+#define INCREASES 278
+#define DECREASES 279
+#define WHENEVER 280
+#define DOES 281
+#define NONE 282
+#define ONE 283
+#define TWICE 284
+#define ID 285
+#define TELLING 286
+#define FIXED 287
+#define INT_TYPE 288
+#define STR_TYPE 289
+#define BOOLEAN_TYPE 290
+#define NUMBER 291
+#define STRING 292
+#define BOOL_TRUE 293
+#define BOOL_FALSE 294
+#define QUOTE 295
+#define SUMMON 296
+#define DIVIDED 297
+#define REMINDING 298
+#define ADDING 299
+#define CONSPIRING 300
+#define EMPOWERING 301
 #define BOOL_IS 302
 #define BOOL_UP 303
 #define BOOL_TO 304
@@ -158,14 +158,13 @@ union YYSTYPE
 {
 #line 15 "limbaj.ypp" /* yacc.c:1909  */
 
-	int* intvalue;
-	bool* boolvalue;
-	std::string* strvalue;
-	Language::Value* exprptrvalue;
-	Language::Variable* varptrvalue;
-	std::vector<Language::Variable*>* decllist;
+	AS_TREE* 		treevalue;
+	int* 			intvalue;
+	bool* 			boolvalue;
+	std::string* 	strvalue;
+	Operation 		optype;
 
-#line 169 "y.tab.h" /* yacc.c:1909  */
+#line 168 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -4,11 +4,8 @@
 #ifndef CODE_H
 #define CODE_H
 #define DEBUG_MODE
-#define STR(ptr) (*(std::string*)(ptr))
-#define INT(ptr) (*(int*)(ptr))
-#define BOOL(ptr) (*(bool*)(ptr))
-#define VARVECTOR(ptr) (*(std::vector<Language::Variable*>*)(ptr))
-extern int yylineno;
+
+
 /* IMPORTANT VARIABLES */
 
 
@@ -25,7 +22,7 @@ Language::Variable* make_reminder(Language::Variable* first, Language::Variable*
 Language::Variable* make_multiplication(Language::Variable* first, Language::Variable* second);
 Language::Variable* make_boolean(Language::Variable* first, Language::Variable* second, Language::BOOL_OP op);
 
-void make_if(Language::Variable* var);
+bool make_if(Language::Variable* var);
 
 void make_assign(Language::Variable* var, Language::Variable* value);
 std::vector<Language::Variable*>* make_list(Language::Variable* initial, std::vector<Language::Variable*>* old);
@@ -42,9 +39,7 @@ void add_scope(std::string name);
 void pop_scope();
 void free_var(Language::Variable* var);
 
-void leave();
-int yyerror(const char* s);
-int yyfmterror(const char* fmt, ...);
+
 
 void init();
 #endif

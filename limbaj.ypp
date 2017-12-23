@@ -1,8 +1,8 @@
 %{
 #include <stdio.h>
+#include "include/types.h"
+#include "include/AST.h"
 
-#include "types.h"
-#include "code.h"
 #define YYDEBUG 1
 
 extern FILE* yyin;
@@ -13,65 +13,73 @@ int yylex(void);
 %}
 
 %union {
-	int* intvalue;
-	bool* boolvalue;
-	std::string* strvalue;
-	Language::Value* exprptrvalue;
-	Language::Variable* varptrvalue;
-	std::vector<Language::Variable*>* decllist;
+	AS_TREE* 		treevalue;
+	int* 			intvalue;
+	bool* 			boolvalue;
+	std::string* 	strvalue;
+	Operation 		optype;
 }
 
-%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR DIVIDED REMINDING ADDING CONSPIRING EMPOWERING EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
 
 %token <strvalue>ID TELLING FIXED
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
 %token QUOTE SUMMON
+%token DIVIDED REMINDING ADDING CONSPIRING EMPOWERING
 %token BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN
 
+%type <treevalue>statements
+%type <treevalue>statement
+%type <treevalue>complex_identifier
 %type <strvalue>var_type
-%type <varptrvalue>expression
-%type <varptrvalue>predef_func
-%type <varptrvalue>output
-%type <varptrvalue>input
-%type <decllist>decl_list
-%type <varptrvalue>declaration
-%type <varptrvalue>complex_identifier
+%type <treevalue>assign
+%type <treevalue>declaration
+%type <treevalue>decl_list
+%type <treevalue>struct_decl
+%type <treevalue>expression
+%type <treevalue>input
+%type <treevalue>output
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDED
 %nonassoc BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN NOT
-
 %start programm
 
 %%
 programm: 
-	statements {printf("program corect sintactic\n");}
+	statements { printf("AS_TREE FINISHED %X\n", $1); executeStatements($1); }
 	;
 
 
 statements: 
-	statement
+	statement 
+	{ 
+		$$ = make_statements(nullptr, $1); 
+	}
 	| statements statement
+	{
+		$$ = make_statements($1, $2);
+	}
 	;
 
 
 statement: 
-	expression
-	| if_statement
-	| declaration
-	| struct_decl
-	| assign
+	expression { $$ = $1; }
+	| declaration { $$ = $1; }
+	| struct_decl { $$ = $1; }
+	| assign { $$ = $1; }
+	| output { $$ = $1; }
 	;
 
 complex_identifier:
-	ID 
+	ID
 	{
-		$$ = get_var(STR($1), NULL);
+		$$ = make_identifier(nullptr, new std::string(STR($1)));
 	}
 	| ID FROM complex_identifier 
 	{
-		$$ = get_var(STR($1), $3);
+		$$ = make_identifier($3, new std::string(STR($1)));
 	}
 	;
 
@@ -99,26 +107,26 @@ var_type:
 assign:
 	LET complex_identifier expression
 	{
-		make_assign($2, $3);
+		$$ = make_assignment($2, $3);
 	}
 	;
 
 declaration:	
 	ENTER var_type ID
 	{
-		$$ = make_variable(STR($2), STR($3), false, NULL);	
+		$$ = make_variable($2, new std::string(STR($3)), false, nullptr);
 	}
 	| ENTER FIXED var_type ID
 	{
-		$$ = make_variable(STR($2), STR($3), true, NULL);	
+		$$ = make_variable($3, new std::string(STR($4)), true, nullptr);
 	}
 	| ENTER var_type ID TELLING expression
 	{
-		$$ = make_variable(STR($2), STR($3), false, $5);	
+		$$ = make_variable($2, new std::string(STR($3)), false, $5);	
 	}
 	| ENTER FIXED var_type ID TELLING expression
 	{
-		$$ = make_variable(STR($3), STR($4), true, $6);	
+		$$ = make_variable($3, new std::string(STR($4)), true, $6);
 	}
 	;
 
@@ -127,11 +135,11 @@ declaration:
 decl_list:
 	declaration
 	{
-		$$ = make_list($1, NULL);
+		$$ = make_declaration_list(nullptr, $1);
 	}
 	| decl_list ',' declaration
 	{
-		$$ = make_list($3, $1);
+		$$ = make_declaration_list($1, $3);
 	}
 	;
 
@@ -140,18 +148,7 @@ decl_list:
 struct_decl:	
 	PROCLAIM ID '<' decl_list '>'
 	{
-		make_struct(STR($2), $4);
-	}
-	;
-
-if_statement:
-	ASK WHETHER '<' expression '>' THEN '<' statements '>'  
-	{
-		make_if($4);
-	}
-	| ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
-	{
-		make_if($4);
+		$$ = make_struct_declaration(new std::string(STR($2)), $4);
 	}
 	;
 
@@ -160,87 +157,31 @@ expression:
 	{ 
 		$$ = $2; 
 	}
-	| expression ADDING expression
-	{
-		$$ = make_addition($1, $3);
-	}
-	| expression CONSPIRING expression 
-	{
-		$$ = make_substraction($1, $3);
-	}
-	| expression DIVIDED expression
-	{
-		$$ = make_division($1, $3);		
-	}
-	| expression REMINDING expression
-	{
-		$$ = make_reminder($1, $3);	
-	}
-	| expression EMPOWERING expression 
-	{
-		$$ = make_multiplication($1, $3);
-	}
-	| expression BOOL_IS expression
-	{
-		$$ = make_boolean($1, $3, Language::BOOL_OP::EQUAL);
-	}
-	| expression BOOL_IS NOT expression
-	{
-		$$ = make_boolean($1, $4, Language::BOOL_OP::NEQUAL);
-	}
-	| expression BOOL_LOWER BOOL_THAN expression
-	{
-		$$ = make_boolean($1, $4, Language::BOOL_OP::LOWER);
-	}	
-	| expression BOOL_GREATER BOOL_THAN expression
-	{
-		$$ = make_boolean($1, $4, Language::BOOL_OP::GREATER);
-	}	
-	| expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
-	{
-		$$ = make_boolean($1, $6, Language::BOOL_OP::LOWEREQ);
-	}	
-	| expression BOOL_UP BOOL_TO BOOL_GREATER BOOL_THAN expression
-	{
-		$$ = make_boolean($1, $6, Language::BOOL_OP::GREATEREQ);
-	}
-	| complex_identifier
-	{
-		$$ = make_copy($1);
-	}
-	| NUMBER
-	{ 
-		$$ = make_expression("$INT", new int(INT($1)));
-	}
-	| STRING 
-	{ 
-		$$ = make_expression("$STR", new std::string(STR($1)));
-	}
-	| BOOL_FALSE 
-	{ 
-		$$ = make_expression("$BOOL", new bool(BOOL($1)));
-	}
-	| BOOL_TRUE 
-	{ 
-		$$ = make_expression("$BOOL", new bool(BOOL($1)));
-	}
-	| predef_func
-	{
-		$$ = make_copy($1);
-	}
-	;
-
-predef_func:
-	output
+	| expression ADDING expression { $$ = make_expression($1, $3, Operation::OP_ADDING);}
+	| expression CONSPIRING expression { $$ = make_expression($1, $3, Operation::OP_CONSPIRING);} 
+	| expression DIVIDED expression { $$ = make_expression($1, $3, Operation::OP_DIVIDED); }
+	| expression REMINDING expression { $$ = make_expression($1, $3, Operation::OP_REMINDING);}
+	| expression EMPOWERING expression { $$ = make_expression($1, $3, Operation::OP_EMPOWERING);}
+	| expression BOOL_IS expression { $$ = make_expression($1, $3, Operation::OP_EQUAL);}
+	| expression BOOL_IS NOT expression { $$ = make_expression($1, $4, Operation::OP_NEQUAL);}
+	| expression BOOL_LOWER BOOL_THAN expression { $$ = make_expression($1, $4, Operation::OP_LOWER);}
+	| expression BOOL_GREATER BOOL_THAN expression { $$ = make_expression($1, $4, Operation::OP_GREATER);}
+	| expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_LOWEREQ);}
+	| expression BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_GREATEREQ);}
+	| complex_identifier { $$ = make_value($1); }
+	| NUMBER { $$ = make_value("$INT", new int(INT($1))); }
+	| STRING { $$ = make_value("$STR", new std::string(STR($1))); }
+	| BOOL_FALSE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
+	| BOOL_TRUE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
 	| input
+	{
+		//////// TODO FIX
+		$$ = make_value("$INT", new int(INT($1)));
+	}
 	;
-
 
 output:
-	QUOTE '<' expression '>' 
-	{ 
-		$$ = make_print($3);
-	}
+	QUOTE '<' expression '>' { $$ = make_output($3); } 
 	;
 
 input:
@@ -254,7 +195,6 @@ input:
 
 
 int main(int argc, char** argv){
-	add_scope("$main");
 	yyin=fopen(argv[1],"r");
 	yyparse();
 	return 0;

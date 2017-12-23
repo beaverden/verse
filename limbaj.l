@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
-#include "types.h"
-#include "code.h"
+#include "include/types.h"
+#include "include/AST.h"
 #include "y.tab.h"
 
 %}

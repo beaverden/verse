@@ -1,0 +1,4 @@
+yacc -d --verbose limbaj.ypp
+flex limbaj.l
+g++ -g -std=c++11 AST.cpp code.cpp y.tab.c lex.yy.c -o limbaj.out -ll -ly
+Makefile:2: recipe for target 'all' failed

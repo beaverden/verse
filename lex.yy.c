@@ -611,8 +611,8 @@ char *yytext;
 #line 1 "limbaj.l"
 #line 2 "limbaj.l"
 #include <stdio.h>
-#include "types.h"
-#include "code.h"
+#include "include/types.h"
+#include "include/AST.h"
 #include "y.tab.h"
 
 #line 619 "lex.yy.c"

@@ -1,10 +1,6 @@
 #include "code.h"
 
-static std::stack<std::string> currentScope;
-static std::map<std::string, Language::Variable*> variables;
-static std::map<std::string, Language::Type> actualTypes;
-static std::map<std::string, Language::ComplexType*> complexTypes;
-static unsigned int temp_count = 0;
+
 
 
 void add_scope(std::string name)
@@ -74,112 +70,11 @@ void free_var(Language::Variable* old)
     delete old;
 }
 
-Language::Variable* make_copy(Language::Variable* old)
-{
-    unsigned char* newData;
-    Language::Variable* newVar = new Language::Variable;
-    newVar->type = old->type;
-    //printf("TYPE %s\n", newVar->type.c_str());
-    newVar->name = old->name;
-    newVar->scope = old->scope;
-    newVar->scopedName = old->scopedName;
-    newVar->isConstant = old->isConstant;
-    newVar->isComplex = old->isComplex;
 
-    if (!old->isComplex)
-    {       
-        if (old->type == "$INT")
-        {
-            newData = new unsigned char[sizeof(int)];
-            INT(newData) = INT(old->data);
-            
-        }
-        else if (old->type == "$STR") 
-        {
-            std::string* newStr = new std::string;
-            (*newStr) = STR(old->data);
-            newData = (unsigned char*)(newStr);
-        }
-        else if (old->type == "$BOOL") 
-        {
-            newData = new unsigned char[sizeof(bool)];
-            BOOL(newData) = BOOL(old->data);
-        }
-        else if (old->type == "$VOID") 
-        {
-            // IGNORE   
-        }
-        else yyfmterror("Invalid copy type");
-        newVar->data = (void*)(newData);
-    }
-    else
-    {
-        Language::ComplexType* newType = new Language::ComplexType;
-        Language::ComplexType* oldType = (Language::ComplexType*)(old->data);
-        newType->typeName = oldType->typeName;
-        for (auto p : oldType->vars)
-        {
-            newType->vars[p.first] = make_copy(p.second);
-        }
-        newVar->data = (void*)(newType);
-    }
-    return newVar;
-}
 
 Language::Variable* make_variable(std::string type, std::string name, bool isConst, Language::Variable* value) 
 {
-	std::string tempName = currentScope.top() + "$$" + name;
-	if (variables.find(tempName) != variables.end())
-	{
-		yyfmterror("Two variables with the same name in the same scope");
-	}
-	Language::Variable* newVar = new Language::Variable;
-	newVar->type = type;
-	newVar->name = name;
-	newVar->isConstant = isConst;
-	newVar->scope = currentScope.top();
-	newVar->scopedName = tempName;
-	if (type.at(0) == '$') 
-	{
-		newVar->isComplex = false;
-        if (value == NULL)
-        {
-            newVar->data = make_default(type);
-        }
-		else
-        {
-            newVar->data = value->data;
-        }
-	} 
-	else
-	{
-		newVar->isComplex = true;
-        if (value == NULL)
-        {
-            if (complexTypes.find(type) == complexTypes.end())
-            {
-                yyfmterror("Invalid type %s", type.c_str());
-            }
-            Language::ComplexType* t = new Language::ComplexType;
-            Language::ComplexType* model = complexTypes[type];
-            t->typeName = model->typeName;
-            for (auto v : model->vars)
-            {
-                t->vars[v.first] = make_copy(v.second);
-            }
-            newVar->data = (void*)t;
-        }
-        else 
-        {
-            newVar->data = value->data;
-        }
 
-	}
-	#ifdef DEBUG_MODE
-		printf("Variable:\n\tTYPE: %s\n\tNAME: %s\n\tFULL: %s\n", type.c_str(), name.c_str(), tempName.c_str());
-	#endif
-	variables[tempName] = newVar;
-	return newVar;
 }
 
 
@@ -219,130 +114,7 @@ Language::Variable* make_expression(std::string type, void* value)
     return var;
 }
 
-Language::Variable* make_addition(Language::Variable* first, Language::Variable* second)
-{
-    Language::Variable* res = new Language::Variable;
-    if (first->type == "$INT" && second->type == "$INT")
-    {
-        res->type = "$INT";
-        int* val = new int;
-        (*val) = INT(first->data) + INT(second->data);
-        res->data = (void*)val;
-    }
-    else if (first->type == "$STR" && second->type == "$STR") 
-    {
-        res->type = "$STR";
-        std::string* val = new std::string;
-        (*val) = STR(first->data) + STR(second->data);
-        res->data = (void*)val;
-    }
-    else
-    {
-        yyfmterror("Invalid types for adding");
-    }
-    free_var(first);
-    free_var(second);
-    return res;
-}
 
-
-Language::Variable* make_substraction(Language::Variable* first, Language::Variable* second)
-{
-    Language::Variable* res = new Language::Variable;
-    if (first->type == "$INT" && second->type == "$INT")
-    {
-        res->type = "$INT";
-        int* val = new int;
-        (*val) = INT(first->data) - INT(second->data);
-        res->data = (void*)val;
-    }
-    else
-    {
-        yyfmterror("Invalid types for substraction");
-    }
-    free_var(first);
-    free_var(second);
-    return res;
-}
-
-Language::Variable* make_division(Language::Variable* first, Language::Variable* second)
-{
-    Language::Variable* res = new Language::Variable;
-    if (first->type == "$INT" && second->type == "$INT")
-    {
-        res->type = "$INT";
-        int* val = new int;
-        (*val) = INT(first->data) / INT(second->data);
-        res->data = (void*)val;
-    }
-    else
-    {
-        yyfmterror("Invalid types for division");
-    }
-    free_var(first);
-    free_var(second);
-    return res;
-}
-
-Language::Variable* make_reminder(Language::Variable* first, Language::Variable* second)
-{
-    Language::Variable* res = new Language::Variable;
-    if (first->type == "$INT" && second->type == "$INT")
-    {
-        res->type = "$INT";
-        int* val = new int;
-        (*val) = INT(first->data) % INT(second->data);
-        res->data = (void*)val;
-    }
-    else
-    {
-        yyfmterror("Invalid types for reminding");
-    }
-    free_var(first);
-    free_var(second);
-    return res;
-}
-
-Language::Variable* make_multiplication(Language::Variable* first, Language::Variable* second)
-{
-    Language::Variable* res = new Language::Variable;
-    if (first->type == "$INT" && second->type == "$INT")
-    {
-        res->type = "$INT";
-        int* val = new int;
-        (*val) = INT(first->data) * INT(second->data);
-        res->data = (void*)val;
-    }
-    else if (  (first->type == "$INT" && second->type == "$STR")
-			|| (first->type == "$STR" && second->type == "$INT"))
-		{
-            res->type = "$STR";
-			std::string str = "";
-			int value = 0;
-
-			if (first->type == "$STR") 
-            { 
-                str = STR(first->data);
-                value = INT(second->data);
-            }
-			else if (first->type == "$INT") 
-            { 
-                str = STR(second->data);
-                value = INT(first->data);
-            }
-            std::string* res_str = new std::string;
-			(*res_str) = "";
-			for (int i = 0; i < value; i++) (*res_str) += str;	
-            res->data = (void*)(res_str);
-		}
-    else
-    {
-        yyfmterror("Invalid types for empowering");
-    }
-    free_var(first);
-    free_var(second);
-    return res;
-}
 
 Language::Variable* make_boolean(Language::Variable* first, Language::Variable* second, Language::BOOL_OP op)
 {
@@ -351,47 +123,7 @@ Language::Variable* make_boolean(Language::Variable* first, Language::Variable* 
     {
         yyfmterror("Cannot compare complex types");
     }
-    res->type = "$BOOL";
-    if (first->type == second->type)
-    {
-        bool* result = new bool(false);
-        if (op == Language::BOOL_OP::EQUAL)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) == INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) == STR(second->data));
-            if (first->type == "$BOOL") (*result) = (BOOL(first->data) == BOOL(second->data));
-        }
-        if (op == Language::BOOL_OP::NEQUAL)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) != INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) != STR(second->data));
-            if (first->type == "$BOOL") (*result) = (BOOL(first->data) != BOOL(second->data));
-        }
-        if (op == Language::BOOL_OP::LOWER)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) < INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) < STR(second->data));
-            if (first->type == "$BOOL") yyfmterror("Cannot use lower on boolean type");
-        }
-        if (op == Language::BOOL_OP::GREATER)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) > INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) > STR(second->data));
-            if (first->type == "$BOOL") yyfmterror("Cannot use greater on boolean type");
-        }
-        if (op == Language::BOOL_OP::LOWEREQ)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) <= INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) <= STR(second->data));
-            if (first->type == "$BOOL") yyfmterror("Cannot use lower equal on boolean type");
-        }
-        if (op == Language::BOOL_OP::GREATEREQ)
-        {
-            if (first->type == "$INT") (*result) = (INT(first->data) >= INT(second->data));
-            if (first->type == "$STR") (*result) = (STR(first->data) >= STR(second->data));
-            if (first->type == "$BOOL") yyfmterror("Cannot use greater equal on boolean type");
-        }
-    res->data = (void*)(result);
+    
     }
     else yyfmterror("Cannot compare different types");
 
@@ -539,27 +271,4 @@ Language::Variable* make_input(Language::Variable* var)
 }
 
 
-void leave()
-{
-	for (auto var : (variables))
-	{
-		delete var.second;		
-	}
-	exit(-1);
-}
 
-
-int yyfmterror(const char* fmt, ...)
-{
-	char str[200];
-	va_list args;
-	va_start(args, fmt);
-	vsprintf(str, fmt, args);
-	yyerror(str);
-}
-
-int yyerror(const char* s)
-{
-	printf("Error on line %d: [%s]\n",yylineno, s);
-	leave();
-}
