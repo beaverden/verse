@@ -248,6 +248,16 @@ AS_TREE* make_assignment(AS_TREE* var, AS_TREE* value)
     return node;
 }
 
+AS_TREE* make_incdec(AS_TREE* var, AS_TREE* delta, Operation op)
+{
+    AS_TREE* node = new AS_TREE;
+    node->type = Type::INCDEC;
+    node->data.incdec.var = var;
+    node->data.incdec.expr = delta;
+    node->data.incdec.op = op;
+    return node;
+}
+
 std::string* make_type(std::string type)
 {
     return new std::string(type);
@@ -357,6 +367,18 @@ AS_TREE* make_while(AS_TREE* expr, AS_TREE* st)
     return node;   
 }
 
+AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts)
+{
+    AS_TREE* node = new AS_TREE;
+    node->lineno = yylineno;
+    node->type = Type::FOR_LOOP;
+    node->data.for_loop.assign1 = as1;
+    node->data.for_loop.assign2 = as2;
+    node->data.for_loop.expr = expr;
+    node->data.for_loop.stmts = stmts;
+    return node;
+}
+
 
 void executeStatements(AS_TREE* tree)
 {
@@ -396,6 +418,12 @@ void executeStatement(AS_TREE* tree)
         case Type::WHILE_STATEMENT:
             executeWhile(tree);
             break;
+        case Type::INCDEC:
+            executeIncDec(tree);
+            break;
+        case Type::FOR_LOOP:
+            executeFor(tree);
+            break;
         default:
             yyfmterror(tree->lineno, "Unknown node type!");
     }
@@ -432,7 +460,7 @@ Language::Value* executeExpression(AS_TREE* tree)
             return executeBool(v1, v2, op);
         }
         else if (   op == OP_ADDING || op == OP_CONSPIRING 
-                 || op == OP_DIVIDED || op == OP_REMINDING || op == OP_EMPOWERING)
+                 || op == OP_DIVIDING || op == OP_REMINDING || op == OP_EMPOWERING)
         {
             return executeMath(v1, v2, op);
         } 
@@ -502,7 +530,7 @@ Language::Value* executeMath(Language::Value* v1, Language::Value* v2, Operation
         case Operation::OP_CONSPIRING:
             return executeSubstraction(v1, v2);
             break;
-        case Operation::OP_DIVIDED:
+        case Operation::OP_DIVIDING:
             return executeDivision(v1, v2);
             break;
         case Operation::OP_REMINDING:
@@ -606,19 +634,26 @@ void executeStructDeclaration(AS_TREE* tree)
 }
 void executeAssignment(AS_TREE* tree)
 {
-    Language::Variable* var = getVar(tree->data.assignment.var);
-    Language::Value* val = executeExpression(tree->data.assignment.value);
+    if (tree->type == Type::INCDEC) 
+    {
+        executeIncDec(tree);
+    }
+    else
+    {
+        Language::Variable* var = getVar(tree->data.assignment.var);
+        Language::Value* val = executeExpression(tree->data.assignment.value);
+        if (var->type != val->type)
+        {
+            yyfmterror(tree->lineno, "Type of %s is compatible with the expression", var->name.c_str());
+        }
+        if (var->isConstant)
+        {
+            yyfmterror(tree->lineno, "Variable %s is constant", var->name.c_str());
+        }
+        var->data = val->data;
+    }
+    
 
-    if (var->type != val->type)
-    {
-        yyfmterror(tree->lineno, "Type of %s is compatible with the expression", var->name.c_str());
-    }
-    if (var->isConstant)
-    {
-        yyfmterror(tree->lineno, "Variable %s is constant", var->name.c_str());
-    }
-    var->data = val->data;
-    free_var(val);
 };
 
 void executeOutput(AS_TREE* tree)
@@ -683,16 +718,17 @@ void executeIf(AS_TREE* tree)
 
 void executeWhile(AS_TREE* tree)
 {
+    if (tree == nullptr) return;
     while (true)
     {
-        Language::Value* val = executeExpression(tree->data.if_statement.expr);
+        Language::Value* val = executeExpression(tree->data.while_statement.expr);
         if (val->type != "$BOOL")
         {
             yyfmterror(tree->lineno, "While expression must be boolean");
         }
         if (BOOL(val->data) == true)
         {
-            executeStatements(tree->data.if_statement.stmts1);
+            executeStatements(tree->data.while_statement.stmts);
         }
         else
         {
@@ -701,6 +737,38 @@ void executeWhile(AS_TREE* tree)
     }
 }
 
+void executeFor(AS_TREE* tree)
+{
+    if (tree == nullptr) return;
+    executeAssignment(tree->data.for_loop.assign1);
+    Language::Value* val = executeExpression(tree->data.for_loop.expr);
+    while (true)
+    {
+        if (val->type != "$BOOL")
+        {
+            yyfmterror(tree->lineno, "For expression must be boolean");
+        }
+        if (BOOL(val->data) == false) break;
+        executeStatements(tree->data.for_loop.stmts);
+        executeAssignment(tree->data.for_loop.assign2);
+        val = executeExpression(tree->data.for_loop.expr);
+    }
+}
+
+void executeIncDec(AS_TREE* tree)
+{
+    if (tree == nullptr) return;
+    Language::Variable* var = getVar(tree->data.incdec.var);
+    Language::Value* val2 = executeExpression(tree->data.incdec.expr);
+    Language::Value* val1 = copyValue(var);
+    Language::Value* result = executeMath(val1, val2, tree->data.incdec.op);
+    //printf("%s %d\n", var->name.c_str(), INT(result->data));
+    if (var->type != result->type)
+    {
+        yyfmterror(tree->lineno, "Expression with different type");
+    }
+    var->data = result->data;
+}
 
 Language::Value* executeAddition(Language::Value* first, Language::Value* second)
 {

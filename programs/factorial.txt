@@ -1,0 +1,10 @@
+enter whole res telling 1
+enter whole i
+enter whole n
+summon<n>
+
+for let i be 1, i up to lower than n, let i ascend
+<
+	let there be i empowering res
+>
+quote<res>

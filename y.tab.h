@@ -52,51 +52,55 @@ extern int yydebug;
     THERE = 262,
     EQUALLING = 263,
     UPON = 264,
-    ADDED = 265,
-    ASCEND = 266,
-    DESCEND = 267,
-    CRY = 268,
-    FOR = 269,
-    EXEUNT = 270,
-    NOT = 271,
-    SINCE = 272,
-    FROM = 273,
-    ASK = 274,
-    WHETHER = 275,
-    THEN = 276,
-    OTHERWISE = 277,
-    CHANGES = 278,
-    INCREASES = 279,
-    DECREASES = 280,
-    WHENEVER = 281,
-    DOES = 282,
-    NONE = 283,
-    ONE = 284,
-    TWICE = 285,
-    ID = 286,
-    TELLING = 287,
-    FIXED = 288,
-    INT_TYPE = 289,
-    STR_TYPE = 290,
-    BOOLEAN_TYPE = 291,
-    NUMBER = 292,
-    STRING = 293,
-    BOOL_TRUE = 294,
-    BOOL_FALSE = 295,
-    QUOTE = 296,
-    SUMMON = 297,
-    DIVIDED = 298,
-    REMINDING = 299,
-    ADDING = 300,
-    CONSPIRING = 301,
-    EMPOWERING = 302,
-    BOOL_IS = 303,
-    BOOL_UP = 304,
-    BOOL_TO = 305,
-    BOOL_DOWN = 306,
-    BOOL_LOWER = 307,
-    BOOL_GREATER = 308,
-    BOOL_THAN = 309
+    ASCEND = 265,
+    DESCEND = 266,
+    CRY = 267,
+    FOR = 268,
+    EXEUNT = 269,
+    NOT = 270,
+    SINCE = 271,
+    FROM = 272,
+    ASK = 273,
+    WHETHER = 274,
+    THEN = 275,
+    OTHERWISE = 276,
+    CHANGES = 277,
+    INCREASES = 278,
+    DECREASES = 279,
+    WHENEVER = 280,
+    DOES = 281,
+    NONE = 282,
+    ONE = 283,
+    TWICE = 284,
+    ID = 285,
+    TELLING = 286,
+    FIXED = 287,
+    INT_TYPE = 288,
+    STR_TYPE = 289,
+    BOOLEAN_TYPE = 290,
+    NUMBER = 291,
+    STRING = 292,
+    BOOL_TRUE = 293,
+    BOOL_FALSE = 294,
+    QUOTE = 295,
+    SUMMON = 296,
+    DIVIDING = 297,
+    REMINDING = 298,
+    ADDING = 299,
+    CONSPIRING = 300,
+    EMPOWERING = 301,
+    DIVIDE = 302,
+    ADDED = 303,
+    EMPOWER = 304,
+    CONSPIRED = 305,
+    REMIND = 306,
+    BOOL_IS = 307,
+    BOOL_UP = 308,
+    BOOL_TO = 309,
+    BOOL_DOWN = 310,
+    BOOL_LOWER = 311,
+    BOOL_GREATER = 312,
+    BOOL_THAN = 313
   };
 #endif
 /* Tokens.  */
@@ -107,51 +111,55 @@ extern int yydebug;
 #define THERE 262
 #define EQUALLING 263
 #define UPON 264
-#define ADDED 265
-#define ASCEND 266
-#define DESCEND 267
-#define CRY 268
-#define FOR 269
-#define EXEUNT 270
-#define NOT 271
-#define SINCE 272
-#define FROM 273
-#define ASK 274
-#define WHETHER 275
-#define THEN 276
-#define OTHERWISE 277
-#define CHANGES 278
-#define INCREASES 279
-#define DECREASES 280
-#define WHENEVER 281
-#define DOES 282
-#define NONE 283
-#define ONE 284
-#define TWICE 285
-#define ID 286
-#define TELLING 287
-#define FIXED 288
-#define INT_TYPE 289
-#define STR_TYPE 290
-#define BOOLEAN_TYPE 291
-#define NUMBER 292
-#define STRING 293
-#define BOOL_TRUE 294
-#define BOOL_FALSE 295
-#define QUOTE 296
-#define SUMMON 297
-#define DIVIDED 298
-#define REMINDING 299
-#define ADDING 300
-#define CONSPIRING 301
-#define EMPOWERING 302
-#define BOOL_IS 303
-#define BOOL_UP 304
-#define BOOL_TO 305
-#define BOOL_DOWN 306
-#define BOOL_LOWER 307
-#define BOOL_GREATER 308
-#define BOOL_THAN 309
+#define ASCEND 265
+#define DESCEND 266
+#define CRY 267
+#define FOR 268
+#define EXEUNT 269
+#define NOT 270
+#define SINCE 271
+#define FROM 272
+#define ASK 273
+#define WHETHER 274
+#define THEN 275
+#define OTHERWISE 276
+#define CHANGES 277
+#define INCREASES 278
+#define DECREASES 279
+#define WHENEVER 280
+#define DOES 281
+#define NONE 282
+#define ONE 283
+#define TWICE 284
+#define ID 285
+#define TELLING 286
+#define FIXED 287
+#define INT_TYPE 288
+#define STR_TYPE 289
+#define BOOLEAN_TYPE 290
+#define NUMBER 291
+#define STRING 292
+#define BOOL_TRUE 293
+#define BOOL_FALSE 294
+#define QUOTE 295
+#define SUMMON 296
+#define DIVIDING 297
+#define REMINDING 298
+#define ADDING 299
+#define CONSPIRING 300
+#define EMPOWERING 301
+#define DIVIDE 302
+#define ADDED 303
+#define EMPOWER 304
+#define CONSPIRED 305
+#define REMIND 306
+#define BOOL_IS 307
+#define BOOL_UP 308
+#define BOOL_TO 309
+#define BOOL_DOWN 310
+#define BOOL_LOWER 311
+#define BOOL_GREATER 312
+#define BOOL_THAN 313
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -166,7 +174,7 @@ union YYSTYPE
 	std::string* 	strvalue;
 	Operation 		optype;
 
-#line 170 "y.tab.h" /* yacc.c:1909  */
+#line 178 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

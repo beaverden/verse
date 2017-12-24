@@ -9,8 +9,8 @@ enter whole copy
 since <i lower than n>
 <
 	let copy be next
-	let next be start adding next
+	let there be start  added to next
 	let start be copy
-	let i be i adding 1
+	let i ascend
 >
 quote <start>

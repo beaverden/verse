@@ -1,0 +1,16 @@
+enter whole a
+enter whole b
+summon<a>
+summon<b>
+
+enter whole copy
+since <b is not none>
+<
+	let copy be b
+	let b be a reminding b
+	let a be copy
+>
+quote<a>
+
+
+

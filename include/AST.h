@@ -32,7 +32,9 @@ enum Type {
     VARIABLE_VALUE = 11,
     IDENTIFIER = 12,
     IF_STATEMENT = 13,
-    WHILE_STATEMENT = 14
+    WHILE_STATEMENT = 14,
+    INCDEC = 15,
+    FOR_LOOP = 16
 };
 
 enum Operation { 
@@ -45,7 +47,7 @@ enum Operation {
 
     OP_ADDING,
     OP_CONSPIRING,
-    OP_DIVIDED,
+    OP_DIVIDING,
     OP_REMINDING,
     OP_EMPOWERING,
 
@@ -130,6 +132,19 @@ struct AS_TREE
             AS_TREE* expr;
             AS_TREE* stmts;
         } while_statement;
+        struct
+        {
+            AS_TREE* var;
+            AS_TREE* expr;
+            Operation op;
+        } incdec;
+        struct
+        {
+            AS_TREE* assign1;
+            AS_TREE* expr;
+            AS_TREE* assign2;
+            AS_TREE* stmts;
+        } for_loop;
     } data;
 };
 
@@ -137,6 +152,7 @@ struct AS_TREE
 std::string* make_type(std::string type);
 AS_TREE* make_statements(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_assignment(AS_TREE* var, AS_TREE* value);
+AS_TREE* make_incdec(AS_TREE* var, AS_TREE* delta, Operation op);
 AS_TREE* make_expression(AS_TREE* exp1, AS_TREE* exp2, Operation op);
 AS_TREE* make_value(std::string type, void* data);
 AS_TREE* make_value(AS_TREE* val);
@@ -148,6 +164,7 @@ AS_TREE* make_input(AS_TREE* id);
 AS_TREE* make_output(AS_TREE* expr);
 AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
 AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
+AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
 /* PARSER */
 
 /* HANDLER */
@@ -170,7 +187,8 @@ void executeOutput(AS_TREE* tree);
 Language::Value* executeInput(AS_TREE* tree);
 void executeIf(AS_TREE* tree);
 void executeWhile(AS_TREE* tree);
-
+void executeIncDec(AS_TREE* tree);
+void executeFor(AS_TREE* tree);
 Language::Variable* getVar(AS_TREE* id);
 /* HANDLER */
 

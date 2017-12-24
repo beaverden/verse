@@ -20,13 +20,14 @@ int yylex(void);
 	Operation 		optype;
 }
 
-%token BE ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+%token BE ENTER PROCLAIM LET THERE EQUALLING UPON ASCEND DESCEND CRY FOR EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
 
 %token <strvalue>ID TELLING FIXED
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
 %token QUOTE SUMMON
-%token DIVIDED REMINDING ADDING CONSPIRING EMPOWERING
+%token DIVIDING REMINDING ADDING CONSPIRING EMPOWERING
+%token DIVIDE ADDED EMPOWER CONSPIRED REMIND
 %token BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN
 
 %type <treevalue>statements
@@ -42,9 +43,10 @@ int yylex(void);
 %type <treevalue>output
 %type <treevalue>if_statement
 %type <treevalue>while_statement
+%type <treevalue>for_statement
 
 %left  ADDING CONSPIRING
-%left  EMPOWERING REMINDING DIVIDED
+%left  EMPOWERING REMINDING DIVIDING
 %nonassoc BOOL_IS BOOL_UP BOOL_TO BOOL_DOWN BOOL_LOWER BOOL_GREATER BOOL_THAN NOT
 %start programm
 
@@ -74,6 +76,7 @@ statement:
 	| output { $$ = $1; }
 	| if_statement { $$ = $1; }
 	| while_statement { $$ = $1; }
+	| for_statement { $$ = $1; }
 	;
 
 complex_identifier:
@@ -112,6 +115,34 @@ assign:
 	LET complex_identifier BE expression
 	{
 		$$ = make_assignment($2, $4);
+	}
+	| LET complex_identifier ASCEND
+	{
+		$$ = make_incdec($2, make_value("$INT", new int(1)), Operation::OP_ADDING);
+	}
+	| LET complex_identifier DESCEND
+	{
+		$$ = make_incdec($2, make_value("$INT", new int(1)), Operation::OP_CONSPIRING);
+	}
+	| LET THERE BE expression ADDED BOOL_TO complex_identifier 
+	{
+		$$ = make_incdec($7, $4, Operation::OP_ADDING);
+	}
+	| LET THERE BE expression CONSPIRED FROM complex_identifier 
+	{
+		$$ = make_incdec($7, $4, Operation::OP_CONSPIRING);
+	}
+	| LET THERE BE expression DIVIDING complex_identifier
+	{
+		$$ = make_incdec($6, $4, Operation::OP_DIVIDING);
+	}
+	| LET THERE BE expression EMPOWERING complex_identifier 
+	{
+		$$ = make_incdec($6, $4, Operation::OP_EMPOWERING);
+	}
+	| LET THERE BE expression REMINDING complex_identifier 
+	{
+		$$ = make_incdec($6, $4, Operation::OP_REMINDING);
 	}
 	;
 
@@ -163,7 +194,7 @@ expression:
 	}
 	| expression ADDING expression { $$ = make_expression($1, $3, Operation::OP_ADDING);}
 	| expression CONSPIRING expression { $$ = make_expression($1, $3, Operation::OP_CONSPIRING);} 
-	| expression DIVIDED expression { $$ = make_expression($1, $3, Operation::OP_DIVIDED); }
+	| expression DIVIDING expression { $$ = make_expression($1, $3, Operation::OP_DIVIDING); }
 	| expression REMINDING expression { $$ = make_expression($1, $3, Operation::OP_REMINDING);}
 	| expression EMPOWERING expression { $$ = make_expression($1, $3, Operation::OP_EMPOWERING);}
 	| expression BOOL_IS expression { $$ = make_expression($1, $3, Operation::OP_EQUAL);}
@@ -173,6 +204,8 @@ expression:
 	| expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_LOWEREQ);}
 	| expression BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_GREATEREQ);}
 	| complex_identifier { $$ = make_value($1); }
+	| NONE { $$ = make_value("$INT", new int(0)); }
+	| ONE { $$ = make_value("$INT", new int(1)); }
 	| NUMBER { $$ = make_value("$INT", new int(INT($1))); }
 	| STRING { $$ = make_value("$STR", new std::string(STR($1))); }
 	| BOOL_FALSE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
@@ -209,6 +242,14 @@ while_statement:
 		$$ = make_while($2, $4);
 	}
 	;
+
+for_statement:
+	FOR assign ',' expression ',' assign '<' statements '>'
+	{
+		$$ = make_for($2, $4, $6, $8);
+	} 
+	;
+
 %%
 
 

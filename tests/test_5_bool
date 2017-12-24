@@ -1,13 +1,4 @@
-enter whole a 
-enter whole b 
-summon<a>
-summon<b>
+enter whole var telling 27
 
-ask whether <a lower than b> then
-< 
-	quote<"YES!">
->
-otherwise
-<
-	quote<"NO:(">
->
+let there be 4 reminding var
+quote<var>

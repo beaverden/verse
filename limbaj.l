@@ -20,12 +20,16 @@
 "there" {return THERE;}
 "equalling" {return EQUALLING;}
 "upon" {return UPON;}
-"added" {return ADDED;}
 "descend" {return DESCEND;}
 "ascend" {return ASCEND;}
 "cry" {return CRY;}
 "for" {return FOR;}
-"divided" {return DIVIDED;}
+"divide" { return DIVIDE; }
+"conspired" { return CONSPIRED; }
+"remind" { return REMIND; }
+"empower" { return EMPOWER; }
+"added" {return ADDED;}
+"dividing" {return DIVIDING;}
 "reminding" {return REMINDING;}
 "adding" {return ADDING;}
 "conspiring" {return CONSPIRING;}
@@ -46,14 +50,9 @@
 "whether" {return WHETHER;}
 "then" {return THEN;}
 "otherwise" {return OTHERWISE;}
-"changes" {return CHANGES;}
-"increases" {return INCREASES;}
-"decreases" {return DECREASES;}
-"whenever" {return WHENEVER;}
 "does" {return DOES;}
 "none" {return NONE;}
 "one" {return ONE;}
-"twice" {return TWICE;}
 "be" { return BE; }
 
 \"(\\.|[^"\\])*\" { 
