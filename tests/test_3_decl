@@ -8,10 +8,12 @@ proclaim _st
 	enter whole i
 >
 enter _st var
-enter _st var2 telling var
+enter _st var2
 
 let s from str from var be "hi"
 quote<s from str from var>
-quote<s from str from var2>
+let s from str from var2 be "hello"
+let s from str from var be s from str from var2
+quote<s from str from var>
 
 

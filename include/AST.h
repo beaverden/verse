@@ -18,19 +18,21 @@
 extern int yylineno;
 
 enum Type { 
-    STATEMENTS, 
-    STATEMENT, 
-    DECLARATION, 
-    STRUCT_DECLARATION,
-    EXPRESSION,
-    ASSIGNMENT,
-    VALUE,
-    TYPE,
-    DECL_LIST,
-    INPUT,
-    OUTPUT,
-    VARIABLE_VALUE,
-    IDENTIFIER
+    STATEMENTS = 0, 
+    STATEMENT  = 1, 
+    DECLARATION = 2, 
+    STRUCT_DECLARATION = 3,
+    EXPRESSION = 4,
+    ASSIGNMENT = 5,
+    VALUE = 6,
+    TYPE = 7,
+    DECL_LIST = 8,
+    INPUT = 9,
+    OUTPUT = 10,
+    VARIABLE_VALUE = 11,
+    IDENTIFIER = 12,
+    IF_STATEMENT = 13,
+    WHILE_STATEMENT = 14
 };
 
 enum Operation { 
@@ -45,7 +47,9 @@ enum Operation {
     OP_CONSPIRING,
     OP_DIVIDED,
     OP_REMINDING,
-    OP_EMPOWERING
+    OP_EMPOWERING,
+
+    OP_NOTHING
 };
 
 
@@ -59,6 +63,7 @@ struct Expression
 struct AS_TREE
 {
     Type type;
+    int lineno = -1;
     union
     {
         struct
@@ -66,6 +71,10 @@ struct AS_TREE
             std::string* type;
             void* data;
         } value;
+        struct
+        {
+            AS_TREE* val;
+        } variable_value;
         struct
         {
             AS_TREE* left;
@@ -107,13 +116,20 @@ struct AS_TREE
         } output;
         struct
         {
-            AS_TREE* val;
-        } variable_value;
+            std::string* name;
+            AS_TREE* from;
+        } identifier;
         struct
         {
-            std::vector<std::string*>* ids;
-        } identifier;
-
+            AS_TREE* expr;
+            AS_TREE* stmts1;
+            AS_TREE* stmts2;
+        } if_statement;
+        struct
+        {
+            AS_TREE* expr;
+            AS_TREE* stmts;
+        } while_statement;
     } data;
 };
 
@@ -130,6 +146,8 @@ AS_TREE* make_declaration_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_struct_declaration(std::string* name, AS_TREE* decl_list);
 AS_TREE* make_input(AS_TREE* id);
 AS_TREE* make_output(AS_TREE* expr);
+AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
+AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
 /* PARSER */
 
 /* HANDLER */
@@ -149,11 +167,15 @@ Language::Variable* executeDeclaration(AS_TREE* tree);
 void executeStructDeclaration(AS_TREE* tree);
 void executeAssignment(AS_TREE* tree);
 void executeOutput(AS_TREE* tree);
+Language::Value* executeInput(AS_TREE* tree);
+void executeIf(AS_TREE* tree);
+void executeWhile(AS_TREE* tree);
 
+Language::Variable* getVar(AS_TREE* id);
 /* HANDLER */
 
 void leave();
 int yyerror(const char* s);
-int yyfmterror(const char* fmt, ...);
+int yyfmterror(int lineno, const char* fmt, ...);
 
 #endif

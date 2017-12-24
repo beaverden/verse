@@ -54,6 +54,7 @@
 "none" {return NONE;}
 "one" {return ONE;}
 "twice" {return TWICE;}
+"be" { return BE; }
 
 \"(\\.|[^"\\])*\" { 
         yylval.strvalue = new std::string(yytext); 
@@ -61,7 +62,6 @@
         return STRING;
     }
 
-[ \t]|"the"|"be"|"a"|"an"|"'s" ;
 [_a-zA-Z][_a-zA-Z0-9]* { 
         yylval.strvalue = new std::string(yytext); 
         return ID;
@@ -70,6 +70,7 @@
         yylval.intvalue = new int(atoi(yytext)); 
         return NUMBER;
     }
+[ \t]|"the"|"be"|"a"|"an"|"'s" ;
 \n {yylineno++;}
 . {return yytext[0];}
 

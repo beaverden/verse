@@ -1,5 +1,4 @@
 enter saying str telling <"hey" empowering 5>
-let str be "nope"
 quote <str>
 
 enter whole int telling 5 empowering 20 adding 1

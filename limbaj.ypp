@@ -20,7 +20,7 @@ int yylex(void);
 	Operation 		optype;
 }
 
-%token ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
+%token BE ENTER PROCLAIM LET THERE EQUALLING UPON ADDED ASCEND DESCEND CRY FOR EXEUNT NOT SINCE FROM ASK WHETHER THEN OTHERWISE CHANGES INCREASES DECREASES WHENEVER DOES NONE ONE TWICE 
 
 %token <strvalue>ID TELLING FIXED
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE
@@ -40,6 +40,8 @@ int yylex(void);
 %type <treevalue>expression
 %type <treevalue>input
 %type <treevalue>output
+%type <treevalue>if_statement
+%type <treevalue>while_statement
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDED
@@ -48,7 +50,7 @@ int yylex(void);
 
 %%
 programm: 
-	statements { printf("AS_TREE FINISHED %X\n", $1); executeStatements($1); }
+	statements { executeStatements($1); }
 	;
 
 
@@ -70,6 +72,8 @@ statement:
 	| struct_decl { $$ = $1; }
 	| assign { $$ = $1; }
 	| output { $$ = $1; }
+	| if_statement { $$ = $1; }
+	| while_statement { $$ = $1; }
 	;
 
 complex_identifier:
@@ -105,9 +109,9 @@ var_type:
 
 
 assign:
-	LET complex_identifier expression
+	LET complex_identifier BE expression
 	{
-		$$ = make_assignment($2, $3);
+		$$ = make_assignment($2, $4);
 	}
 	;
 
@@ -173,11 +177,7 @@ expression:
 	| STRING { $$ = make_value("$STR", new std::string(STR($1))); }
 	| BOOL_FALSE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
 	| BOOL_TRUE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
-	| input
-	{
-		//////// TODO FIX
-		$$ = make_value("$INT", new int(INT($1)));
-	}
+	| input { $$ = $1; }
 	;
 
 output:
@@ -191,6 +191,24 @@ input:
 	}
 	;
 
+
+if_statement:
+	ASK WHETHER '<' expression '>' THEN '<' statements '>'  
+	{
+		$$ = make_if($4, $8, nullptr);
+	}
+	| ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+	{
+		$$ = make_if($4, $8, $12);
+	}
+	;
+
+while_statement:
+	SINCE expression '<' statements '>'
+	{
+		$$ = make_while($2, $4);
+	}
+	;
 %%
 
 

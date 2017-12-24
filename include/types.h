@@ -27,6 +27,7 @@ namespace Language
 	{
 		std::string 	type;
 		void* 			data;
+		int lineno;
 	};
 
 	struct Variable
@@ -38,6 +39,7 @@ namespace Language
 		bool 			isConstant;
 		bool			isComplex;
 		void*			data;
+		int lineno;
 	};
 
 	struct ComplexType

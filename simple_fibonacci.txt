@@ -1,0 +1,16 @@
+enter whole start telling 0
+enter whole next telling 1
+enter whole n
+
+summon<n>
+enter whole i telling 0
+enter whole copy
+
+since <i lower than n>
+<
+	let copy be next
+	let next be start adding next
+	let start be copy
+	let i be i adding 1
+>
+quote <start>
