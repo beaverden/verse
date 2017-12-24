@@ -18,23 +18,34 @@
 extern int yylineno;
 
 enum Type { 
-    STATEMENTS = 0, 
-    STATEMENT  = 1, 
-    DECLARATION = 2, 
-    STRUCT_DECLARATION = 3,
-    EXPRESSION = 4,
-    ASSIGNMENT = 5,
-    VALUE = 6,
-    TYPE = 7,
-    DECL_LIST = 8,
-    INPUT = 9,
-    OUTPUT = 10,
-    VARIABLE_VALUE = 11,
-    IDENTIFIER = 12,
-    IF_STATEMENT = 13,
-    WHILE_STATEMENT = 14,
-    INCDEC = 15,
-    FOR_LOOP = 16
+    STATEMENTS          = 0, 
+    STATEMENT           = 1, 
+    DECLARATION         = 2, 
+    STRUCT_DECLARATION  = 3,
+    EXPRESSION          = 4,
+    ASSIGNMENT          = 5,
+    VALUE               = 6,
+    TYPE                = 7,
+    DECL_LIST           = 8,
+    INPUT               = 9,
+    OUTPUT              = 10,
+    VARIABLE_VALUE      = 11,
+    IDENTIFIER          = 12,
+    IF_STATEMENT        = 13,
+    WHILE_STATEMENT     = 14,
+    INCDEC              = 15,
+    FOR_LOOP            = 16,
+
+    BREAK               = 17,
+    CONTINUE            = 18,
+    RETURN              = 19,
+    VOID                = 20,
+
+    FUNCTION_DECL_LIST  = 21,
+    FUNCTION_DECL_ITEM  = 22,
+    FUNCTION_DECL       = 23,
+    FUNCTION_CALL       = 24,
+    EXPRESSION_LIST     = 25
 };
 
 enum Operation { 
@@ -145,6 +156,35 @@ struct AS_TREE
             AS_TREE* assign2;
             AS_TREE* stmts;
         } for_loop;
+        struct
+        {
+            AS_TREE* value;
+        } return_value;
+        struct
+        {
+            std::vector<AS_TREE*>* list;
+        } function_decl_list;
+        struct
+        {
+            std::string* type;
+            std::string* id;
+        } function_decl_item;
+        struct
+        {
+            std::string* id;
+            std::string* returnType;
+            AS_TREE* decl_list;
+            AS_TREE* stmts;
+        } function_decl;
+        struct
+        {
+            std::string* id;
+            AS_TREE* list;
+        } function_call;
+        struct
+        {
+            std::vector<AS_TREE*>* list;
+        } expression_list;
     } data;
 };
 
@@ -165,11 +205,18 @@ AS_TREE* make_output(AS_TREE* expr);
 AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
 AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
 AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
+AS_TREE* make_flow_break(Type type, AS_TREE* expr);
+
+AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val);
+AS_TREE* make_function_decl_item(std::string* type, std::string* id);
+AS_TREE* make_function_declaration(std::string* id, std::string* returnType, AS_TREE* decl_list, AS_TREE* stmts);
+AS_TREE* make_function_call(std::string* id, AS_TREE* list);
+AS_TREE* make_expression_list(AS_TREE* orig, AS_TREE* val);
 /* PARSER */
 
 /* HANDLER */
-void executeStatements(AS_TREE* tree);
-void executeStatement(AS_TREE* tree);
+AS_TREE* executeStatements(AS_TREE* tree);
+AS_TREE* executeStatement(AS_TREE* tree);
 
 Language::Value* executeExpression(AS_TREE* tree);
 Language::Value* executeBool(Language::Value* v1, Language::Value* v2, Operation op);
@@ -181,14 +228,17 @@ Language::Value* executeReminder(Language::Value* first, Language::Value* second
 Language::Value* executeMultiplication(Language::Value* first, Language::Value* second);
 
 Language::Variable* executeDeclaration(AS_TREE* tree);
-void executeStructDeclaration(AS_TREE* tree);
-void executeAssignment(AS_TREE* tree);
-void executeOutput(AS_TREE* tree);
+AS_TREE* executeStructDeclaration(AS_TREE* tree);
+AS_TREE* executeAssignment(AS_TREE* tree);
+AS_TREE* executeOutput(AS_TREE* tree);
 Language::Value* executeInput(AS_TREE* tree);
-void executeIf(AS_TREE* tree);
-void executeWhile(AS_TREE* tree);
-void executeIncDec(AS_TREE* tree);
-void executeFor(AS_TREE* tree);
+AS_TREE* executeIf(AS_TREE* tree);
+AS_TREE* executeWhile(AS_TREE* tree);
+AS_TREE* executeIncDec(AS_TREE* tree);
+AS_TREE* executeFor(AS_TREE* tree);
+AS_TREE* executeFunctionDecl(AS_TREE* tree);
+Language::Value* executeFunction(AS_TREE* tree);
+
 Language::Variable* getVar(AS_TREE* id);
 /* HANDLER */
 

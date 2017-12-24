@@ -13,12 +13,12 @@
 "telling" { return TELLING; }
 "indeed" { yylval.boolvalue = new bool(true); return BOOL_TRUE; }
 "untruth" { yylval.boolvalue = new bool(false); return BOOL_FALSE; }
+"of" { return OF; }
 "quote" {return QUOTE;}
 "enter" {return ENTER;}
 "proclaim" {return PROCLAIM;}
 "let" {return LET;} 
 "there" {return THERE;}
-"equalling" {return EQUALLING;}
 "upon" {return UPON;}
 "descend" {return DESCEND;}
 "ascend" {return ASCEND;}
@@ -54,6 +54,12 @@
 "none" {return NONE;}
 "one" {return ONE;}
 "be" { return BE; }
+"as" { return AS; }
+"break" { return FLOW_BREAK; }
+"free" { return FLOW_FREE; }
+"continue" { return FLOW_CONTINUE; }
+"describe" { return DESCRIBE; }
+"adventure" { return ADVENTURE; }
 
 \"(\\.|[^"\\])*\" { 
         yylval.strvalue = new std::string(yytext); 

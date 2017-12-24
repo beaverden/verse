@@ -47,6 +47,19 @@ namespace Language
 		std::string typeName;
 		std::unordered_map<std::string, Variable*> vars;	
 	};
+
+	struct GlobalContext
+	{
+		bool inLoop = false;
+		bool inFunction = true;
+	};
+
+	struct PrototypeParam
+	{
+		std::string		name;
+		std::string		type;
+	};
+
 }
 
 
