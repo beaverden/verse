@@ -21,7 +21,7 @@ int yylex(void);
 	Operation 		optype;
 }
 
-%token UPON NOT SINCE FROM THEN CHANGES INCREASES DECREASES WHENEVER DOES 
+%token UPON NOT SINCE FROM THEN CHANGES INCREASES DECREASES WHENEVER DOES NUMERIC VERBOSE
 %token <strvalue>ID TELLING FIXED
 %token INT_TYPE STR_TYPE BOOLEAN_TYPE NONE ONE 
 %token <intvalue>NUMBER <strvalue>STRING <boolvalue>BOOL_TRUE <boolvalue>BOOL_FALSE
@@ -53,6 +53,8 @@ int yylex(void);
 %type <treevalue>function_decl_list
 %type <treevalue>function_call
 %type <treevalue>expression_list
+%type <treevalue>verbose
+%type <treevalue>numeric
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDING
@@ -208,6 +210,8 @@ expression:
 	| BOOL_FALSE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| BOOL_TRUE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| input { $$ = $1; }
+	| verbose { $$ = $1; }
+	| numeric { $$ = $1; }
 	| function_call { $$ = $1; }
 	;
 
@@ -219,6 +223,20 @@ input:
 	SUMMON '<' complex_identifier '>'
 	{
 		$$ = make_input($3);
+	}
+	;
+
+verbose:
+	VERBOSE '<' expression '>'
+	{
+		$$ = make_conversion($3, Type::CONV_VERBOSE);
+	}
+	;
+
+numeric:
+	NUMERIC '<' expression '>'
+	{
+		$$ = make_conversion($3, Type::CONV_NUMERIC);
 	}
 	;
 

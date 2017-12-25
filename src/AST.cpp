@@ -172,6 +172,22 @@ AS_TREE* make_input(AS_TREE* id)
     return wrap;
 }
 
+AS_TREE* make_conversion(AS_TREE* expr, Type type)
+{
+    AS_TREE* node = new AS_TREE;
+    node->lineno = yylineno;
+    node->type = type;
+    node->data.conversion.expr = expr;
+
+    AS_TREE* wrap = new AS_TREE;
+    wrap->lineno = yylineno;
+    wrap->type = Type::EXPRESSION;
+    wrap->data.expression.left = node;
+    wrap->data.expression.op = Operation::OP_NOTHING;
+    return wrap; 
+}
+
+
 AS_TREE* make_output(AS_TREE* expr)
 {
     AS_TREE* node = new AS_TREE;

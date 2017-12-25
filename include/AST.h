@@ -44,7 +44,11 @@ enum Type {
     FUNCTION_DECL_LIST  = 21,
     FUNCTION_DECL_ITEM  = 22,
     FUNCTION_DECL       = 23,
-    FUNCTION_CALL       = 24
+    FUNCTION_CALL       = 24,
+    
+    ARRAY               = 25,
+    CONV_VERBOSE        = 26,
+    CONV_NUMERIC        = 27
     
 };
 
@@ -186,6 +190,10 @@ struct AS_TREE
         {
             std::vector<AS_TREE*>* list;
         } expression_list;
+        struct
+        {
+            AS_TREE* expr;
+        } conversion;
     } data;
 };
 
@@ -206,11 +214,13 @@ AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TR
 AS_TREE* make_declaration_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_struct_declaration(std::string* name, AS_TREE* decl_list);
 AS_TREE* make_input(AS_TREE* id);
+AS_TREE* make_conversion(AS_TREE* expr, Type type);
 AS_TREE* make_output(AS_TREE* expr);
 AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
 AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
 AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
 AS_TREE* make_flow_break(Type type, AS_TREE* expr);
+
 
 AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_function_decl_item(std::string* type, std::string* id);

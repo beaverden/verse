@@ -444,6 +444,48 @@ Language::Value* executeInput(AS_TREE* tree)
     return val;
 }
 
+Language::Value* executeConversion(AS_TREE* tree, Type type)
+{
+    Language::Value* ret = new Language::Value;
+    Language::Value* val = executeExpression(tree);
+    if (type == Type::CONV_VERBOSE)
+    {
+        printf("Verbose!\n");
+        ret->type = "$STR";
+        ret->data = (void*)(new std::string());
+        if (val->type == "$INT")
+        {
+            STR(ret->data) = std::to_string(INT(val->data));
+        }
+        else if (val->type == "$STR")
+        {
+            STR(ret->data) = STR(val->data);
+        }
+        else 
+        {
+            yyfmterror(tree->lineno, "Invalid type for verbose conversion");
+        }
+    }
+    else if (type == Type::CONV_NUMERIC)
+    {
+        ret->type = "$INT";
+        ret->data = (void*)(new int());
+        if (val->type == "$INT")
+        {
+            INT(ret->data) = INT(val->data);
+        }
+        else if (val->type == "$STR") {
+            if (STR(val->data) == "")
+            {
+                yyfmterror(tree->lineno, "Can't convert empty string to number");
+            }
+            INT(ret->data) = atoi(STR(val->data).c_str());
+        }
+    }
+    free_val(val);
+    return ret;
+}
+
 AS_TREE* executeIf(AS_TREE* tree)
 {
     Language::Value* val = executeExpression(tree->data.if_statement.expr);
@@ -550,6 +592,7 @@ AS_TREE* executeFunctionDecl(AS_TREE* tree)
 
 Language::Value* executeFunction(AS_TREE* tree)
 {
+    // TODO no parameters function
     std::string id = (*tree->data.function_call.id);
     if (functions.find(id) == functions.end())
     {
@@ -599,16 +642,32 @@ Language::Value* executeFunction(AS_TREE* tree)
     executionContext.push(newContext);
     global.inFunction = true;
     AS_TREE* res = executeStatements(proto->data.function_decl.stmts);
-    global.inFunction = false;
+    if (executionContext.size() == 1)
+    {
+        global.inFunction = false;
+    }
+
     Language::Value* ret;
     if (res->type == Type::RETURN)
     {
         ret = executeExpression(res->data.return_value.value);
+        if (ret->type != (*proto->data.function_decl.returnType))
+        {
+            yyfmterror(res->lineno, "Invalid return type");
+        }
     }
     else
     {
+        if ((*proto->data.function_decl.returnType) != "$VOID")
+        {
+            yyfmterror(res->lineno, "No return statement found");
+        }
         ret = new Language::Value;
         ret->type = "$VOID";
+    }
+    for (auto var : executionContext.top())
+    {
+        free_var(var.second);
     }
     executionContext.pop();
     return ret;
@@ -642,6 +701,11 @@ Language::Value* executeExpression(AS_TREE* tree)
     else if (tree->type == Type::INPUT)
     {
         return executeInput(tree->data.input.input_to);
+    }
+    else if (tree->type == Type::CONV_NUMERIC || 
+             tree->type == Type::CONV_VERBOSE)
+    {
+        return executeConversion(tree->data.conversion.expr, tree->type);
     }
     else if (tree->type == Type::EXPRESSION)
     {

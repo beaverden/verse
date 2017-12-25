@@ -1,13 +1,15 @@
-proclaim t
+describe f1 as whole adventure of <whole b>
 <
-	whole t,
-	saying u
+	exeunt b!
+>
+describe f2 as whole adventure of <whole a>
+<
+	cry for f1<a>
+	quote<a>
+	exeunt a!
 >
 
-enter whole t telling 5
-enter t var
-let u from var be "hello"
-let t from var be 5
-let there be t from var empowering u from var
-quote<t from var>
-quote<u from var>
+enter saying str
+summon<str>
+enter whole n telling numeric<str>
+quote<n empowering n>

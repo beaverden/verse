@@ -1,8 +1,0 @@
-enter saying str telling <"hey" empowering 5>
-quote <str>
-
-enter whole int telling 5 empowering 20 adding 1
-quote<int>
-enter whole newvar telling  <int conspiring 1> empowering <int adding 5>
-quote<int>
-quote<newvar>

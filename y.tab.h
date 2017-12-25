@@ -55,57 +55,59 @@ extern int yydebug;
     DECREASES = 265,
     WHENEVER = 266,
     DOES = 267,
-    ID = 268,
-    TELLING = 269,
-    FIXED = 270,
-    INT_TYPE = 271,
-    STR_TYPE = 272,
-    BOOLEAN_TYPE = 273,
-    NONE = 274,
-    ONE = 275,
-    NUMBER = 276,
-    STRING = 277,
-    BOOL_TRUE = 278,
-    BOOL_FALSE = 279,
-    QUOTE = 280,
-    SUMMON = 281,
-    DIVIDING = 282,
-    REMINDING = 283,
-    ADDING = 284,
-    CONSPIRING = 285,
-    EMPOWERING = 286,
-    DIVIDE = 287,
-    ADDED = 288,
-    EMPOWER = 289,
-    CONSPIRED = 290,
-    REMIND = 291,
-    ASCEND = 292,
-    DESCEND = 293,
-    BOOL_IS = 294,
-    BOOL_UP = 295,
-    BOOL_TO = 296,
-    BOOL_DOWN = 297,
-    BOOL_LOWER = 298,
-    BOOL_GREATER = 299,
-    BOOL_THAN = 300,
-    FLOW_BREAK = 301,
-    FLOW_FREE = 302,
-    FLOW_CONTINUE = 303,
-    EXEUNT = 304,
-    DESCRIBE = 305,
-    ADVENTURE = 306,
-    AS = 307,
-    OF = 308,
-    CRY = 309,
-    FOR = 310,
-    ASK = 311,
-    WHETHER = 312,
-    OTHERWISE = 313,
-    BE = 314,
-    ENTER = 315,
-    PROCLAIM = 316,
-    LET = 317,
-    THERE = 318
+    NUMERIC = 268,
+    VERBOSE = 269,
+    ID = 270,
+    TELLING = 271,
+    FIXED = 272,
+    INT_TYPE = 273,
+    STR_TYPE = 274,
+    BOOLEAN_TYPE = 275,
+    NONE = 276,
+    ONE = 277,
+    NUMBER = 278,
+    STRING = 279,
+    BOOL_TRUE = 280,
+    BOOL_FALSE = 281,
+    QUOTE = 282,
+    SUMMON = 283,
+    DIVIDING = 284,
+    REMINDING = 285,
+    ADDING = 286,
+    CONSPIRING = 287,
+    EMPOWERING = 288,
+    DIVIDE = 289,
+    ADDED = 290,
+    EMPOWER = 291,
+    CONSPIRED = 292,
+    REMIND = 293,
+    ASCEND = 294,
+    DESCEND = 295,
+    BOOL_IS = 296,
+    BOOL_UP = 297,
+    BOOL_TO = 298,
+    BOOL_DOWN = 299,
+    BOOL_LOWER = 300,
+    BOOL_GREATER = 301,
+    BOOL_THAN = 302,
+    FLOW_BREAK = 303,
+    FLOW_FREE = 304,
+    FLOW_CONTINUE = 305,
+    EXEUNT = 306,
+    DESCRIBE = 307,
+    ADVENTURE = 308,
+    AS = 309,
+    OF = 310,
+    CRY = 311,
+    FOR = 312,
+    ASK = 313,
+    WHETHER = 314,
+    OTHERWISE = 315,
+    BE = 316,
+    ENTER = 317,
+    PROCLAIM = 318,
+    LET = 319,
+    THERE = 320
   };
 #endif
 /* Tokens.  */
@@ -119,57 +121,59 @@ extern int yydebug;
 #define DECREASES 265
 #define WHENEVER 266
 #define DOES 267
-#define ID 268
-#define TELLING 269
-#define FIXED 270
-#define INT_TYPE 271
-#define STR_TYPE 272
-#define BOOLEAN_TYPE 273
-#define NONE 274
-#define ONE 275
-#define NUMBER 276
-#define STRING 277
-#define BOOL_TRUE 278
-#define BOOL_FALSE 279
-#define QUOTE 280
-#define SUMMON 281
-#define DIVIDING 282
-#define REMINDING 283
-#define ADDING 284
-#define CONSPIRING 285
-#define EMPOWERING 286
-#define DIVIDE 287
-#define ADDED 288
-#define EMPOWER 289
-#define CONSPIRED 290
-#define REMIND 291
-#define ASCEND 292
-#define DESCEND 293
-#define BOOL_IS 294
-#define BOOL_UP 295
-#define BOOL_TO 296
-#define BOOL_DOWN 297
-#define BOOL_LOWER 298
-#define BOOL_GREATER 299
-#define BOOL_THAN 300
-#define FLOW_BREAK 301
-#define FLOW_FREE 302
-#define FLOW_CONTINUE 303
-#define EXEUNT 304
-#define DESCRIBE 305
-#define ADVENTURE 306
-#define AS 307
-#define OF 308
-#define CRY 309
-#define FOR 310
-#define ASK 311
-#define WHETHER 312
-#define OTHERWISE 313
-#define BE 314
-#define ENTER 315
-#define PROCLAIM 316
-#define LET 317
-#define THERE 318
+#define NUMERIC 268
+#define VERBOSE 269
+#define ID 270
+#define TELLING 271
+#define FIXED 272
+#define INT_TYPE 273
+#define STR_TYPE 274
+#define BOOLEAN_TYPE 275
+#define NONE 276
+#define ONE 277
+#define NUMBER 278
+#define STRING 279
+#define BOOL_TRUE 280
+#define BOOL_FALSE 281
+#define QUOTE 282
+#define SUMMON 283
+#define DIVIDING 284
+#define REMINDING 285
+#define ADDING 286
+#define CONSPIRING 287
+#define EMPOWERING 288
+#define DIVIDE 289
+#define ADDED 290
+#define EMPOWER 291
+#define CONSPIRED 292
+#define REMIND 293
+#define ASCEND 294
+#define DESCEND 295
+#define BOOL_IS 296
+#define BOOL_UP 297
+#define BOOL_TO 298
+#define BOOL_DOWN 299
+#define BOOL_LOWER 300
+#define BOOL_GREATER 301
+#define BOOL_THAN 302
+#define FLOW_BREAK 303
+#define FLOW_FREE 304
+#define FLOW_CONTINUE 305
+#define EXEUNT 306
+#define DESCRIBE 307
+#define ADVENTURE 308
+#define AS 309
+#define OF 310
+#define CRY 311
+#define FOR 312
+#define ASK 313
+#define WHETHER 314
+#define OTHERWISE 315
+#define BE 316
+#define ENTER 317
+#define PROCLAIM 318
+#define LET 319
+#define THERE 320
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -184,7 +188,7 @@ union YYSTYPE
 	std::string* 	strvalue;
 	Operation 		optype;
 
-#line 188 "y.tab.h" /* yacc.c:1909  */
+#line 192 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

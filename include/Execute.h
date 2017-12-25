@@ -22,6 +22,7 @@ AS_TREE* executeStructDeclaration(AS_TREE* tree);
 AS_TREE* executeAssignment(AS_TREE* tree);
 AS_TREE* executeOutput(AS_TREE* tree);
 Language::Value* executeInput(AS_TREE* tree);
+Language::Value* executeConversion(AS_TREE* tree, Type type);
 AS_TREE* executeIf(AS_TREE* tree);
 AS_TREE* executeWhile(AS_TREE* tree);
 AS_TREE* executeIncDec(AS_TREE* tree);

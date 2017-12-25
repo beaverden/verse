@@ -60,6 +60,8 @@
 "continue" { return FLOW_CONTINUE; }
 "describe" { return DESCRIBE; }
 "adventure" { return ADVENTURE; }
+"numeric" { return NUMERIC; }
+"verbose" { return VERBOSE; }
 
 \"(\\.|[^"\\])*\" { 
         yylval.strvalue = new std::string(yytext); 
