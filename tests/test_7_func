@@ -1,22 +1,14 @@
-describe prim as doubting  adventure of <discrete question>
+proclaim s 
 <
-	ask whether <question lower than 2> then
-	<
-		exeunt untruth!
-	>
-	enter whole self telling 2
-	for let self be 2, since self lower than question, let self ascend
-	<
-		ask whether <<question reminding self> is none> then
-		<
-			exeunt untruth!
-		>
-	>
+	whole i,
+	saying str
+>
+
+describe prim as doubting adventure of <whole var>
+<
+	let var be 6	
 	exeunt indeed!
 >
 
-
-enter whole n
-summon<n>
-quote <cry for prim<n>>
-
+enter fixed whole i telling 5
+cry for prim<i>

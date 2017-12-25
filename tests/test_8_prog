@@ -9,7 +9,3 @@ describe f2 as whole adventure of <whole a>
 	exeunt a!
 >
 
-enter saying str
-summon<str>
-enter whole n telling numeric<str>
-quote<n empowering n>

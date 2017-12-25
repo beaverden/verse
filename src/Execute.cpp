@@ -60,6 +60,10 @@ Language::Variable* make_default_variable(std::string type)
         {
             var->data = (void*)(new bool(false));
         }
+        else if (type == "$LIST")
+        {
+            var->data = (void*)(new std::vector<Language::Value*>);
+        }
     }
     else
     {
@@ -136,6 +140,11 @@ Language::Value* copyValue(Language::Variable* old)
             newData = new unsigned char[sizeof(bool)];
             BOOL(newData) = BOOL(old->data);
         }
+        else if (old->type == "$LIST")
+        {
+            newData = new unsigned char[sizeof(std::vector<Language::Value*>)];
+            VALVECTOR(newData) = VALVECTOR(old->data);
+        }
         else if (old->type == "$VOID") 
         {
             // IGNORE   
@@ -145,7 +154,6 @@ Language::Value* copyValue(Language::Variable* old)
     }
     else
     {
-        // TODO complex assign
         yyfmterror(old->lineno, "Can't assign a complex type");
     }
     return newVal;   
@@ -153,7 +161,6 @@ Language::Value* copyValue(Language::Variable* old)
 
 Language::Variable* make_copy(Language::Variable* old)
 {
-    // TODO MAKE PROPER COPY
     unsigned char* newData;
     Language::Variable* newVar = new Language::Variable;
     newVar->type = old->type;
@@ -179,6 +186,11 @@ Language::Variable* make_copy(Language::Variable* old)
         {
             newData = new unsigned char[sizeof(bool)];
             BOOL(newData) = BOOL(old->data);
+        }
+        else if (old->type == "$LIST")
+        {
+            newData = new unsigned char[sizeof(std::vector<Language::Value*>)];
+            VALVECTOR(newData) = VALVECTOR(old->data);
         }
         else if (old->type == "$VOID") 
         {
@@ -274,6 +286,10 @@ AS_TREE* executeStatement(AS_TREE* tree)
         case Type::FUNCTION_DECL:
             return executeFunctionDecl(tree);
             break;
+        case Type::LIST_ADD:
+            return executeListAlter(tree);
+        case Type::LIST_REMOVE:
+            return executeListAlter(tree);
         default:
             yyfmterror(tree->lineno, "Unknown node type!");
     }
@@ -401,12 +417,35 @@ AS_TREE* executeAssignment(AS_TREE* tree)
 
 };
 
+std::string getOutput(Language::Value* val)
+{
+    printf("OK %s\n", val->type.c_str());
+    if (val->type == "$STR") return STR(val->data);
+    else if (val->type == "$INT") return std::to_string(INT(val->data));
+    else if (val->type == "$BOOL") return ((BOOL(val->data) == true) ? "indeed" : "untruth");			
+    else if (val->type == "$LIST")
+    {
+        std::string res = "[";
+        std::vector<Language::Value*>* values = (std::vector<Language::Value*>*)(val->data);
+        for (size_t i = 0; i < values->size() - 1; i++)
+        {
+            Language::Value* v = values->at(i);
+            res += getOutput(values->at(i)) + ", ";
+        }
+        if (values->size() != 0)
+        {
+            res += getOutput(values->back());
+        }
+        res += "]";
+        return res;
+    }
+    else yyfmterror(0, "Invalid type for printing");
+}
+
 AS_TREE* executeOutput(AS_TREE* tree)
 {
     Language::Value* var = executeExpression(tree->data.output.expr);
-    if (var->type == "$STR") printf("[QUOTE] %s\n", STR(var->data).c_str());
-    if (var->type == "$INT") printf("[QUOTE] %d\n", INT(var->data));
-    if (var->type == "$BOOL") printf("[QUOTE] %s\n", (BOOL(var->data) == true) ? "indeed" : "untruth");			
+    std::cout << "[QUOTE] " << getOutput(var) << std::endl;
     free_val(var);
 }
 
@@ -438,7 +477,7 @@ Language::Value* executeInput(AS_TREE* tree)
     }
     else
     {
-        yyfmterror(tree->lineno, "Urecognized type");
+        yyfmterror(tree->lineno, "Can't read into such type");
     }
     Language::Value* val = copyValue(var);
     return val;
@@ -460,6 +499,10 @@ Language::Value* executeConversion(AS_TREE* tree, Type type)
         else if (val->type == "$STR")
         {
             STR(ret->data) = STR(val->data);
+        }
+        else if (val->type == "$LIST")
+        {
+            STR(ret->data) = getOutput(val);
         }
         else 
         {
@@ -590,17 +633,62 @@ AS_TREE* executeFunctionDecl(AS_TREE* tree)
     return make_void();
 }
 
+AS_TREE* executeListAlter(AS_TREE* tree)
+{
+    int* index = tree->data.list_alter.index;
+    Language::Variable* listVar = resolveIdentifier(tree->data.list_alter.id);
+    if (listVar->type != "$LIST")
+    {
+        yyfmterror(tree->lineno, "%s is not a list", listVar->name.c_str());
+    }
+    std::vector<Language::Value*>* list = (std::vector<Language::Value*>*)(listVar->data);
+    int listSize = list->size();
+    if (tree->type == Type::LIST_ADD)
+    {     
+        Language::Value* exprVal = executeExpression(tree->data.list_alter.expr);
+        if (index == nullptr) list->push_back(exprVal);
+        else
+        {
+            if (*index >= listSize)
+            {
+                yyfmterror(tree->lineno, "Invalid insert point at %d", *index);
+            }
+            int real = ((*index % listSize) + listSize ) % listSize;
+            list->insert(list->begin() + real, exprVal);
+        }
+    }
+    else if (tree->type == Type::LIST_REMOVE)
+    {
+        if (*index >= listSize)
+        {
+            yyfmterror(tree->lineno, "Invalid chapter number");
+        }
+        int real = ((*index % listSize) + listSize ) % listSize;
+        list->erase(list->begin() + real);
+    }
+    return make_void();
+}
+
 Language::Value* executeFunction(AS_TREE* tree)
 {
-    // TODO no parameters function
     std::string id = (*tree->data.function_call.id);
     if (functions.find(id) == functions.end())
     {
         yyfmterror(tree->lineno, "Function %s doesn't exist", id.c_str());
     }
     AS_TREE* proto = functions[id];
-    std::vector<AS_TREE*> expr_list = (*tree->data.function_call.list->data.expression_list.list);
-    std::vector<AS_TREE*> param_proto = (*proto->data.function_decl.decl_list->data.function_decl_list.list);
+    std::vector<AS_TREE*> expr_list;
+    
+    if (tree->data.function_call.list != nullptr)
+    {
+        expr_list = (*tree->data.function_call.list->data.expression_list.list);
+    }
+    std::vector<AS_TREE*> param_proto;
+    if (proto->data.function_decl.decl_list != nullptr)
+    {
+        param_proto = (*proto->data.function_decl.decl_list->data.function_decl_list.list);
+    };
+    
     if (expr_list.size() != param_proto.size())
     {
         yyfmterror(tree->lineno, "Function call needs %d params", param_proto.size());
@@ -621,7 +709,7 @@ Language::Value* executeFunction(AS_TREE* tree)
         vv->type = type;
         vv->name = id;
         vv->isConstant = isConstant;
-        vv->isComplex = false;
+        vv->isComplex = v->isComplex;
         vv->data = v->data;
         
         variables.push_back(vv);
@@ -686,12 +774,29 @@ Language::Value* executeExpression(AS_TREE* tree)
         Language::Value* v = new Language::Value;
         v->type = (*tree->data.value.type);
         v->data = tree->data.value.data;
+        if (v->type == "$LIST")
+        {
+            std::vector<AS_TREE*>* list = ((AS_TREE*)(v->data))->data.expression_list.list;
+            std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
+            for (auto expr : (*list))
+            {
+                Language::Value* cVal = executeExpression(expr);
+                vals->push_back(cVal);
+            }
+            v->data = (void*)(vals);
+        }
         return v;
     }
     else if (tree->type == Type::VARIABLE_VALUE)
     {
         Language::Variable* original = resolveIdentifier(tree->data.variable_value.val);
-        Language::Value* newVal = copyValue(original);
+        Language::Variable* copy = make_copy(original);
+        //Language::Value* newVal = copyValue(original);
+        //return newVal;
+        Language::Value* newVal = new Language::Value;
+        newVal->type = copy->type;
+        newVal->data = copy->data;
+        newVal->isComplex = copy->isComplex;
         return newVal;
     }
     else if (tree->type == Type::FUNCTION_CALL)
@@ -818,6 +923,14 @@ Language::Value* executeAddition(Language::Value* first, Language::Value* second
         std::string* val = new std::string;
         (*val) = STR(first->data) + STR(second->data);
         res->data = (void*)val;
+    }
+    else if (first->type == "$LIST" && second->type == "$LIST")
+    {
+        res->type = "$LIST";
+        std::vector<Language::Value*>* v = new std::vector<Language::Value*>;
+        (*v) = VALVECTOR(first->data);
+        v->insert(v->end(), VALVECTOR(second->data).begin(), VALVECTOR(second->data).end());
+        res->data = (void*)(v);
     }
     else
     {

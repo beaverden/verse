@@ -28,7 +28,9 @@ AS_TREE* executeWhile(AS_TREE* tree);
 AS_TREE* executeIncDec(AS_TREE* tree);
 AS_TREE* executeFor(AS_TREE* tree);
 AS_TREE* executeFunctionDecl(AS_TREE* tree);
+AS_TREE* executeListAlter(AS_TREE* tree);
 Language::Value* executeFunction(AS_TREE* tree);
+
 /* STATEMENTS */
 
 /* HELPERS */

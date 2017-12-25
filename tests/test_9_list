@@ -1,0 +1,5 @@
+enter whole d telling 200
+enter book arr telling <book<1, 2, 3 adding 5, d> adding book<6, "hello">>
+
+write book<5,7,6> to arr
+quote<arr>

@@ -62,6 +62,10 @@
 "adventure" { return ADVENTURE; }
 "numeric" { return NUMERIC; }
 "verbose" { return VERBOSE; }
+"book" { return BOOK; }
+"chapter" { return CHAPTER; }
+"write" { return WRITE; }
+"erase" { return ERASE; }
 
 \"(\\.|[^"\\])*\" { 
         yylval.strvalue = new std::string(yytext); 

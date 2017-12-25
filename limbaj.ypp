@@ -33,6 +33,7 @@ int yylex(void);
 %token DESCRIBE ADVENTURE AS OF CRY FOR
 %token ASK WHETHER OTHERWISE
 %token BE ENTER PROCLAIM LET THERE
+%token BOOK CHAPTER WRITE ERASE
 
 %type <treevalue>statements
 %type <treevalue>statement
@@ -117,6 +118,10 @@ var_type:
 	{ 
 		$$ = make_type("$BOOL"); 
 	}
+	| BOOK
+	{
+		$$ = make_type("$LIST");
+	}
 	| ID 
 	{ 
 		$$ = make_type(STR($1)); 
@@ -156,6 +161,18 @@ assign:
 	| LET THERE BE expression REMINDING complex_identifier 
 	{
 		$$ = make_incdec($6, $4, Operation::OP_REMINDING);
+	}
+	| WRITE expression BOOL_TO complex_identifier
+	{
+		$$ = make_list_alter($2, nullptr, $4, Type::LIST_ADD);
+	}
+	| WRITE expression AS CHAPTER NUMBER BOOL_TO complex_identifier
+	{
+		$$ = make_list_alter($2, new int(INT($5)), $7, Type::LIST_ADD);
+	}
+	| ERASE CHAPTER NUMBER FROM complex_identifier
+	{
+		$$ = make_list_alter(nullptr, new int(INT($3)), $5, Type::LIST_REMOVE);
 	}
 	;
 
@@ -209,6 +226,7 @@ expression:
 	| STRING { $$ = make_value(new std::string("$STR"), new std::string(STR($1))); }
 	| BOOL_FALSE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| BOOL_TRUE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
+	| BOOK '<' expression_list '>' { $$ = make_value(new std::string("$LIST"), $3); }
 	| input { $$ = $1; }
 	| verbose { $$ = $1; }
 	| numeric { $$ = $1; }
@@ -276,8 +294,12 @@ flow_break:
 function_decl_item:
 	var_type ID 
 	{
-		// TODO WHAT IF IT IS FIXED and has default value?
-		$$ = make_function_decl_item(new std::string(STR($1)), new std::string(STR($2)));
+		$$ = make_function_decl_item(new std::string(STR($1)), new std::string(STR($2)), false);
+	}
+	| FIXED var_type ID
+	{
+		// TODO Should have value
+		$$ = make_function_decl_item(new std::string(STR($2)), new std::string(STR($3)), true);
 	}
 	;
 
@@ -299,12 +321,22 @@ function_decl:
 				new std::string(STR($2)), 
 				new std::string(STR($4)), $8, $11);
 	}
+	| DESCRIBE ID AS var_type ADVENTURE '<' statements '>'
+	{
+		$$ = make_function_declaration(
+				new std::string(STR($2)), 
+				new std::string(STR($4)), nullptr, $7);		
+	}
 	;
 
 function_call:
 	CRY FOR ID '<' expression_list '>'
 	{
 		$$ = make_function_call(new std::string(STR($3)), $5);
+	}
+	| CRY FOR ID '!'
+	{
+		$$ = make_function_call(new std::string(STR($3)), nullptr);
 	}
 	;
 

@@ -19,6 +19,7 @@
 #define INT(ptr) (*(int*)(ptr))
 #define BOOL(ptr) (*(bool*)(ptr))
 #define VARVECTOR(ptr) (*(std::vector<Language::Variable*>*)(ptr))
+#define VALVECTOR(ptr) (*(std::vector<Language::Value*>*)(ptr))
 #define AS_VECTOR(data) (*(std::vector<AS_TREE*>*)(data))
 
 namespace Language
@@ -27,7 +28,8 @@ namespace Language
 	{
 		std::string 	type;
 		void* 			data;
-		int lineno;
+		bool 			isComplex = false;
+		int 			lineno;
 	};
 
 	struct Variable
@@ -55,7 +57,7 @@ namespace Language
 
 	struct GlobalContext
 	{
-		bool inLoop = false;
+		bool inLoop 	= false;
 		bool inFunction = false;
 	};
 

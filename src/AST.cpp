@@ -239,13 +239,14 @@ AS_TREE* make_flow_break(Type type, AS_TREE* expr)
     return node;
 }
 
-AS_TREE* make_function_decl_item(std::string* type, std::string* id)
+AS_TREE* make_function_decl_item(std::string* type, std::string* id, bool isConst)
 {
     AS_TREE* node = new AS_TREE;
     node->lineno = yylineno;
     node->type = Type::FUNCTION_DECL_ITEM;
     node->data.function_decl_item.type = type;
     node->data.function_decl_item.id = id;
+    node->data.function_decl_item.isConstant = isConst;
     return node;
 }
 
@@ -274,13 +275,20 @@ AS_TREE* make_function_declaration(std::string* id, std::string* returnType, AS_
     
     #ifdef DEBUG_MODE
         printf("Function declaration!\n");
-        std::vector<AS_TREE*> v = (*decl_list->data.function_decl_list.list);
-        for (auto p : v)
+        if (decl_list != nullptr)
         {
-            printf("\tDECL: %s %s\n", p->data.function_decl_item.type->c_str(),
-                p->data.function_decl_item.id->c_str());
+            std::vector<AS_TREE*> v = (*decl_list->data.function_decl_list.list);
+            for (auto p : v)
+            {
+                printf("\tDECL: %s %s\n", p->data.function_decl_item.type->c_str(),
+                    p->data.function_decl_item.id->c_str());
+            }
+            printf("\n");
         }
-        printf("\n");
+        else
+        {
+            printf("\tNo parameters\n");
+        }
     #endif
     return node;
 }
@@ -312,4 +320,16 @@ AS_TREE* make_function_call(std::string* id, AS_TREE* list)
     wrap->data.expression.left = node;
     wrap->data.expression.op = Operation::OP_NOTHING;
     return wrap;
+}
+
+AS_TREE* make_list_alter(AS_TREE* expr, int* index, AS_TREE* id, Type type)
+{
+    AS_TREE* node = new AS_TREE;
+    node->lineno = yylineno;
+    node->type = type;
+    node->data.list_alter.expr = expr;
+    node->data.list_alter.index = index;
+    node->data.list_alter.id = id;
+    node->data.list_alter.type = type; 
+    return node;
 }
