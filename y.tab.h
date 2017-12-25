@@ -176,7 +176,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 15 "limbaj.ypp" /* yacc.c:1909  */
+#line 16 "limbaj.ypp" /* yacc.c:1909  */
 
 	AS_TREE* 		treevalue;
 	int* 			intvalue;

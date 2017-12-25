@@ -34,31 +34,38 @@ namespace Language
 	{
 		std::string 	type;
 		std::string		name;
-		std::string		scope;
-		std::string 	scopedName;
 		bool 			isConstant;
 		bool			isComplex;
 		void*			data;
 		int lineno;
 	};
 
+	struct PrototypeParam
+	{
+		bool 			isConstant;
+		std::string		name;
+		std::string		type;
+	};
+
 	struct ComplexType
 	{
 		std::string typeName;
-		std::unordered_map<std::string, Variable*> vars;	
+		std::unordered_map<std::string, PrototypeParam> vars;
 	};
 
 	struct GlobalContext
 	{
 		bool inLoop = false;
-		bool inFunction = true;
+		bool inFunction = false;
 	};
 
-	struct PrototypeParam
+	struct Structure
 	{
-		std::string		name;
-		std::string		type;
+		std::map<std::string, Language::Variable*> vars;
 	};
+
+	
+
 
 }
 

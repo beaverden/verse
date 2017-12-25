@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "include/types.h"
 #include "include/AST.h"
+#include "include/Execute.h"
 
 #define YYDEBUG 1
 
@@ -39,7 +40,6 @@ int yylex(void);
 %type <strvalue>var_type
 %type <treevalue>assign
 %type <treevalue>declaration
-%type <treevalue>decl_list
 %type <treevalue>struct_decl
 %type <treevalue>expression
 %type <treevalue>input
@@ -129,11 +129,11 @@ assign:
 	}
 	| LET complex_identifier ASCEND
 	{
-		$$ = make_incdec($2, make_value("$INT", new int(1)), Operation::OP_ADDING);
+		$$ = make_incdec($2, make_value(new std::string("$INT"), new int(1)), Operation::OP_ADDING);
 	}
 	| LET complex_identifier DESCEND
 	{
-		$$ = make_incdec($2, make_value("$INT", new int(1)), Operation::OP_CONSPIRING);
+		$$ = make_incdec($2, make_value(new std::string("$INT"), new int(1)), Operation::OP_CONSPIRING);
 	}
 	| LET THERE BE expression ADDED BOOL_TO complex_identifier 
 	{
@@ -177,22 +177,8 @@ declaration:
 	;
 
 
-
-decl_list:
-	declaration
-	{
-		$$ = make_declaration_list(nullptr, $1);
-	}
-	| decl_list ',' declaration
-	{
-		$$ = make_declaration_list($1, $3);
-	}
-	;
-
-
-
 struct_decl:	
-	PROCLAIM ID '<' decl_list '>'
+	PROCLAIM ID '<' function_decl_list '>'
 	{
 		$$ = make_struct_declaration(new std::string(STR($2)), $4);
 	}
@@ -215,12 +201,12 @@ expression:
 	| expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_LOWEREQ);}
 	| expression BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression { $$ = make_expression($1, $6, Operation::OP_GREATEREQ);}
 	| complex_identifier { $$ = make_value($1); }
-	| NONE { $$ = make_value("$INT", new int(0)); }
-	| ONE { $$ = make_value("$INT", new int(1)); }
-	| NUMBER { $$ = make_value("$INT", new int(INT($1))); }
-	| STRING { $$ = make_value("$STR", new std::string(STR($1))); }
-	| BOOL_FALSE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
-	| BOOL_TRUE { $$ = make_value("$BOOL", new bool(BOOL($1))); }
+	| NONE { $$ = make_value(new std::string("$INT"), new int(0)); }
+	| ONE { $$ = make_value(new std::string("$INT"), new int(1)); }
+	| NUMBER { $$ = make_value(new std::string("$INT"), new int(INT($1))); }
+	| STRING { $$ = make_value(new std::string("$STR"), new std::string(STR($1))); }
+	| BOOL_FALSE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
+	| BOOL_TRUE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| input { $$ = $1; }
 	| function_call { $$ = $1; }
 	;
@@ -256,9 +242,9 @@ while_statement:
 	;
 
 for_statement:
-	FOR assign ',' expression ',' assign '<' statements '>'
+	FOR assign ',' SINCE expression ',' assign '<' statements '>'
 	{
-		$$ = make_for($2, $4, $6, $8);
+		$$ = make_for($2, $5, $7, $9);
 	} 
 	;
 
@@ -272,6 +258,7 @@ flow_break:
 function_decl_item:
 	var_type ID 
 	{
+		// TODO WHAT IF IT IS FIXED and has default value?
 		$$ = make_function_decl_item(new std::string(STR($1)), new std::string(STR($2)));
 	}
 	;

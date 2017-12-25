@@ -1,9 +1,22 @@
-describe test as  whole adventure of <whole a, whole b, whole c>
+describe prim as doubting  adventure of <discrete question>
 <
-	quote <a>
-	quote <b>
-	quote <c>
+	ask whether <question lower than 2> then
+	<
+		exeunt untruth!
+	>
+	enter whole self telling 2
+	for let self be 2, since self lower than question, let self ascend
+	<
+		ask whether <<question reminding self> is none> then
+		<
+			exeunt untruth!
+		>
+	>
+	exeunt indeed!
 >
 
-enter whole d telling 5
-cry for test<1, 2, d>
+
+enter whole n
+summon<n>
+quote <cry for prim<n>>
+

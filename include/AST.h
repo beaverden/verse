@@ -26,7 +26,7 @@ enum Type {
     ASSIGNMENT          = 5,
     VALUE               = 6,
     TYPE                = 7,
-    DECL_LIST           = 8,
+    EXPRESSION_LIST     = 8,
     INPUT               = 9,
     OUTPUT              = 10,
     VARIABLE_VALUE      = 11,
@@ -44,8 +44,8 @@ enum Type {
     FUNCTION_DECL_LIST  = 21,
     FUNCTION_DECL_ITEM  = 22,
     FUNCTION_DECL       = 23,
-    FUNCTION_CALL       = 24,
-    EXPRESSION_LIST     = 25
+    FUNCTION_CALL       = 24
+    
 };
 
 enum Operation { 
@@ -166,6 +166,7 @@ struct AS_TREE
         } function_decl_list;
         struct
         {
+            bool isConstant;
             std::string* type;
             std::string* id;
         } function_decl_item;
@@ -189,12 +190,16 @@ struct AS_TREE
 };
 
 /* PARSER */
+AS_TREE* make_break();
+AS_TREE* make_continue();
+AS_TREE* make_return(AS_TREE* expr);
+AS_TREE* make_void();
 std::string* make_type(std::string type);
 AS_TREE* make_statements(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_assignment(AS_TREE* var, AS_TREE* value);
 AS_TREE* make_incdec(AS_TREE* var, AS_TREE* delta, Operation op);
 AS_TREE* make_expression(AS_TREE* exp1, AS_TREE* exp2, Operation op);
-AS_TREE* make_value(std::string type, void* data);
+AS_TREE* make_value(std::string* type, void* data);
 AS_TREE* make_value(AS_TREE* val);
 AS_TREE* make_identifier(AS_TREE* orig, std::string* name);
 AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TREE* value);
@@ -214,36 +219,5 @@ AS_TREE* make_function_call(std::string* id, AS_TREE* list);
 AS_TREE* make_expression_list(AS_TREE* orig, AS_TREE* val);
 /* PARSER */
 
-/* HANDLER */
-AS_TREE* executeStatements(AS_TREE* tree);
-AS_TREE* executeStatement(AS_TREE* tree);
-
-Language::Value* executeExpression(AS_TREE* tree);
-Language::Value* executeBool(Language::Value* v1, Language::Value* v2, Operation op);
-Language::Value* executeMath(Language::Value* v1, Language::Value* v2, Operation op);
-Language::Value* executeAddition(Language::Value* first, Language::Value* second);
-Language::Value* executeSubstraction(Language::Value* first, Language::Value* second);
-Language::Value* executeDivision(Language::Value* first, Language::Value* second);
-Language::Value* executeReminder(Language::Value* first, Language::Value* second);
-Language::Value* executeMultiplication(Language::Value* first, Language::Value* second);
-
-Language::Variable* executeDeclaration(AS_TREE* tree);
-AS_TREE* executeStructDeclaration(AS_TREE* tree);
-AS_TREE* executeAssignment(AS_TREE* tree);
-AS_TREE* executeOutput(AS_TREE* tree);
-Language::Value* executeInput(AS_TREE* tree);
-AS_TREE* executeIf(AS_TREE* tree);
-AS_TREE* executeWhile(AS_TREE* tree);
-AS_TREE* executeIncDec(AS_TREE* tree);
-AS_TREE* executeFor(AS_TREE* tree);
-AS_TREE* executeFunctionDecl(AS_TREE* tree);
-Language::Value* executeFunction(AS_TREE* tree);
-
-Language::Variable* getVar(AS_TREE* id);
-/* HANDLER */
-
-void leave();
-int yyerror(const char* s);
-int yyfmterror(int lineno, const char* fmt, ...);
 
 #endif

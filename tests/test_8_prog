@@ -1,0 +1,13 @@
+proclaim t
+<
+	whole t,
+	saying u
+>
+
+enter whole t telling 5
+enter t var
+let u from var be "hello"
+let t from var be 5
+let there be t from var empowering u from var
+quote<t from var>
+quote<u from var>
