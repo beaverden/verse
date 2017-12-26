@@ -41,6 +41,26 @@ void addVariable(Language::Variable* var)
 void free_var(Language::Variable* val) {}
 void free_val(Language::Value* val) {}
 
+void printIntList(Language::Value* l, int depth = 0)
+{
+    if (l->type == "$INT")
+    {
+        for (int i = 0; i < depth; i++) printf("\t");
+        printf("INT: %d\n", INT(l->data));
+    }
+    else if (l->type == "$LIST")
+    {
+        for (int i = 0; i < depth; i++) printf("\t");
+        printf("LIST OF\n");
+        std::vector<Language::Value*>* vals = (std::vector<Language::Value*>*)(l->data);
+        for (auto p : (*vals))
+        {
+            printIntList(p, depth + 1);
+        }
+    }
+    else printf("oooups\n");
+}
+
 Language::Variable* make_default_variable(std::string type)
 {
     Language::Variable* var = new Language::Variable;
@@ -159,6 +179,50 @@ Language::Value* copyValue(Language::Variable* old)
     return newVal;   
 }
 
+Language::Value* make_val_copy(Language::Value* old)
+{
+    unsigned char* newData;
+    Language::Value* newVal = new Language::Value;
+    newVal->type = old->type;
+    newVal->isComplex = old->isComplex;
+    if (old->type.at(0) == '$')
+    {
+        if (old->type == "$INT")
+        {
+            newData = new unsigned char[sizeof(int)];
+            INT(newData) = INT(old->data);
+        }
+        else if (old->type == "$STR") 
+        {
+            std::string* newStr = new std::string;
+            (*newStr) = STR(old->data);
+            newData = (unsigned char*)(newStr);
+        }
+        else if (old->type == "$BOOL") 
+        {
+            newData = new unsigned char[sizeof(bool)];
+            BOOL(newData) = BOOL(old->data);
+        }
+        else if (old->type == "$LIST")
+        {
+            std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
+            for (auto ptr : VALVECTOR(old->data))
+            {
+                Language::Value* vcop = make_val_copy(ptr);
+                vals->push_back(vcop);
+            }
+            newData = (unsigned char*)(vals);
+        }   
+        else if (old->type == "$VOID") 
+        {
+            // IGNORE   
+        }
+        else yyfmterror(-1, "Invalid copy type");
+        newVal->data = (void*)(newData);     
+    }
+    return newVal;
+}
+
 Language::Variable* make_copy(Language::Variable* old)
 {
     unsigned char* newData;
@@ -167,7 +231,6 @@ Language::Variable* make_copy(Language::Variable* old)
     newVar->name = old->name;
     newVar->isConstant = old->isConstant;
     newVar->isComplex = old->isComplex;
-
     if (!old->isComplex)
     {       
         if (old->type == "$INT")
@@ -189,8 +252,13 @@ Language::Variable* make_copy(Language::Variable* old)
         }
         else if (old->type == "$LIST")
         {
-            newData = new unsigned char[sizeof(std::vector<Language::Value*>)];
-            VALVECTOR(newData) = VALVECTOR(old->data);
+            std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
+            for (auto ptr : VALVECTOR(old->data))
+            {
+                Language::Value* vcop = make_val_copy(ptr);
+                vals->push_back(vcop);
+            }
+            newData = (unsigned char*)(vals);
         }
         else if (old->type == "$VOID") 
         {
@@ -419,7 +487,6 @@ AS_TREE* executeAssignment(AS_TREE* tree)
 
 std::string getOutput(Language::Value* val)
 {
-    printf("OK %s\n", val->type.c_str());
     if (val->type == "$STR") return STR(val->data);
     else if (val->type == "$INT") return std::to_string(INT(val->data));
     else if (val->type == "$BOOL") return ((BOOL(val->data) == true) ? "indeed" : "untruth");			
@@ -489,7 +556,6 @@ Language::Value* executeConversion(AS_TREE* tree, Type type)
     Language::Value* val = executeExpression(tree);
     if (type == Type::CONV_VERBOSE)
     {
-        printf("Verbose!\n");
         ret->type = "$STR";
         ret->data = (void*)(new std::string());
         if (val->type == "$INT")
@@ -633,6 +699,7 @@ AS_TREE* executeFunctionDecl(AS_TREE* tree)
     return make_void();
 }
 
+
 AS_TREE* executeListAlter(AS_TREE* tree)
 {
     int* index = tree->data.list_alter.index;
@@ -771,6 +838,7 @@ Language::Value* executeExpression(AS_TREE* tree)
     if (tree == nullptr) return nullptr;
     if (tree->type == Type::VALUE)
     {
+        
         Language::Value* v = new Language::Value;
         v->type = (*tree->data.value.type);
         v->data = tree->data.value.data;
@@ -780,23 +848,28 @@ Language::Value* executeExpression(AS_TREE* tree)
             std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
             for (auto expr : (*list))
             {
+                
                 Language::Value* cVal = executeExpression(expr);
                 vals->push_back(cVal);
             }
             v->data = (void*)(vals);
         }
+        
         return v;
     }
     else if (tree->type == Type::VARIABLE_VALUE)
     {
         Language::Variable* original = resolveIdentifier(tree->data.variable_value.val);
+        Language::Value* vv = new Language::Value;
+        vv->type = original->type;
+        vv->data = original->data;
         Language::Variable* copy = make_copy(original);
-        //Language::Value* newVal = copyValue(original);
-        //return newVal;
         Language::Value* newVal = new Language::Value;
+
         newVal->type = copy->type;
         newVal->data = copy->data;
         newVal->isComplex = copy->isComplex;
+        
         return newVal;
     }
     else if (tree->type == Type::FUNCTION_CALL)

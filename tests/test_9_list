@@ -1,5 +1,11 @@
-enter whole d telling 200
-enter book arr telling <book<1, 2, 3 adding 5, d> adding book<6, "hello">>
+proclaim type
+<
+	book b,
+	whole l
+>
 
-write book<5,7,6> to arr
-quote<arr>
+enter type var
+let b from var be book<1,2,3, book<5,8, book<1,2>>>
+let l from var be 5
+
+quote<verbose<b from var> adding " " adding verbose<l from var>>
