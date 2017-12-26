@@ -4,10 +4,21 @@ as a final assignment for the [Formal Languages, Automata and Compilers](https:/
 
 It was made using LEX, YACC and works only thanks to unknown magic unicorn power.
 
+  * Working examples can be found in `programs/`
   * Please note that this language is our first experience in parser and interpreter design and is not intended for any practical use.
   * Also consult the list of bugs (I wish there wasn't any).
   * Any string inside "[  ]" is meant to be taken as a regular expression. [type] means something like int or string and [identifier] would mean "_HolyHandGrenade" or "var".
   * Language lacks some important features that are not implemented now.
+
+## Running
+While having flex and bison installed, run `make`
+
+This will generate a executable `limbaj.out`.
+
+Run with a file name as parameter to get the output.
+```
+./limbaj.out programs/gcd.txt
+```
 
 ## Primitive types
 There are four primitive types, any other types are composed of them.
