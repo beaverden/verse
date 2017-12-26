@@ -1,0 +1,17 @@
+describe revelation as whole adventure of <whole darkness, whole light>
+<
+	ask whether <light is none> then
+	<
+		exeunt darkness!
+	>
+	otherwise
+	<
+		exeunt cry for revelation<light, darkness reminding light>!
+	>
+>
+
+enter whole darkness
+enter whole light
+summon<darkness>
+summon<light>
+quote<cry for revelation<darkness, light>>

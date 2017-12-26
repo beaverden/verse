@@ -4,9 +4,15 @@ proclaim tt
 	whole j
 >
 
+describe func as whole adventure of <tt var>
+<
+	quote <i from var>
+	exeunt 0!
+>
+
 enter tt var
 let i from var be 1
 let j from var be 2
 enter book arr
 write chapter var to arr
-quote<i from chapter 0 of arr>
+cry for func<chapter 0 of arr>

@@ -38,27 +38,32 @@ void addVariable(Language::Variable* var)
     }
 }
 
-void free_var(Language::Variable* val) {}
+void free_var(Language::Variable* val) 
+{
+    // TODO Implement (fuck memory management)
+}
 void free_val(Language::Value* val) {}
 
 void printIntList(Language::Value* l, int depth = 0)
 {
-    if (l->type == "$INT")
-    {
-        for (int i = 0; i < depth; i++) printf("\t");
-        printf("INT: %d\n", INT(l->data));
-    }
-    else if (l->type == "$LIST")
-    {
-        for (int i = 0; i < depth; i++) printf("\t");
-        printf("LIST OF\n");
-        std::vector<Language::Value*>* vals = (std::vector<Language::Value*>*)(l->data);
-        for (auto p : (*vals))
+    #ifdef DEBUG_MODE
+        if (l->type == "$INT")
         {
-            printIntList(p, depth + 1);
+            for (int i = 0; i < depth; i++) printf("\t");
+            printf("INT: %d\n", INT(l->data));
         }
-    }
-    else printf("oooups\n");
+        else if (l->type == "$LIST")
+        {
+            for (int i = 0; i < depth; i++) printf("\t");
+            printf("LIST OF\n");
+            std::vector<Language::Value*>* vals = (std::vector<Language::Value*>*)(l->data);
+            for (auto p : (*vals))
+            {
+                printIntList(p, depth + 1);
+            }
+        }
+        else printf("Not a correct type\n");
+    #endif
 }
 
 Language::Variable* make_default_variable(std::string type)
@@ -783,7 +788,7 @@ Language::Value* executeFunction(AS_TREE* tree)
         Language::Value* v = executeExpression(expr);
         if (v->type != type)
         {
-            yyfmterror(tree->lineno, "Invalid [%d] parameter type for function %s", paramNo+1, id.c_str());
+            yyfmterror(tree->lineno, "Invalid [%d] parameter type [%s] for function", paramNo+1, id.c_str());
         }
         Language::Variable* vv = new Language::Variable;
         vv->type = type;
