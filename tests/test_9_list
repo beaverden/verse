@@ -1,11 +1,12 @@
-proclaim type
+proclaim tt
 <
-	book b,
-	whole l
+	whole i,
+	whole j
 >
 
-enter type var
-let b from var be book<1,2,3, book<5,8, book<1,2>>>
-let l from var be 5
-
-quote<verbose<b from var> adding " " adding verbose<l from var>>
+enter tt var
+let i from var be 1
+let j from var be 2
+enter book arr
+write chapter var to arr
+quote<i from chapter 0 of arr>

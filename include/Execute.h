@@ -38,9 +38,9 @@ Language::Variable* resolveIdentifier(AS_TREE* id);
 Language::Variable* getVariable(std::string name);
 void addVariable(Language::Variable* var);
 Language::Variable* make_default_variable(std::string type);
-Language::Value* copyValue(Language::Variable* old);
 Language::Variable* make_copy(Language::Variable* old);
-
+Language::Value* make_val_copy_of_var(Language::Variable* old);
+Language::Value* make_val_copy(Language::Value* old);
 void free_var(Language::Variable* var);
 void free_val(Language::Value* val);
 /* HELPERS */

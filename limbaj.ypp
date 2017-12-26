@@ -33,7 +33,7 @@ int yylex(void);
 %token DESCRIBE ADVENTURE AS OF CRY FOR
 %token ASK WHETHER OTHERWISE
 %token BE ENTER PROCLAIM LET THERE
-%token BOOK CHAPTER WRITE ERASE
+%token BOOK CHAPTER WRITE ERASE PAGE
 
 %type <treevalue>statements
 %type <treevalue>statement
@@ -102,6 +102,10 @@ complex_identifier:
 	{
 		$$ = make_identifier($3, new std::string(STR($1)));
 	}
+	| CHAPTER expression OF complex_identifier
+	{
+		$$ = make_indexer($4, $2);
+	}
 	;
 
 
@@ -162,17 +166,17 @@ assign:
 	{
 		$$ = make_incdec($6, $4, Operation::OP_REMINDING);
 	}
-	| WRITE expression BOOL_TO complex_identifier
+	| WRITE CHAPTER expression BOOL_TO complex_identifier
 	{
-		$$ = make_list_alter($2, nullptr, $4, Type::LIST_ADD);
+		$$ = make_list_alter($3, nullptr, $5, Type::LIST_ADD);
 	}
-	| WRITE expression AS CHAPTER NUMBER BOOL_TO complex_identifier
+	| WRITE expression AS CHAPTER expression BOOL_TO complex_identifier
 	{
-		$$ = make_list_alter($2, new int(INT($5)), $7, Type::LIST_ADD);
+		$$ = make_list_alter($2, $5, $7, Type::LIST_ADD);
 	}
-	| ERASE CHAPTER NUMBER FROM complex_identifier
+	| ERASE CHAPTER expression OF complex_identifier
 	{
-		$$ = make_list_alter(nullptr, new int(INT($3)), $5, Type::LIST_REMOVE);
+		$$ = make_list_alter(nullptr, $3, $5, Type::LIST_REMOVE);
 	}
 	;
 

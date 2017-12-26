@@ -29,6 +29,7 @@ namespace Language
 		std::string 	type;
 		void* 			data;
 		bool 			isComplex = false;
+		bool			isConstant = false;
 		int 			lineno;
 	};
 

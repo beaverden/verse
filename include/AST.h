@@ -51,7 +51,8 @@ enum Type {
     CONV_NUMERIC        = 27,
 
     LIST_ADD            = 28,
-    LIST_REMOVE         = 29
+    LIST_REMOVE         = 29,
+    INDEXER             = 30
     
 };
 
@@ -141,6 +142,11 @@ struct AS_TREE
         } identifier;
         struct
         {
+            AS_TREE* index;
+            AS_TREE* from;
+        } indexer;
+        struct
+        {
             AS_TREE* expr;
             AS_TREE* stmts1;
             AS_TREE* stmts2;
@@ -200,7 +206,7 @@ struct AS_TREE
         struct
         {
             AS_TREE* expr;
-            int* index;
+            AS_TREE* index;
             AS_TREE* id;
             Type type;
         } list_alter;
@@ -220,6 +226,7 @@ AS_TREE* make_expression(AS_TREE* exp1, AS_TREE* exp2, Operation op);
 AS_TREE* make_value(std::string* type, void* data);
 AS_TREE* make_value(AS_TREE* val);
 AS_TREE* make_identifier(AS_TREE* orig, std::string* name);
+AS_TREE* make_indexer(AS_TREE* orig, AS_TREE* index);
 AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TREE* value);
 AS_TREE* make_declaration_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_struct_declaration(std::string* name, AS_TREE* decl_list);
@@ -230,7 +237,7 @@ AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
 AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
 AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
 AS_TREE* make_flow_break(Type type, AS_TREE* expr);
-AS_TREE* make_list_alter(AS_TREE* expr, int* index, AS_TREE* id, Type type);
+AS_TREE* make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type);
 
 AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_function_decl_item(std::string* type, std::string* id, bool isConst);

@@ -107,77 +107,75 @@ Language::Variable* make_default_variable(std::string type)
 
 Language::Variable* resolveIdentifier(AS_TREE* tree)
 {
-    if (tree->data.identifier.from == nullptr)
+    if (tree->type == Type::IDENTIFIER)
     {
-        std::string name = *(tree->data.identifier.name);
-        Language::Variable* v = getVariable(name);
-        if (v == nullptr) 
+        if (tree->data.identifier.from == nullptr)
         {
-            yyfmterror(tree->lineno, "Variable %s doesn't exist", name.c_str());
+            std::string name = *(tree->data.identifier.name);
+            Language::Variable* v = getVariable(name);
+            if (v == nullptr) 
+            {
+                yyfmterror(tree->lineno, "Variable %s doesn't exist", name.c_str());
+            }
+            return v;
         }
-        return v;
-    }
-    else 
-    {
-        Language::Variable* var = resolveIdentifier(tree->data.identifier.from);
-        if (!var->isComplex)
+        else 
         {
-            yyfmterror(tree->lineno, "Variable %s is not complex", var->name.c_str());
-        }
+            Language::Variable* var = resolveIdentifier(tree->data.identifier.from);
+            if (!var->isComplex)
+            {
+                yyfmterror(tree->lineno, "Variable %s is not complex", var->name.c_str());
+            }
 
-        Language::Structure* typ = (Language::Structure*)(var->data);
-        std::string name = (*tree->data.identifier.name);
-        if (typ->vars.find(name) == typ->vars.end())
-        {
-            yyfmterror(tree->lineno, "Variable %s has no member %s", var->name.c_str(), name.c_str());
+            Language::Structure* typ = (Language::Structure*)(var->data);
+            std::string name = (*tree->data.identifier.name);
+            if (typ->vars.find(name) == typ->vars.end())
+            {
+                yyfmterror(tree->lineno, "Variable %s has no member %s", var->name.c_str(), name.c_str());
+            }
+            return typ->vars[name];
         }
-        return typ->vars[name];
+    }
+    else if (tree->type == Type::INDEXER)
+    {
+        Language::Variable* var = resolveIdentifier(tree->data.indexer.from);
+        Language::Value* indexVal = executeExpression(tree->data.indexer.index);
+        if (indexVal->type != "$INT")
+        {
+            yyfmterror(tree->lineno, "Index type not integer");
+        }
+        int index = INT(indexVal->data);
+        if (var->type != "$LIST")
+        {
+            yyfmterror(tree->lineno, "Cannot index this type");
+        }
+        std::vector<Language::Value*>* list = (std::vector<Language::Value*>*)(var->data);
+        int listSize = list->size();
+        if ((index >= listSize) ||
+            (index < 0 && -1*index > listSize) ||
+            (listSize == 0))
+        {
+            yyfmterror(tree->lineno, "Array out of bounds [%d]", index);
+        }
+        int real = ((index % listSize) + listSize) % listSize;
+        Language::Variable* ref = new Language::Variable;
+        Language::Value* val = list->at(real);
+        ref->isConstant = val->isConstant;
+        ref->type = val->type;
+        ref->data = val->data;
+        ref->isComplex = val->isComplex;
+        return ref;
     }
 }
 
-Language::Value* copyValue(Language::Variable* old)
+Language::Value* make_val_copy_of_var(Language::Variable* old)
 {
-    unsigned char* newData;
-    Language::Value* newVal = new Language::Value;
-    newVal->type = old->type;
-
-    if (!old->isComplex)
-    {       
-        if (old->type == "$INT")
-        {
-            newData = new unsigned char[sizeof(int)];
-            INT(newData) = INT(old->data);
-            
-        }
-        else if (old->type == "$STR") 
-        {
-            std::string* newStr = new std::string;
-            (*newStr) = STR(old->data);
-            newData = (unsigned char*)(newStr);
-        }
-        else if (old->type == "$BOOL") 
-        {
-            newData = new unsigned char[sizeof(bool)];
-            BOOL(newData) = BOOL(old->data);
-        }
-        else if (old->type == "$LIST")
-        {
-            newData = new unsigned char[sizeof(std::vector<Language::Value*>)];
-            VALVECTOR(newData) = VALVECTOR(old->data);
-        }
-        else if (old->type == "$VOID") 
-        {
-            // IGNORE   
-        }
-        else yyfmterror(-1, "Invalid copy type");
-        newVal->data = (void*)(newData);
-    }
-    else
-    {
-        yyfmterror(old->lineno, "Can't assign a complex type");
-    }
-    return newVal;   
+    Language::Value v;
+    v.type = old->type;
+    v.data = old->data;
+    return make_val_copy(&v);
 }
+
 
 Language::Value* make_val_copy(Language::Value* old)
 {
@@ -546,7 +544,7 @@ Language::Value* executeInput(AS_TREE* tree)
     {
         yyfmterror(tree->lineno, "Can't read into such type");
     }
-    Language::Value* val = copyValue(var);
+    Language::Value* val = make_val_copy_of_var(var);
     return val;
 }
 
@@ -676,7 +674,7 @@ AS_TREE* executeIncDec(AS_TREE* tree)
     if (tree == nullptr) return make_void();
     Language::Variable* var = resolveIdentifier(tree->data.incdec.var);
     Language::Value* val2 = executeExpression(tree->data.incdec.expr);
-    Language::Value* val1 = copyValue(var);
+    Language::Value* val1 = make_val_copy_of_var(var);
     Language::Value* result = executeMath(val1, val2, tree->data.incdec.op);
     //printf("%s %d\n", var->name.c_str(), INT(result->data));
     if (var->type != result->type)
@@ -702,7 +700,22 @@ AS_TREE* executeFunctionDecl(AS_TREE* tree)
 
 AS_TREE* executeListAlter(AS_TREE* tree)
 {
-    int* index = tree->data.list_alter.index;
+    Language::Value* indexVal = executeExpression(tree->data.list_alter.index);
+    int* index;
+    if (indexVal == nullptr)
+    {
+        index = nullptr;
+    }
+    else
+    {
+        if (indexVal->type != "$INT")
+        {
+            yyfmterror(tree->lineno, "Can't use that expression as index");
+        }
+        index = (int*)(indexVal->data);
+    }
+    
+    
     Language::Variable* listVar = resolveIdentifier(tree->data.list_alter.id);
     if (listVar->type != "$LIST")
     {
@@ -716,22 +729,22 @@ AS_TREE* executeListAlter(AS_TREE* tree)
         if (index == nullptr) list->push_back(exprVal);
         else
         {
-            if (*index >= listSize)
+            if (*index > listSize || *index < 0)
             {
                 yyfmterror(tree->lineno, "Invalid insert point at %d", *index);
             }
-            int real = ((*index % listSize) + listSize ) % listSize;
-            list->insert(list->begin() + real, exprVal);
+            //int real = ((*index % listSize) + listSize ) % listSize;
+            list->insert(list->begin() + *index, exprVal);
         }
     }
     else if (tree->type == Type::LIST_REMOVE)
     {
-        if (*index >= listSize)
+        if ((*index) >= listSize || (*index) < 0)
         {
-            yyfmterror(tree->lineno, "Invalid chapter number");
+            yyfmterror(tree->lineno, "Invalid chapter number %d", *index);
         }
-        int real = ((*index % listSize) + listSize ) % listSize;
-        list->erase(list->begin() + real);
+        //int real = ((*index % listSize) + listSize ) % listSize;
+        list->erase(list->begin() + *index);
     }
     return make_void();
 }

@@ -135,6 +135,18 @@ AS_TREE* make_identifier(AS_TREE* orig, std::string* name)
     }
 }
 
+
+AS_TREE* make_indexer(AS_TREE* orig, AS_TREE* index)
+{
+    AS_TREE* node = new AS_TREE;
+    node->lineno = yylineno;
+    node->type = Type::INDEXER;
+    node->data.indexer.index = index;
+    node->data.indexer.from = orig;
+    return node;
+}
+
+
 AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TREE* value)
 {
     AS_TREE* node = new AS_TREE;
@@ -322,7 +334,7 @@ AS_TREE* make_function_call(std::string* id, AS_TREE* list)
     return wrap;
 }
 
-AS_TREE* make_list_alter(AS_TREE* expr, int* index, AS_TREE* id, Type type)
+AS_TREE* make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type)
 {
     AS_TREE* node = new AS_TREE;
     node->lineno = yylineno;
