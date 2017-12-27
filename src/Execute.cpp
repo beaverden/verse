@@ -871,13 +871,11 @@ Language::Value* executeExpression(AS_TREE* tree)
             if (list != nullptr)
             {
                 for (auto expr : (*list))
-                {
-                    
+                {                    
                     Language::Value* cVal = executeExpression(expr);
                     vals->push_back(cVal);
                 }
             }
-            
             v->data = (void*)(vals);
         }
         

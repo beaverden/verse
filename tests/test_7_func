@@ -4,11 +4,12 @@ proclaim s
 	saying str
 >
 
-describe prim as doubting adventure of <whole var>
+describe prim as doubting adventure 
 <
-	let var be 6	
+	enter whole var telling 7
+	quote<var>
 	exeunt indeed!
 >
 
 enter fixed whole i telling 5
-cry for prim<i>
+cry for prim!

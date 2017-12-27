@@ -13,7 +13,7 @@
 #include <iostream>
 #include <memory>
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 #define STR(ptr) (*(std::string*)(ptr))
 #define INT(ptr) (*(int*)(ptr))
