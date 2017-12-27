@@ -862,14 +862,22 @@ Language::Value* executeExpression(AS_TREE* tree)
         v->data = tree->data.value.data;
         if (v->type == "$LIST")
         {
-            std::vector<AS_TREE*>* list = ((AS_TREE*)(v->data))->data.expression_list.list;
-            std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
-            for (auto expr : (*list))
+            std::vector<AS_TREE*>* list = nullptr;
+            if (v->data != nullptr)
             {
-                
-                Language::Value* cVal = executeExpression(expr);
-                vals->push_back(cVal);
+                list = ((AS_TREE*)(v->data))->data.expression_list.list;
             }
+            std::vector<Language::Value*>* vals = new std::vector<Language::Value*>;
+            if (list != nullptr)
+            {
+                for (auto expr : (*list))
+                {
+                    
+                    Language::Value* cVal = executeExpression(expr);
+                    vals->push_back(cVal);
+                }
+            }
+            
             v->data = (void*)(vals);
         }
         

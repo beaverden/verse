@@ -231,6 +231,7 @@ expression:
 	| BOOL_FALSE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| BOOL_TRUE { $$ = make_value(new std::string("$BOOL"), new bool(BOOL($1))); }
 	| BOOK '<' expression_list '>' { $$ = make_value(new std::string("$LIST"), $3); }
+	| BOOK '<' '>' { $$ = make_value(new std::string("$LIST"), nullptr); }
 	| input { $$ = $1; }
 	| verbose { $$ = $1; }
 	| numeric { $$ = $1; }
