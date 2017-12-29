@@ -345,3 +345,19 @@ AS_TREE* make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type)
     node->data.list_alter.type = type; 
     return node;
 }
+
+
+AS_TREE* make_length(AS_TREE* id)
+{
+    AS_TREE* node = new AS_TREE;
+    node->lineno = yylineno;
+    node->type = Type::LENGTH_OF;
+    node->data.input.input_to = id;
+
+    AS_TREE* wrap = new AS_TREE;
+    wrap->lineno = yylineno;
+    wrap->type = Type::EXPRESSION;
+    wrap->data.expression.left = node;
+    wrap->data.expression.op = Operation::OP_NOTHING;
+    return wrap;
+}

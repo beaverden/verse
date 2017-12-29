@@ -497,15 +497,16 @@ std::string getOutput(Language::Value* val)
     {
         std::string res = "[";
         std::vector<Language::Value*>* values = (std::vector<Language::Value*>*)(val->data);
-        for (size_t i = 0; i < values->size() - 1; i++)
-        {
-            Language::Value* v = values->at(i);
-            res += getOutput(values->at(i)) + ", ";
-        }
         if (values->size() != 0)
         {
+            for (size_t i = 0; i < values->size() - 1; i++)
+            {
+                Language::Value* v = values->at(i);
+                res += getOutput(values->at(i)) + ", ";
+            }
             res += getOutput(values->back());
         }
+        
         res += "]";
         return res;
     }
@@ -593,6 +594,32 @@ Language::Value* executeConversion(AS_TREE* tree, Type type)
             }
             INT(ret->data) = atoi(STR(val->data).c_str());
         }
+    }
+    else if (type == Type::CONV_LIST)
+    {
+        ret->type = "$LIST";
+        std::vector<Language::Value*>* values = new std::vector<Language::Value*>;
+        if (val->type == "$INT" || val->type == "$BOOL")
+        {
+            values->push_back(make_val_copy(val));
+        }
+        else if (val->type == "$STR")
+        {
+            std::string* data = (std::string*)(val->data);
+            for (size_t i = 0; i < data->length(); i++)
+            {
+                Language::Value* add = new Language::Value;
+                add->isComplex = false;
+                add->isConstant = false;
+                add->type = "$STR";
+                std::string* s = new std::string;
+                (*s) = data->at(i);
+                add->data = (void*)(s);
+                
+                values->push_back(add);
+            }
+        }
+        ret->data = (void*)(values);
     }
     free_val(val);
     return ret;
@@ -754,6 +781,29 @@ AS_TREE* executeListAlter(AS_TREE* tree)
     return make_void();
 }
 
+Language::Value* executeLength(AS_TREE* expr)
+{
+    Language::Value* val = executeExpression(expr);
+    Language::Value* res = new Language::Value;
+    res->type = "$INT";
+    res->data = (void*)(new int(0));
+    if (val->type == "$LIST")
+    {
+        std::vector<Language::Value*>* values = (std::vector<Language::Value*>*)(val->data);
+        INT(res->data) = values->size();
+    }
+    else if (val->type == "$STR")
+    {
+        std::string* s = (std::string*)(val->data);
+        INT(res->data) = s->length();
+    }
+    else 
+    {
+        yyfmterror(expr->lineno, "Type [%s] doesn't have length property", val->type.c_str());
+    }
+    return res;
+}
+
 Language::Value* executeFunction(AS_TREE* tree)
 {
     std::string id = (*tree->data.function_call.id);
@@ -905,9 +955,14 @@ Language::Value* executeExpression(AS_TREE* tree)
         return executeInput(tree->data.input.input_to);
     }
     else if (tree->type == Type::CONV_NUMERIC || 
-             tree->type == Type::CONV_VERBOSE)
+             tree->type == Type::CONV_VERBOSE ||
+             tree->type == Type::CONV_LIST)
     {
         return executeConversion(tree->data.conversion.expr, tree->type);
+    }
+    else if (tree->type == Type::LENGTH_OF)
+    {
+        return executeLength(tree->data.length_of.expr);
     }
     else if (tree->type == Type::EXPRESSION)
     {

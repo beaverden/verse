@@ -52,7 +52,9 @@ enum Type {
 
     LIST_ADD            = 28,
     LIST_REMOVE         = 29,
-    INDEXER             = 30
+    INDEXER             = 30,
+    CONV_LIST           = 31,
+    LENGTH_OF           = 32
     
 };
 
@@ -210,6 +212,10 @@ struct AS_TREE
             AS_TREE* id;
             Type type;
         } list_alter;
+        struct
+        {
+            AS_TREE* expr;
+        } length_of;
     } data;
 };
 
@@ -238,6 +244,7 @@ AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
 AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
 AS_TREE* make_flow_break(Type type, AS_TREE* expr);
 AS_TREE* make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type);
+AS_TREE* make_length(AS_TREE* expr);
 
 AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val);
 AS_TREE* make_function_decl_item(std::string* type, std::string* id, bool isConst);

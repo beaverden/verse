@@ -66,6 +66,8 @@
 "chapter" { return CHAPTER; }
 "write" { return WRITE; }
 "erase" { return ERASE; }
+"enlist" { return ENLIST; }
+"length" { return LENGTH; }
 
 \"(\\.|[^"\\])*\" { 
         yylval.strvalue = new std::string(yytext); 

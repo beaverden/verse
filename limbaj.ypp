@@ -33,7 +33,7 @@ int yylex(void);
 %token DESCRIBE ADVENTURE AS OF CRY FOR
 %token ASK WHETHER OTHERWISE
 %token BE ENTER PROCLAIM LET THERE
-%token BOOK CHAPTER WRITE ERASE PAGE
+%token BOOK CHAPTER WRITE ERASE PAGE ENLIST LENGTH
 
 %type <treevalue>statements
 %type <treevalue>statement
@@ -56,6 +56,8 @@ int yylex(void);
 %type <treevalue>expression_list
 %type <treevalue>verbose
 %type <treevalue>numeric
+%type <treevalue>to_list
+%type <treevalue>length_of
 
 %left  ADDING CONSPIRING
 %left  EMPOWERING REMINDING DIVIDING
@@ -235,6 +237,8 @@ expression:
 	| input { $$ = $1; }
 	| verbose { $$ = $1; }
 	| numeric { $$ = $1; }
+	| to_list { $$ = $1; }
+	| length_of { $$ = $1; }
 	| function_call { $$ = $1; }
 	;
 
@@ -260,6 +264,20 @@ numeric:
 	NUMERIC '<' expression '>'
 	{
 		$$ = make_conversion($3, Type::CONV_NUMERIC);
+	}
+	;
+
+to_list:
+	ENLIST '<' expression '>'
+	{
+		$$ = make_conversion($3, Type::CONV_LIST);
+	}
+	;
+
+length_of:
+	LENGTH OF '<' expression '>'
+	{
+		$$ = make_length($4);
 	}
 	;
 

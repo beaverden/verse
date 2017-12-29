@@ -1,0 +1,9 @@
+enter saying str telling ""
+summon<str>
+
+enter whole i
+enter book l telling enlist<str>
+for let i be 0, since i lower than length of<str>, let i ascend
+<
+	quote<chapter i of l>
+>

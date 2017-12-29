@@ -85,67 +85,73 @@ Grammar
    59           | input
    60           | verbose
    61           | numeric
-   62           | function_call
+   62           | to_list
+   63           | length_of
+   64           | function_call
 
-   63 output: QUOTE '<' expression '>'
+   65 output: QUOTE '<' expression '>'
 
-   64 input: SUMMON '<' complex_identifier '>'
+   66 input: SUMMON '<' complex_identifier '>'
 
-   65 verbose: VERBOSE '<' expression '>'
+   67 verbose: VERBOSE '<' expression '>'
 
-   66 numeric: NUMERIC '<' expression '>'
+   68 numeric: NUMERIC '<' expression '>'
 
-   67 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>'
-   68             | ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+   69 to_list: ENLIST '<' expression '>'
 
-   69 while_statement: SINCE expression '<' statements '>'
+   70 length_of: LENGTH OF '<' expression '>'
 
-   70 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements '>'
+   71 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>'
+   72             | ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
 
-   71 flow_break: EXEUNT expression '!'
-   72           | EXEUNT '!'
-   73           | FLOW_BREAK FLOW_FREE
-   74           | FLOW_CONTINUE
+   73 while_statement: SINCE expression '<' statements '>'
 
-   75 function_decl_item: var_type ID
-   76                   | FIXED var_type ID
+   74 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements '>'
 
-   77 function_decl_list: function_decl_item
-   78                   | function_decl_list ',' function_decl_item
+   75 flow_break: EXEUNT expression '!'
+   76           | EXEUNT '!'
+   77           | FLOW_BREAK FLOW_FREE
+   78           | FLOW_CONTINUE
 
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE ID AS var_type ADVENTURE '<' statements '>'
+   79 function_decl_item: var_type ID
+   80                   | FIXED var_type ID
 
-   81 function_call: CRY FOR ID '<' expression_list '>'
-   82              | CRY FOR ID '!'
+   81 function_decl_list: function_decl_item
+   82                   | function_decl_list ',' function_decl_item
 
-   83 expression_list: expression
-   84                | expression_list ',' expression
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE ID AS var_type ADVENTURE '<' statements '>'
+
+   85 function_call: CRY FOR ID '<' expression_list '>'
+   86              | CRY FOR ID '!'
+
+   87 expression_list: expression
+   88                | expression_list ',' expression
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 71 72 82
-',' (44) 70 78 84
-'<' (60) 37 38 57 58 63 64 65 66 67 68 69 70 79 80 81
-'>' (62) 37 38 57 58 63 64 65 66 67 68 69 70 79 80 81
+'!' (33) 75 76 86
+',' (44) 74 82 88
+'<' (60) 37 38 57 58 65 66 67 68 69 70 71 72 73 74 83 84 85
+'>' (62) 37 38 57 58 65 66 67 68 69 70 71 72 73 74 83 84 85
 error (256)
 UPON (258)
 NOT (259) 45
-SINCE (260) 69 70
+SINCE (260) 73 74
 FROM (261) 15 26
-THEN (262) 67 68
+THEN (262) 71 72
 CHANGES (263)
 INCREASES (264)
 DECREASES (265)
 WHENEVER (266)
 DOES (267)
-NUMERIC (268) 66
-VERBOSE (269) 65
-ID (270) 14 15 21 33 34 35 36 37 75 76 79 80 81 82
+NUMERIC (268) 68
+VERBOSE (269) 67
+ID (270) 14 15 21 33 34 35 36 37 79 80 83 84 85 86
 TELLING (271) 35 36
-FIXED (272) 34 36 76
+FIXED (272) 34 36 80
 INT_TYPE (273) 17
 STR_TYPE (274) 18
 BOOLEAN_TYPE (275) 19
@@ -155,8 +161,8 @@ NUMBER (278) 53
 STRING (279) 54
 BOOL_TRUE (280) 56
 BOOL_FALSE (281) 55
-QUOTE (282) 63
-SUMMON (283) 64
+QUOTE (282) 65
+SUMMON (283) 66
 DIVIDING (284) 27 41
 REMINDING (285) 29 42
 ADDING (286) 39
@@ -176,19 +182,19 @@ BOOL_DOWN (299) 49
 BOOL_LOWER (300) 46 48
 BOOL_GREATER (301) 47 49
 BOOL_THAN (302) 46 47 48 49
-FLOW_BREAK (303) 73
-FLOW_FREE (304) 73
-FLOW_CONTINUE (305) 74
-EXEUNT (306) 71 72
-DESCRIBE (307) 79 80
-ADVENTURE (308) 79 80
-AS (309) 31 79 80
-OF (310) 16 32 79
-CRY (311) 81 82
-FOR (312) 70 81 82
-ASK (313) 67 68
-WHETHER (314) 67 68
-OTHERWISE (315) 68
+FLOW_BREAK (303) 77
+FLOW_FREE (304) 77
+FLOW_CONTINUE (305) 78
+EXEUNT (306) 75 76
+DESCRIBE (307) 83 84
+ADVENTURE (308) 83 84
+AS (309) 31 83 84
+OF (310) 16 32 70 83
+CRY (311) 85 86
+FOR (312) 74 85 86
+ASK (313) 71 72
+WHETHER (314) 71 72
+OTHERWISE (315) 72
 BE (316) 22 25 26 27 28 29
 ENTER (317) 33 34 35 36
 PROCLAIM (318) 37
@@ -199,60 +205,66 @@ CHAPTER (322) 16 30 31 32
 WRITE (323) 30 31
 ERASE (324) 32
 PAGE (325)
+ENLIST (326) 69
+LENGTH (327) 70
 
 
 Nonterminals, with rules where they appear
 
-$accept (75)
+$accept (77)
     on left: 0
-programm (76)
+programm (78)
     on left: 1, on right: 0
-statements (77)
-    on left: 2 3, on right: 1 3 67 68 69 70 79 80
-statement (78)
+statements (79)
+    on left: 2 3, on right: 1 3 71 72 73 74 83 84
+statement (80)
     on left: 4 5 6 7 8 9 10 11 12 13, on right: 2 3
-complex_identifier (79)
+complex_identifier (81)
     on left: 14 15 16, on right: 15 16 22 23 24 25 26 27 28 29 30 31
-    32 50 64
-var_type (80)
-    on left: 17 18 19 20 21, on right: 33 34 35 36 75 76 79 80
-assign (81)
-    on left: 22 23 24 25 26 27 28 29 30 31 32, on right: 7 70
-declaration (82)
+    32 50 66
+var_type (82)
+    on left: 17 18 19 20 21, on right: 33 34 35 36 79 80 83 84
+assign (83)
+    on left: 22 23 24 25 26 27 28 29 30 31 32, on right: 7 74
+declaration (84)
     on left: 33 34 35 36, on right: 5
-struct_decl (83)
+struct_decl (85)
     on left: 37, on right: 6
-expression (84)
+expression (86)
     on left: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55
-    56 57 58 59 60 61 62, on right: 4 16 22 25 26 27 28 29 30 31 32
-    35 36 38 39 40 41 42 43 44 45 46 47 48 49 63 65 66 67 68 69 70
-    71 83 84
-output (85)
-    on left: 63, on right: 8
-input (86)
-    on left: 64, on right: 59
-verbose (87)
-    on left: 65, on right: 60
-numeric (88)
-    on left: 66, on right: 61
-if_statement (89)
-    on left: 67 68, on right: 9
-while_statement (90)
-    on left: 69, on right: 10
-for_statement (91)
-    on left: 70, on right: 11
-flow_break (92)
-    on left: 71 72 73 74, on right: 12
-function_decl_item (93)
-    on left: 75 76, on right: 77 78
-function_decl_list (94)
-    on left: 77 78, on right: 37 78 79
-function_decl (95)
-    on left: 79 80, on right: 13
-function_call (96)
-    on left: 81 82, on right: 62
-expression_list (97)
-    on left: 83 84, on right: 57 81 84
+    56 57 58 59 60 61 62 63 64, on right: 4 16 22 25 26 27 28 29 30
+    31 32 35 36 38 39 40 41 42 43 44 45 46 47 48 49 65 67 68 69 70
+    71 72 73 74 75 87 88
+output (87)
+    on left: 65, on right: 8
+input (88)
+    on left: 66, on right: 59
+verbose (89)
+    on left: 67, on right: 60
+numeric (90)
+    on left: 68, on right: 61
+to_list (91)
+    on left: 69, on right: 62
+length_of (92)
+    on left: 70, on right: 63
+if_statement (93)
+    on left: 71 72, on right: 9
+while_statement (94)
+    on left: 73, on right: 10
+for_statement (95)
+    on left: 74, on right: 11
+flow_break (96)
+    on left: 75 76 77 78, on right: 12
+function_decl_item (97)
+    on left: 79 80, on right: 81 82
+function_decl_list (98)
+    on left: 81 82, on right: 37 82 83
+function_decl (99)
+    on left: 83 84, on right: 13
+function_call (100)
+    on left: 85 86, on right: 64
+expression_list (101)
+    on left: 87 88, on right: 57 85 88
 
 
 State 0
@@ -285,31 +297,35 @@ State 0
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
-    programm            go to state 28
-    statements          go to state 29
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
+    programm            go to state 30
+    statements          go to state 31
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
 State 1
 
-   69 while_statement: SINCE . expression '<' statements '>'
+   73 while_statement: SINCE . expression '<' statements '>'
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -324,28 +340,32 @@ State 1
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 46
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 50
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
 State 2
 
-   66 numeric: NUMERIC . '<' expression '>'
+   68 numeric: NUMERIC . '<' expression '>'
 
-    '<'  shift, and go to state 47
+    '<'  shift, and go to state 51
 
 
 State 3
 
-   65 verbose: VERBOSE . '<' expression '>'
+   67 verbose: VERBOSE . '<' expression '>'
 
-    '<'  shift, and go to state 48
+    '<'  shift, and go to state 52
 
 
 State 4
@@ -353,7 +373,7 @@ State 4
    14 complex_identifier: ID .
    15                   | ID . FROM complex_identifier
 
-    FROM  shift, and go to state 49
+    FROM  shift, and go to state 53
 
     $default  reduce using rule 14 (complex_identifier)
 
@@ -402,36 +422,36 @@ State 10
 
 State 11
 
-   63 output: QUOTE . '<' expression '>'
+   65 output: QUOTE . '<' expression '>'
 
-    '<'  shift, and go to state 50
+    '<'  shift, and go to state 54
 
 
 State 12
 
-   64 input: SUMMON . '<' complex_identifier '>'
+   66 input: SUMMON . '<' complex_identifier '>'
 
-    '<'  shift, and go to state 51
+    '<'  shift, and go to state 55
 
 
 State 13
 
-   73 flow_break: FLOW_BREAK . FLOW_FREE
+   77 flow_break: FLOW_BREAK . FLOW_FREE
 
-    FLOW_FREE  shift, and go to state 52
+    FLOW_FREE  shift, and go to state 56
 
 
 State 14
 
-   74 flow_break: FLOW_CONTINUE .
+   78 flow_break: FLOW_CONTINUE .
 
-    $default  reduce using rule 74 (flow_break)
+    $default  reduce using rule 78 (flow_break)
 
 
 State 15
 
-   71 flow_break: EXEUNT . expression '!'
-   72           | EXEUNT . '!'
+   75 flow_break: EXEUNT . expression '!'
+   76           | EXEUNT . '!'
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -446,50 +466,54 @@ State 15
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
-    '!'         shift, and go to state 53
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+    '!'         shift, and go to state 57
 
-    complex_identifier  go to state 31
-    expression          go to state 54
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 58
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
 State 16
 
-   79 function_decl: DESCRIBE . ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE . ID AS var_type ADVENTURE '<' statements '>'
+   83 function_decl: DESCRIBE . ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE . ID AS var_type ADVENTURE '<' statements '>'
 
-    ID  shift, and go to state 55
+    ID  shift, and go to state 59
 
 
 State 17
 
-   81 function_call: CRY . FOR ID '<' expression_list '>'
-   82              | CRY . FOR ID '!'
+   85 function_call: CRY . FOR ID '<' expression_list '>'
+   86              | CRY . FOR ID '!'
 
-    FOR  shift, and go to state 56
+    FOR  shift, and go to state 60
 
 
 State 18
 
-   70 for_statement: FOR . assign ',' SINCE expression ',' assign '<' statements '>'
+   74 for_statement: FOR . assign ',' SINCE expression ',' assign '<' statements '>'
 
     LET    shift, and go to state 22
     WRITE  shift, and go to state 25
     ERASE  shift, and go to state 26
 
-    assign  go to state 57
+    assign  go to state 61
 
 
 State 19
 
-   67 if_statement: ASK . WHETHER '<' expression '>' THEN '<' statements '>'
-   68             | ASK . WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+   71 if_statement: ASK . WHETHER '<' expression '>' THEN '<' statements '>'
+   72             | ASK . WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
 
-    WHETHER  shift, and go to state 58
+    WHETHER  shift, and go to state 62
 
 
 State 20
@@ -499,21 +523,21 @@ State 20
    35            | ENTER . var_type ID TELLING expression
    36            | ENTER . FIXED var_type ID TELLING expression
 
-    ID            shift, and go to state 59
-    FIXED         shift, and go to state 60
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
+    ID            shift, and go to state 63
+    FIXED         shift, and go to state 64
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
 
-    var_type  go to state 65
+    var_type  go to state 69
 
 
 State 21
 
    37 struct_decl: PROCLAIM . ID '<' function_decl_list '>'
 
-    ID  shift, and go to state 66
+    ID  shift, and go to state 70
 
 
 State 22
@@ -528,10 +552,10 @@ State 22
    29       | LET . THERE BE expression REMINDING complex_identifier
 
     ID       shift, and go to state 4
-    THERE    shift, and go to state 67
+    THERE    shift, and go to state 71
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 68
+    complex_identifier  go to state 72
 
 
 State 23
@@ -539,7 +563,7 @@ State 23
    57 expression: BOOK . '<' expression_list '>'
    58           | BOOK . '<' '>'
 
-    '<'  shift, and go to state 69
+    '<'  shift, and go to state 73
 
 
 State 24
@@ -559,14 +583,18 @@ State 24
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 70
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 74
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
 State 25
@@ -586,25 +614,43 @@ State 25
     SUMMON      shift, and go to state 12
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
-    CHAPTER     shift, and go to state 71
-    '<'         shift, and go to state 27
+    CHAPTER     shift, and go to state 75
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 72
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 76
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
 State 26
 
    32 assign: ERASE . CHAPTER expression OF complex_identifier
 
-    CHAPTER  shift, and go to state 73
+    CHAPTER  shift, and go to state 77
 
 
 State 27
+
+   69 to_list: ENLIST . '<' expression '>'
+
+    '<'  shift, and go to state 78
+
+
+State 28
+
+   70 length_of: LENGTH . OF '<' expression '>'
+
+    OF  shift, and go to state 79
+
+
+State 29
 
    38 expression: '<' . expression '>'
 
@@ -621,24 +667,28 @@ State 27
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 74
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 80
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 28
+State 30
 
     0 $accept: programm . $end
 
-    $end  shift, and go to state 75
+    $end  shift, and go to state 81
 
 
-State 29
+State 31
 
     1 programm: statements .
     3 statements: statements . statement
@@ -669,64 +719,68 @@ State 29
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
     $default  reduce using rule 1 (programm)
 
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
-State 30
+State 32
 
     2 statements: statement .
 
     $default  reduce using rule 2 (statements)
 
 
-State 31
+State 33
 
    50 expression: complex_identifier .
 
     $default  reduce using rule 50 (expression)
 
 
-State 32
+State 34
 
     7 statement: assign .
 
     $default  reduce using rule 7 (statement)
 
 
-State 33
+State 35
 
     5 statement: declaration .
 
     $default  reduce using rule 5 (statement)
 
 
-State 34
+State 36
 
     6 statement: struct_decl .
 
     $default  reduce using rule 6 (statement)
 
 
-State 35
+State 37
 
     4 statement: expression .
    39 expression: expression . ADDING expression
@@ -741,91 +795,105 @@ State 35
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 4 (statement)
 
 
-State 36
+State 38
 
     8 statement: output .
 
     $default  reduce using rule 8 (statement)
 
 
-State 37
+State 39
 
    59 expression: input .
 
     $default  reduce using rule 59 (expression)
 
 
-State 38
+State 40
 
    60 expression: verbose .
 
     $default  reduce using rule 60 (expression)
 
 
-State 39
+State 41
 
    61 expression: numeric .
 
     $default  reduce using rule 61 (expression)
 
 
-State 40
+State 42
+
+   62 expression: to_list .
+
+    $default  reduce using rule 62 (expression)
+
+
+State 43
+
+   63 expression: length_of .
+
+    $default  reduce using rule 63 (expression)
+
+
+State 44
 
     9 statement: if_statement .
 
     $default  reduce using rule 9 (statement)
 
 
-State 41
+State 45
 
    10 statement: while_statement .
 
     $default  reduce using rule 10 (statement)
 
 
-State 42
+State 46
 
    11 statement: for_statement .
 
     $default  reduce using rule 11 (statement)
 
 
-State 43
+State 47
 
    12 statement: flow_break .
 
     $default  reduce using rule 12 (statement)
 
 
-State 44
+State 48
 
    13 statement: function_decl .
 
     $default  reduce using rule 13 (statement)
 
 
-State 45
+State 49
 
-   62 expression: function_call .
+   64 expression: function_call .
 
-    $default  reduce using rule 62 (expression)
+    $default  reduce using rule 64 (expression)
 
 
-State 46
+State 50
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -838,51 +906,24 @@ State 46
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   69 while_statement: SINCE expression . '<' statements '>'
+   73 while_statement: SINCE expression . '<' statements '>'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '<'           shift, and go to state 87
-
-
-State 47
-
-   66 numeric: NUMERIC '<' . expression '>'
-
-    NUMERIC     shift, and go to state 2
-    VERBOSE     shift, and go to state 3
-    ID          shift, and go to state 4
-    NONE        shift, and go to state 5
-    ONE         shift, and go to state 6
-    NUMBER      shift, and go to state 7
-    STRING      shift, and go to state 8
-    BOOL_TRUE   shift, and go to state 9
-    BOOL_FALSE  shift, and go to state 10
-    SUMMON      shift, and go to state 12
-    CRY         shift, and go to state 17
-    BOOK        shift, and go to state 23
-    CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
-
-    complex_identifier  go to state 31
-    expression          go to state 88
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '<'           shift, and go to state 93
 
 
-State 48
+State 51
 
-   65 verbose: VERBOSE '<' . expression '>'
+   68 numeric: NUMERIC '<' . expression '>'
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -897,29 +938,64 @@ State 48
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 89
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 94
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 49
+State 52
+
+   67 verbose: VERBOSE '<' . expression '>'
+
+    NUMERIC     shift, and go to state 2
+    VERBOSE     shift, and go to state 3
+    ID          shift, and go to state 4
+    NONE        shift, and go to state 5
+    ONE         shift, and go to state 6
+    NUMBER      shift, and go to state 7
+    STRING      shift, and go to state 8
+    BOOL_TRUE   shift, and go to state 9
+    BOOL_FALSE  shift, and go to state 10
+    SUMMON      shift, and go to state 12
+    CRY         shift, and go to state 17
+    BOOK        shift, and go to state 23
+    CHAPTER     shift, and go to state 24
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+
+    complex_identifier  go to state 33
+    expression          go to state 95
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+
+
+State 53
 
    15 complex_identifier: ID FROM . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 90
+    complex_identifier  go to state 96
 
 
-State 50
+State 54
 
-   63 output: QUOTE '<' . expression '>'
+   65 output: QUOTE '<' . expression '>'
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -934,41 +1010,45 @@ State 50
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 91
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 97
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 51
+State 55
 
-   64 input: SUMMON '<' . complex_identifier '>'
+   66 input: SUMMON '<' . complex_identifier '>'
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 92
+    complex_identifier  go to state 98
 
 
-State 52
+State 56
 
-   73 flow_break: FLOW_BREAK FLOW_FREE .
+   77 flow_break: FLOW_BREAK FLOW_FREE .
 
-    $default  reduce using rule 73 (flow_break)
-
-
-State 53
-
-   72 flow_break: EXEUNT '!' .
-
-    $default  reduce using rule 72 (flow_break)
+    $default  reduce using rule 77 (flow_break)
 
 
-State 54
+State 57
+
+   76 flow_break: EXEUNT '!' .
+
+    $default  reduce using rule 76 (flow_break)
+
+
+State 58
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -981,117 +1061,117 @@ State 54
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   71 flow_break: EXEUNT expression . '!'
+   75 flow_break: EXEUNT expression . '!'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '!'           shift, and go to state 93
-
-
-State 55
-
-   79 function_decl: DESCRIBE ID . AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE ID . AS var_type ADVENTURE '<' statements '>'
-
-    AS  shift, and go to state 94
-
-
-State 56
-
-   81 function_call: CRY FOR . ID '<' expression_list '>'
-   82              | CRY FOR . ID '!'
-
-    ID  shift, and go to state 95
-
-
-State 57
-
-   70 for_statement: FOR assign . ',' SINCE expression ',' assign '<' statements '>'
-
-    ','  shift, and go to state 96
-
-
-State 58
-
-   67 if_statement: ASK WHETHER . '<' expression '>' THEN '<' statements '>'
-   68             | ASK WHETHER . '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
-
-    '<'  shift, and go to state 97
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '!'           shift, and go to state 99
 
 
 State 59
+
+   83 function_decl: DESCRIBE ID . AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE ID . AS var_type ADVENTURE '<' statements '>'
+
+    AS  shift, and go to state 100
+
+
+State 60
+
+   85 function_call: CRY FOR . ID '<' expression_list '>'
+   86              | CRY FOR . ID '!'
+
+    ID  shift, and go to state 101
+
+
+State 61
+
+   74 for_statement: FOR assign . ',' SINCE expression ',' assign '<' statements '>'
+
+    ','  shift, and go to state 102
+
+
+State 62
+
+   71 if_statement: ASK WHETHER . '<' expression '>' THEN '<' statements '>'
+   72             | ASK WHETHER . '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+
+    '<'  shift, and go to state 103
+
+
+State 63
 
    21 var_type: ID .
 
     $default  reduce using rule 21 (var_type)
 
 
-State 60
+State 64
 
    34 declaration: ENTER FIXED . var_type ID
    36            | ENTER FIXED . var_type ID TELLING expression
 
-    ID            shift, and go to state 59
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
+    ID            shift, and go to state 63
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
 
-    var_type  go to state 98
+    var_type  go to state 104
 
 
-State 61
+State 65
 
    17 var_type: INT_TYPE .
 
     $default  reduce using rule 17 (var_type)
 
 
-State 62
+State 66
 
    18 var_type: STR_TYPE .
 
     $default  reduce using rule 18 (var_type)
 
 
-State 63
+State 67
 
    19 var_type: BOOLEAN_TYPE .
 
     $default  reduce using rule 19 (var_type)
 
 
-State 64
+State 68
 
    20 var_type: BOOK .
 
     $default  reduce using rule 20 (var_type)
 
 
-State 65
+State 69
 
    33 declaration: ENTER var_type . ID
    35            | ENTER var_type . ID TELLING expression
 
-    ID  shift, and go to state 99
+    ID  shift, and go to state 105
 
 
-State 66
+State 70
 
    37 struct_decl: PROCLAIM ID . '<' function_decl_list '>'
 
-    '<'  shift, and go to state 100
+    '<'  shift, and go to state 106
 
 
-State 67
+State 71
 
    25 assign: LET THERE . BE expression ADDED BOOL_TO complex_identifier
    26       | LET THERE . BE expression CONSPIRED FROM complex_identifier
@@ -1099,21 +1179,21 @@ State 67
    28       | LET THERE . BE expression EMPOWERING complex_identifier
    29       | LET THERE . BE expression REMINDING complex_identifier
 
-    BE  shift, and go to state 101
+    BE  shift, and go to state 107
 
 
-State 68
+State 72
 
    22 assign: LET complex_identifier . BE expression
    23       | LET complex_identifier . ASCEND
    24       | LET complex_identifier . DESCEND
 
-    ASCEND   shift, and go to state 102
-    DESCEND  shift, and go to state 103
-    BE       shift, and go to state 104
+    ASCEND   shift, and go to state 108
+    DESCEND  shift, and go to state 109
+    BE       shift, and go to state 110
 
 
-State 69
+State 73
 
    57 expression: BOOK '<' . expression_list '>'
    58           | BOOK '<' . '>'
@@ -1131,19 +1211,23 @@ State 69
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
-    '>'         shift, and go to state 105
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+    '>'         shift, and go to state 111
 
-    complex_identifier  go to state 31
-    expression          go to state 106
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
-    expression_list     go to state 107
+    complex_identifier  go to state 33
+    expression          go to state 112
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+    expression_list     go to state 113
 
 
-State 70
+State 74
 
    16 complex_identifier: CHAPTER expression . OF complex_identifier
    39 expression: expression . ADDING expression
@@ -1158,20 +1242,20 @@ State 70
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    OF            shift, and go to state 108
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    OF            shift, and go to state 114
 
 
-State 71
+State 75
 
    16 complex_identifier: CHAPTER . expression OF complex_identifier
    30 assign: WRITE CHAPTER . expression BOOL_TO complex_identifier
@@ -1189,17 +1273,21 @@ State 71
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 109
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 115
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 72
+State 76
 
    31 assign: WRITE expression . AS CHAPTER expression BOOL_TO complex_identifier
    39 expression: expression . ADDING expression
@@ -1214,20 +1302,20 @@ State 72
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    AS            shift, and go to state 110
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    AS            shift, and go to state 116
 
 
-State 73
+State 77
 
    32 assign: ERASE CHAPTER . expression OF complex_identifier
 
@@ -1244,17 +1332,59 @@ State 73
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 111
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 117
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 74
+State 78
+
+   69 to_list: ENLIST '<' . expression '>'
+
+    NUMERIC     shift, and go to state 2
+    VERBOSE     shift, and go to state 3
+    ID          shift, and go to state 4
+    NONE        shift, and go to state 5
+    ONE         shift, and go to state 6
+    NUMBER      shift, and go to state 7
+    STRING      shift, and go to state 8
+    BOOL_TRUE   shift, and go to state 9
+    BOOL_FALSE  shift, and go to state 10
+    SUMMON      shift, and go to state 12
+    CRY         shift, and go to state 17
+    BOOK        shift, and go to state 23
+    CHAPTER     shift, and go to state 24
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+
+    complex_identifier  go to state 33
+    expression          go to state 118
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+
+
+State 79
+
+   70 length_of: LENGTH OF . '<' expression '>'
+
+    '<'  shift, and go to state 119
+
+
+State 80
 
    38 expression: '<' expression . '>'
    39           | expression . ADDING expression
@@ -1269,34 +1399,34 @@ State 74
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '>'           shift, and go to state 112
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 120
 
 
-State 75
+State 81
 
     0 $accept: programm $end .
 
     $default  accept
 
 
-State 76
+State 82
 
     3 statements: statements statement .
 
     $default  reduce using rule 3 (statements)
 
 
-State 77
+State 83
 
    41 expression: expression DIVIDING . expression
 
@@ -1313,17 +1443,21 @@ State 77
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 113
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 121
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 78
+State 84
 
    42 expression: expression REMINDING . expression
 
@@ -1340,17 +1474,21 @@ State 78
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 114
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 122
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 79
+State 85
 
    39 expression: expression ADDING . expression
 
@@ -1367,17 +1505,21 @@ State 79
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 115
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 123
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 80
+State 86
 
    40 expression: expression CONSPIRING . expression
 
@@ -1394,17 +1536,21 @@ State 80
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 116
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 124
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 81
+State 87
 
    43 expression: expression EMPOWERING . expression
 
@@ -1421,22 +1567,26 @@ State 81
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 117
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 125
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 82
+State 88
 
    44 expression: expression BOOL_IS . expression
    45           | expression BOOL_IS . NOT expression
 
-    NOT         shift, and go to state 118
+    NOT         shift, and go to state 126
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
     ID          shift, and go to state 4
@@ -1450,47 +1600,51 @@ State 82
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 119
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 127
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 83
+State 89
 
    48 expression: expression BOOL_UP . BOOL_TO BOOL_LOWER BOOL_THAN expression
 
-    BOOL_TO  shift, and go to state 120
+    BOOL_TO  shift, and go to state 128
 
 
-State 84
+State 90
 
    49 expression: expression BOOL_DOWN . BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    BOOL_TO  shift, and go to state 121
+    BOOL_TO  shift, and go to state 129
 
 
-State 85
+State 91
 
    46 expression: expression BOOL_LOWER . BOOL_THAN expression
 
-    BOOL_THAN  shift, and go to state 122
+    BOOL_THAN  shift, and go to state 130
 
 
-State 86
+State 92
 
    47 expression: expression BOOL_GREATER . BOOL_THAN expression
 
-    BOOL_THAN  shift, and go to state 123
+    BOOL_THAN  shift, and go to state 131
 
 
-State 87
+State 93
 
-   69 while_statement: SINCE expression '<' . statements '>'
+   73 while_statement: SINCE expression '<' . statements '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -1518,56 +1672,32 @@ State 87
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
-    statements          go to state 124
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 88
-
-   39 expression: expression . ADDING expression
-   40           | expression . CONSPIRING expression
-   41           | expression . DIVIDING expression
-   42           | expression . REMINDING expression
-   43           | expression . EMPOWERING expression
-   44           | expression . BOOL_IS expression
-   45           | expression . BOOL_IS NOT expression
-   46           | expression . BOOL_LOWER BOOL_THAN expression
-   47           | expression . BOOL_GREATER BOOL_THAN expression
-   48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
-   49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   66 numeric: NUMERIC '<' expression . '>'
-
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '>'           shift, and go to state 125
+    statements          go to state 132
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
-State 89
+State 94
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -1580,29 +1710,57 @@ State 89
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   65 verbose: VERBOSE '<' expression . '>'
+   68 numeric: NUMERIC '<' expression . '>'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '>'           shift, and go to state 126
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 133
 
 
-State 90
+State 95
+
+   39 expression: expression . ADDING expression
+   40           | expression . CONSPIRING expression
+   41           | expression . DIVIDING expression
+   42           | expression . REMINDING expression
+   43           | expression . EMPOWERING expression
+   44           | expression . BOOL_IS expression
+   45           | expression . BOOL_IS NOT expression
+   46           | expression . BOOL_LOWER BOOL_THAN expression
+   47           | expression . BOOL_GREATER BOOL_THAN expression
+   48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
+   49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
+   67 verbose: VERBOSE '<' expression . '>'
+
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 134
+
+
+State 96
 
    15 complex_identifier: ID FROM complex_identifier .
 
     $default  reduce using rule 15 (complex_identifier)
 
 
-State 91
+State 97
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -1615,69 +1773,69 @@ State 91
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   63 output: QUOTE '<' expression . '>'
+   65 output: QUOTE '<' expression . '>'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '>'           shift, and go to state 127
-
-
-State 92
-
-   64 input: SUMMON '<' complex_identifier . '>'
-
-    '>'  shift, and go to state 128
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 135
 
 
-State 93
+State 98
 
-   71 flow_break: EXEUNT expression '!' .
+   66 input: SUMMON '<' complex_identifier . '>'
 
-    $default  reduce using rule 71 (flow_break)
-
-
-State 94
-
-   79 function_decl: DESCRIBE ID AS . var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE ID AS . var_type ADVENTURE '<' statements '>'
-
-    ID            shift, and go to state 59
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
-
-    var_type  go to state 129
+    '>'  shift, and go to state 136
 
 
-State 95
+State 99
 
-   81 function_call: CRY FOR ID . '<' expression_list '>'
-   82              | CRY FOR ID . '!'
+   75 flow_break: EXEUNT expression '!' .
 
-    '<'  shift, and go to state 130
-    '!'  shift, and go to state 131
+    $default  reduce using rule 75 (flow_break)
 
 
-State 96
+State 100
 
-   70 for_statement: FOR assign ',' . SINCE expression ',' assign '<' statements '>'
+   83 function_decl: DESCRIBE ID AS . var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE ID AS . var_type ADVENTURE '<' statements '>'
 
-    SINCE  shift, and go to state 132
+    ID            shift, and go to state 63
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
+
+    var_type  go to state 137
 
 
-State 97
+State 101
 
-   67 if_statement: ASK WHETHER '<' . expression '>' THEN '<' statements '>'
-   68             | ASK WHETHER '<' . expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+   85 function_call: CRY FOR ID . '<' expression_list '>'
+   86              | CRY FOR ID . '!'
+
+    '<'  shift, and go to state 138
+    '!'  shift, and go to state 139
+
+
+State 102
+
+   74 for_statement: FOR assign ',' . SINCE expression ',' assign '<' statements '>'
+
+    SINCE  shift, and go to state 140
+
+
+State 103
+
+   71 if_statement: ASK WHETHER '<' . expression '>' THEN '<' statements '>'
+   72             | ASK WHETHER '<' . expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -1692,51 +1850,55 @@ State 97
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 133
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 141
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 98
+State 104
 
    34 declaration: ENTER FIXED var_type . ID
    36            | ENTER FIXED var_type . ID TELLING expression
 
-    ID  shift, and go to state 134
+    ID  shift, and go to state 142
 
 
-State 99
+State 105
 
    33 declaration: ENTER var_type ID .
    35            | ENTER var_type ID . TELLING expression
 
-    TELLING  shift, and go to state 135
+    TELLING  shift, and go to state 143
 
     $default  reduce using rule 33 (declaration)
 
 
-State 100
+State 106
 
    37 struct_decl: PROCLAIM ID '<' . function_decl_list '>'
 
-    ID            shift, and go to state 59
-    FIXED         shift, and go to state 136
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
+    ID            shift, and go to state 63
+    FIXED         shift, and go to state 144
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
 
-    var_type            go to state 137
-    function_decl_item  go to state 138
-    function_decl_list  go to state 139
+    var_type            go to state 145
+    function_decl_item  go to state 146
+    function_decl_list  go to state 147
 
 
-State 101
+State 107
 
    25 assign: LET THERE BE . expression ADDED BOOL_TO complex_identifier
    26       | LET THERE BE . expression CONSPIRED FROM complex_identifier
@@ -1757,31 +1919,35 @@ State 101
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 140
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 148
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 102
+State 108
 
    23 assign: LET complex_identifier ASCEND .
 
     $default  reduce using rule 23 (assign)
 
 
-State 103
+State 109
 
    24 assign: LET complex_identifier DESCEND .
 
     $default  reduce using rule 24 (assign)
 
 
-State 104
+State 110
 
    22 assign: LET complex_identifier BE . expression
 
@@ -1798,24 +1964,28 @@ State 104
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 141
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 149
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 105
+State 111
 
    58 expression: BOOK '<' '>' .
 
     $default  reduce using rule 58 (expression)
 
 
-State 106
+State 112
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -1828,42 +1998,42 @@ State 106
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   83 expression_list: expression .
+   87 expression_list: expression .
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
-    $default  reduce using rule 83 (expression_list)
+    $default  reduce using rule 87 (expression_list)
 
 
-State 107
+State 113
 
    57 expression: BOOK '<' expression_list . '>'
-   84 expression_list: expression_list . ',' expression
+   88 expression_list: expression_list . ',' expression
 
-    '>'  shift, and go to state 142
-    ','  shift, and go to state 143
+    '>'  shift, and go to state 150
+    ','  shift, and go to state 151
 
 
-State 108
+State 114
 
    16 complex_identifier: CHAPTER expression OF . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 144
+    complex_identifier  go to state 152
 
 
-State 109
+State 115
 
    16 complex_identifier: CHAPTER expression . OF complex_identifier
    30 assign: WRITE CHAPTER expression . BOOL_TO complex_identifier
@@ -1879,28 +2049,28 @@ State 109
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_TO       shift, and go to state 145
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    OF            shift, and go to state 108
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_TO       shift, and go to state 153
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    OF            shift, and go to state 114
 
 
-State 110
+State 116
 
    31 assign: WRITE expression AS . CHAPTER expression BOOL_TO complex_identifier
 
-    CHAPTER  shift, and go to state 146
+    CHAPTER  shift, and go to state 154
 
 
-State 111
+State 117
 
    32 assign: ERASE CHAPTER expression . OF complex_identifier
    39 expression: expression . ADDING expression
@@ -1915,27 +2085,86 @@ State 111
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    OF            shift, and go to state 147
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    OF            shift, and go to state 155
 
 
-State 112
+State 118
+
+   39 expression: expression . ADDING expression
+   40           | expression . CONSPIRING expression
+   41           | expression . DIVIDING expression
+   42           | expression . REMINDING expression
+   43           | expression . EMPOWERING expression
+   44           | expression . BOOL_IS expression
+   45           | expression . BOOL_IS NOT expression
+   46           | expression . BOOL_LOWER BOOL_THAN expression
+   47           | expression . BOOL_GREATER BOOL_THAN expression
+   48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
+   49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
+   69 to_list: ENLIST '<' expression . '>'
+
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 156
+
+
+State 119
+
+   70 length_of: LENGTH OF '<' . expression '>'
+
+    NUMERIC     shift, and go to state 2
+    VERBOSE     shift, and go to state 3
+    ID          shift, and go to state 4
+    NONE        shift, and go to state 5
+    ONE         shift, and go to state 6
+    NUMBER      shift, and go to state 7
+    STRING      shift, and go to state 8
+    BOOL_TRUE   shift, and go to state 9
+    BOOL_FALSE  shift, and go to state 10
+    SUMMON      shift, and go to state 12
+    CRY         shift, and go to state 17
+    BOOK        shift, and go to state 23
+    CHAPTER     shift, and go to state 24
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+
+    complex_identifier  go to state 33
+    expression          go to state 157
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+
+
+State 120
 
    38 expression: '<' expression '>' .
 
     $default  reduce using rule 38 (expression)
 
 
-State 113
+State 121
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -1950,16 +2179,16 @@ State 113
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 41 (expression)
 
 
-State 114
+State 122
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -1974,16 +2203,16 @@ State 114
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 42 (expression)
 
 
-State 115
+State 123
 
    39 expression: expression . ADDING expression
    39           | expression ADDING expression .
@@ -1998,19 +2227,19 @@ State 115
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 39 (expression)
 
 
-State 116
+State 124
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2025,19 +2254,19 @@ State 116
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 40 (expression)
 
 
-State 117
+State 125
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2052,16 +2281,16 @@ State 117
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 43 (expression)
 
 
-State 118
+State 126
 
    45 expression: expression BOOL_IS NOT . expression
 
@@ -2078,17 +2307,21 @@ State 118
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 148
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 158
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 119
+State 127
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2112,21 +2345,21 @@ State 119
     $default  reduce using rule 44 (expression)
 
 
-State 120
+State 128
 
    48 expression: expression BOOL_UP BOOL_TO . BOOL_LOWER BOOL_THAN expression
 
-    BOOL_LOWER  shift, and go to state 149
+    BOOL_LOWER  shift, and go to state 159
 
 
-State 121
+State 129
 
    49 expression: expression BOOL_DOWN BOOL_TO . BOOL_GREATER BOOL_THAN expression
 
-    BOOL_GREATER  shift, and go to state 150
+    BOOL_GREATER  shift, and go to state 160
 
 
-State 122
+State 130
 
    46 expression: expression BOOL_LOWER BOOL_THAN . expression
 
@@ -2143,17 +2376,21 @@ State 122
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 151
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 161
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 123
+State 131
 
    47 expression: expression BOOL_GREATER BOOL_THAN . expression
 
@@ -2170,20 +2407,24 @@ State 123
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 152
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 162
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 124
+State 132
 
     3 statements: statements . statement
-   69 while_statement: SINCE expression '<' statements . '>'
+   73 while_statement: SINCE expression '<' statements . '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -2211,126 +2452,138 @@ State 124
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 153
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 163
 
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 125
-
-   66 numeric: NUMERIC '<' expression '>' .
-
-    $default  reduce using rule 66 (numeric)
-
-
-State 126
-
-   65 verbose: VERBOSE '<' expression '>' .
-
-    $default  reduce using rule 65 (verbose)
-
-
-State 127
-
-   63 output: QUOTE '<' expression '>' .
-
-    $default  reduce using rule 63 (output)
-
-
-State 128
-
-   64 input: SUMMON '<' complex_identifier '>' .
-
-    $default  reduce using rule 64 (input)
-
-
-State 129
-
-   79 function_decl: DESCRIBE ID AS var_type . ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE ID AS var_type . ADVENTURE '<' statements '>'
-
-    ADVENTURE  shift, and go to state 154
-
-
-State 130
-
-   81 function_call: CRY FOR ID '<' . expression_list '>'
-
-    NUMERIC     shift, and go to state 2
-    VERBOSE     shift, and go to state 3
-    ID          shift, and go to state 4
-    NONE        shift, and go to state 5
-    ONE         shift, and go to state 6
-    NUMBER      shift, and go to state 7
-    STRING      shift, and go to state 8
-    BOOL_TRUE   shift, and go to state 9
-    BOOL_FALSE  shift, and go to state 10
-    SUMMON      shift, and go to state 12
-    CRY         shift, and go to state 17
-    BOOK        shift, and go to state 23
-    CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
-
-    complex_identifier  go to state 31
-    expression          go to state 106
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
-    expression_list     go to state 155
-
-
-State 131
-
-   82 function_call: CRY FOR ID '!' .
-
-    $default  reduce using rule 82 (function_call)
-
-
-State 132
-
-   70 for_statement: FOR assign ',' SINCE . expression ',' assign '<' statements '>'
-
-    NUMERIC     shift, and go to state 2
-    VERBOSE     shift, and go to state 3
-    ID          shift, and go to state 4
-    NONE        shift, and go to state 5
-    ONE         shift, and go to state 6
-    NUMBER      shift, and go to state 7
-    STRING      shift, and go to state 8
-    BOOL_TRUE   shift, and go to state 9
-    BOOL_FALSE  shift, and go to state 10
-    SUMMON      shift, and go to state 12
-    CRY         shift, and go to state 17
-    BOOK        shift, and go to state 23
-    CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
-
-    complex_identifier  go to state 31
-    expression          go to state 156
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
 State 133
+
+   68 numeric: NUMERIC '<' expression '>' .
+
+    $default  reduce using rule 68 (numeric)
+
+
+State 134
+
+   67 verbose: VERBOSE '<' expression '>' .
+
+    $default  reduce using rule 67 (verbose)
+
+
+State 135
+
+   65 output: QUOTE '<' expression '>' .
+
+    $default  reduce using rule 65 (output)
+
+
+State 136
+
+   66 input: SUMMON '<' complex_identifier '>' .
+
+    $default  reduce using rule 66 (input)
+
+
+State 137
+
+   83 function_decl: DESCRIBE ID AS var_type . ADVENTURE OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE ID AS var_type . ADVENTURE '<' statements '>'
+
+    ADVENTURE  shift, and go to state 164
+
+
+State 138
+
+   85 function_call: CRY FOR ID '<' . expression_list '>'
+
+    NUMERIC     shift, and go to state 2
+    VERBOSE     shift, and go to state 3
+    ID          shift, and go to state 4
+    NONE        shift, and go to state 5
+    ONE         shift, and go to state 6
+    NUMBER      shift, and go to state 7
+    STRING      shift, and go to state 8
+    BOOL_TRUE   shift, and go to state 9
+    BOOL_FALSE  shift, and go to state 10
+    SUMMON      shift, and go to state 12
+    CRY         shift, and go to state 17
+    BOOK        shift, and go to state 23
+    CHAPTER     shift, and go to state 24
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+
+    complex_identifier  go to state 33
+    expression          go to state 112
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+    expression_list     go to state 165
+
+
+State 139
+
+   86 function_call: CRY FOR ID '!' .
+
+    $default  reduce using rule 86 (function_call)
+
+
+State 140
+
+   74 for_statement: FOR assign ',' SINCE . expression ',' assign '<' statements '>'
+
+    NUMERIC     shift, and go to state 2
+    VERBOSE     shift, and go to state 3
+    ID          shift, and go to state 4
+    NONE        shift, and go to state 5
+    ONE         shift, and go to state 6
+    NUMBER      shift, and go to state 7
+    STRING      shift, and go to state 8
+    BOOL_TRUE   shift, and go to state 9
+    BOOL_FALSE  shift, and go to state 10
+    SUMMON      shift, and go to state 12
+    CRY         shift, and go to state 17
+    BOOK        shift, and go to state 23
+    CHAPTER     shift, and go to state 24
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
+
+    complex_identifier  go to state 33
+    expression          go to state 166
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
+
+
+State 141
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2343,33 +2596,33 @@ State 133
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   67 if_statement: ASK WHETHER '<' expression . '>' THEN '<' statements '>'
-   68             | ASK WHETHER '<' expression . '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
+   71 if_statement: ASK WHETHER '<' expression . '>' THEN '<' statements '>'
+   72             | ASK WHETHER '<' expression . '>' THEN '<' statements '>' OTHERWISE '<' statements '>'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    '>'           shift, and go to state 157
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 167
 
 
-State 134
+State 142
 
    34 declaration: ENTER FIXED var_type ID .
    36            | ENTER FIXED var_type ID . TELLING expression
 
-    TELLING  shift, and go to state 158
+    TELLING  shift, and go to state 168
 
     $default  reduce using rule 34 (declaration)
 
 
-State 135
+State 143
 
    35 declaration: ENTER var_type ID TELLING . expression
 
@@ -2386,53 +2639,57 @@ State 135
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 159
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
-
-
-State 136
-
-   76 function_decl_item: FIXED . var_type ID
-
-    ID            shift, and go to state 59
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
-
-    var_type  go to state 160
+    complex_identifier  go to state 33
+    expression          go to state 169
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 137
+State 144
 
-   75 function_decl_item: var_type . ID
+   80 function_decl_item: FIXED . var_type ID
 
-    ID  shift, and go to state 161
+    ID            shift, and go to state 63
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
+
+    var_type  go to state 170
 
 
-State 138
+State 145
 
-   77 function_decl_list: function_decl_item .
+   79 function_decl_item: var_type . ID
 
-    $default  reduce using rule 77 (function_decl_list)
+    ID  shift, and go to state 171
 
 
-State 139
+State 146
+
+   81 function_decl_list: function_decl_item .
+
+    $default  reduce using rule 81 (function_decl_list)
+
+
+State 147
 
    37 struct_decl: PROCLAIM ID '<' function_decl_list . '>'
-   78 function_decl_list: function_decl_list . ',' function_decl_item
+   82 function_decl_list: function_decl_list . ',' function_decl_item
 
-    '>'  shift, and go to state 162
-    ','  shift, and go to state 163
+    '>'  shift, and go to state 172
+    ','  shift, and go to state 173
 
 
-State 140
+State 148
 
    25 assign: LET THERE BE expression . ADDED BOOL_TO complex_identifier
    26       | LET THERE BE expression . CONSPIRED FROM complex_identifier
@@ -2451,21 +2708,21 @@ State 140
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 164
-    REMINDING     shift, and go to state 165
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 166
-    ADDED         shift, and go to state 167
-    CONSPIRED     shift, and go to state 168
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 174
+    REMINDING     shift, and go to state 175
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 176
+    ADDED         shift, and go to state 177
+    CONSPIRED     shift, and go to state 178
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
 
-State 141
+State 149
 
    22 assign: LET complex_identifier BE expression .
    39 expression: expression . ADDING expression
@@ -2480,30 +2737,30 @@ State 141
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 22 (assign)
 
 
-State 142
+State 150
 
    57 expression: BOOK '<' expression_list '>' .
 
     $default  reduce using rule 57 (expression)
 
 
-State 143
+State 151
 
-   84 expression_list: expression_list ',' . expression
+   88 expression_list: expression_list ',' . expression
 
     NUMERIC     shift, and go to state 2
     VERBOSE     shift, and go to state 3
@@ -2518,34 +2775,38 @@ State 143
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 169
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 179
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 144
+State 152
 
    16 complex_identifier: CHAPTER expression OF complex_identifier .
 
     $default  reduce using rule 16 (complex_identifier)
 
 
-State 145
+State 153
 
    30 assign: WRITE CHAPTER expression BOOL_TO . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 170
+    complex_identifier  go to state 180
 
 
-State 146
+State 154
 
    31 assign: WRITE expression AS CHAPTER . expression BOOL_TO complex_identifier
 
@@ -2562,27 +2823,66 @@ State 146
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 171
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 181
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 147
+State 155
 
    32 assign: ERASE CHAPTER expression OF . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 172
+    complex_identifier  go to state 182
 
 
-State 148
+State 156
+
+   69 to_list: ENLIST '<' expression '>' .
+
+    $default  reduce using rule 69 (to_list)
+
+
+State 157
+
+   39 expression: expression . ADDING expression
+   40           | expression . CONSPIRING expression
+   41           | expression . DIVIDING expression
+   42           | expression . REMINDING expression
+   43           | expression . EMPOWERING expression
+   44           | expression . BOOL_IS expression
+   45           | expression . BOOL_IS NOT expression
+   46           | expression . BOOL_LOWER BOOL_THAN expression
+   47           | expression . BOOL_GREATER BOOL_THAN expression
+   48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
+   49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
+   70 length_of: LENGTH OF '<' expression . '>'
+
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    '>'           shift, and go to state 183
+
+
+State 158
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2606,21 +2906,21 @@ State 148
     $default  reduce using rule 45 (expression)
 
 
-State 149
+State 159
 
    48 expression: expression BOOL_UP BOOL_TO BOOL_LOWER . BOOL_THAN expression
 
-    BOOL_THAN  shift, and go to state 173
+    BOOL_THAN  shift, and go to state 184
 
 
-State 150
+State 160
 
    49 expression: expression BOOL_DOWN BOOL_TO BOOL_GREATER . BOOL_THAN expression
 
-    BOOL_THAN  shift, and go to state 174
+    BOOL_THAN  shift, and go to state 185
 
 
-State 151
+State 161
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2644,7 +2944,7 @@ State 151
     $default  reduce using rule 46 (expression)
 
 
-State 152
+State 162
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2668,32 +2968,32 @@ State 152
     $default  reduce using rule 47 (expression)
 
 
-State 153
+State 163
 
-   69 while_statement: SINCE expression '<' statements '>' .
+   73 while_statement: SINCE expression '<' statements '>' .
 
-    $default  reduce using rule 69 (while_statement)
-
-
-State 154
-
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE . OF '<' function_decl_list '>' '<' statements '>'
-   80              | DESCRIBE ID AS var_type ADVENTURE . '<' statements '>'
-
-    OF   shift, and go to state 175
-    '<'  shift, and go to state 176
+    $default  reduce using rule 73 (while_statement)
 
 
-State 155
+State 164
 
-   81 function_call: CRY FOR ID '<' expression_list . '>'
-   84 expression_list: expression_list . ',' expression
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE . OF '<' function_decl_list '>' '<' statements '>'
+   84              | DESCRIBE ID AS var_type ADVENTURE . '<' statements '>'
 
-    '>'  shift, and go to state 177
-    ','  shift, and go to state 143
+    OF   shift, and go to state 186
+    '<'  shift, and go to state 187
 
 
-State 156
+State 165
+
+   85 function_call: CRY FOR ID '<' expression_list . '>'
+   88 expression_list: expression_list . ',' expression
+
+    '>'  shift, and go to state 188
+    ','  shift, and go to state 151
+
+
+State 166
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2706,30 +3006,30 @@ State 156
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   70 for_statement: FOR assign ',' SINCE expression . ',' assign '<' statements '>'
+   74 for_statement: FOR assign ',' SINCE expression . ',' assign '<' statements '>'
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
-    ','           shift, and go to state 178
-
-
-State 157
-
-   67 if_statement: ASK WHETHER '<' expression '>' . THEN '<' statements '>'
-   68             | ASK WHETHER '<' expression '>' . THEN '<' statements '>' OTHERWISE '<' statements '>'
-
-    THEN  shift, and go to state 179
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
+    ','           shift, and go to state 189
 
 
-State 158
+State 167
+
+   71 if_statement: ASK WHETHER '<' expression '>' . THEN '<' statements '>'
+   72             | ASK WHETHER '<' expression '>' . THEN '<' statements '>' OTHERWISE '<' statements '>'
+
+    THEN  shift, and go to state 190
+
+
+State 168
 
    36 declaration: ENTER FIXED var_type ID TELLING . expression
 
@@ -2746,17 +3046,21 @@ State 158
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 180
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 191
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 159
+State 169
 
    35 declaration: ENTER var_type ID TELLING expression .
    39 expression: expression . ADDING expression
@@ -2771,57 +3075,57 @@ State 159
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 35 (declaration)
 
 
-State 160
+State 170
 
-   76 function_decl_item: FIXED var_type . ID
+   80 function_decl_item: FIXED var_type . ID
 
-    ID  shift, and go to state 181
-
-
-State 161
-
-   75 function_decl_item: var_type ID .
-
-    $default  reduce using rule 75 (function_decl_item)
+    ID  shift, and go to state 192
 
 
-State 162
+State 171
+
+   79 function_decl_item: var_type ID .
+
+    $default  reduce using rule 79 (function_decl_item)
+
+
+State 172
 
    37 struct_decl: PROCLAIM ID '<' function_decl_list '>' .
 
     $default  reduce using rule 37 (struct_decl)
 
 
-State 163
+State 173
 
-   78 function_decl_list: function_decl_list ',' . function_decl_item
+   82 function_decl_list: function_decl_list ',' . function_decl_item
 
-    ID            shift, and go to state 59
-    FIXED         shift, and go to state 136
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
+    ID            shift, and go to state 63
+    FIXED         shift, and go to state 144
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
 
-    var_type            go to state 137
-    function_decl_item  go to state 182
+    var_type            go to state 145
+    function_decl_item  go to state 193
 
 
-State 164
+State 174
 
    27 assign: LET THERE BE expression DIVIDING . complex_identifier
    41 expression: expression DIVIDING . expression
@@ -2839,17 +3143,21 @@ State 164
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 183
-    expression          go to state 113
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 194
+    expression          go to state 121
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 165
+State 175
 
    29 assign: LET THERE BE expression REMINDING . complex_identifier
    42 expression: expression REMINDING . expression
@@ -2867,17 +3175,21 @@ State 165
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 184
-    expression          go to state 114
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 195
+    expression          go to state 122
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 166
+State 176
 
    28 assign: LET THERE BE expression EMPOWERING . complex_identifier
    43 expression: expression EMPOWERING . expression
@@ -2895,31 +3207,35 @@ State 166
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 185
-    expression          go to state 117
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 196
+    expression          go to state 125
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 167
+State 177
 
    25 assign: LET THERE BE expression ADDED . BOOL_TO complex_identifier
 
-    BOOL_TO  shift, and go to state 186
+    BOOL_TO  shift, and go to state 197
 
 
-State 168
+State 178
 
    26 assign: LET THERE BE expression CONSPIRED . FROM complex_identifier
 
-    FROM  shift, and go to state 187
+    FROM  shift, and go to state 198
 
 
-State 169
+State 179
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -2932,30 +3248,30 @@ State 169
    47           | expression . BOOL_GREATER BOOL_THAN expression
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
-   84 expression_list: expression_list ',' expression .
+   88 expression_list: expression_list ',' expression .
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
-    $default  reduce using rule 84 (expression_list)
+    $default  reduce using rule 88 (expression_list)
 
 
-State 170
+State 180
 
    30 assign: WRITE CHAPTER expression BOOL_TO complex_identifier .
 
     $default  reduce using rule 30 (assign)
 
 
-State 171
+State 181
 
    31 assign: WRITE expression AS CHAPTER expression . BOOL_TO complex_identifier
    39 expression: expression . ADDING expression
@@ -2970,27 +3286,34 @@ State 171
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_TO       shift, and go to state 188
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_TO       shift, and go to state 199
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
 
-State 172
+State 182
 
    32 assign: ERASE CHAPTER expression OF complex_identifier .
 
     $default  reduce using rule 32 (assign)
 
 
-State 173
+State 183
+
+   70 length_of: LENGTH OF '<' expression '>' .
+
+    $default  reduce using rule 70 (length_of)
+
+
+State 184
 
    48 expression: expression BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN . expression
 
@@ -3007,17 +3330,21 @@ State 173
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 189
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
+    complex_identifier  go to state 33
+    expression          go to state 200
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 174
+State 185
 
    49 expression: expression BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN . expression
 
@@ -3034,26 +3361,30 @@ State 174
     CRY         shift, and go to state 17
     BOOK        shift, and go to state 23
     CHAPTER     shift, and go to state 24
-    '<'         shift, and go to state 27
+    ENLIST      shift, and go to state 27
+    LENGTH      shift, and go to state 28
+    '<'         shift, and go to state 29
 
-    complex_identifier  go to state 31
-    expression          go to state 190
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    function_call       go to state 45
-
-
-State 175
-
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF . '<' function_decl_list '>' '<' statements '>'
-
-    '<'  shift, and go to state 191
+    complex_identifier  go to state 33
+    expression          go to state 201
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    function_call       go to state 49
 
 
-State 176
+State 186
 
-   80 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' . statements '>'
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF . '<' function_decl_list '>' '<' statements '>'
+
+    '<'  shift, and go to state 202
+
+
+State 187
+
+   84 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' . statements '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -3081,54 +3412,58 @@ State 176
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
-    statements          go to state 192
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 177
-
-   81 function_call: CRY FOR ID '<' expression_list '>' .
-
-    $default  reduce using rule 81 (function_call)
+    statements          go to state 203
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
-State 178
+State 188
 
-   70 for_statement: FOR assign ',' SINCE expression ',' . assign '<' statements '>'
+   85 function_call: CRY FOR ID '<' expression_list '>' .
+
+    $default  reduce using rule 85 (function_call)
+
+
+State 189
+
+   74 for_statement: FOR assign ',' SINCE expression ',' . assign '<' statements '>'
 
     LET    shift, and go to state 22
     WRITE  shift, and go to state 25
     ERASE  shift, and go to state 26
 
-    assign  go to state 193
+    assign  go to state 204
 
 
-State 179
+State 190
 
-   67 if_statement: ASK WHETHER '<' expression '>' THEN . '<' statements '>'
-   68             | ASK WHETHER '<' expression '>' THEN . '<' statements '>' OTHERWISE '<' statements '>'
+   71 if_statement: ASK WHETHER '<' expression '>' THEN . '<' statements '>'
+   72             | ASK WHETHER '<' expression '>' THEN . '<' statements '>' OTHERWISE '<' statements '>'
 
-    '<'  shift, and go to state 194
+    '<'  shift, and go to state 205
 
 
-State 180
+State 191
 
    36 declaration: ENTER FIXED var_type ID TELLING expression .
    39 expression: expression . ADDING expression
@@ -3143,35 +3478,35 @@ State 180
    48           | expression . BOOL_UP BOOL_TO BOOL_LOWER BOOL_THAN expression
    49           | expression . BOOL_DOWN BOOL_TO BOOL_GREATER BOOL_THAN expression
 
-    DIVIDING      shift, and go to state 77
-    REMINDING     shift, and go to state 78
-    ADDING        shift, and go to state 79
-    CONSPIRING    shift, and go to state 80
-    EMPOWERING    shift, and go to state 81
-    BOOL_IS       shift, and go to state 82
-    BOOL_UP       shift, and go to state 83
-    BOOL_DOWN     shift, and go to state 84
-    BOOL_LOWER    shift, and go to state 85
-    BOOL_GREATER  shift, and go to state 86
+    DIVIDING      shift, and go to state 83
+    REMINDING     shift, and go to state 84
+    ADDING        shift, and go to state 85
+    CONSPIRING    shift, and go to state 86
+    EMPOWERING    shift, and go to state 87
+    BOOL_IS       shift, and go to state 88
+    BOOL_UP       shift, and go to state 89
+    BOOL_DOWN     shift, and go to state 90
+    BOOL_LOWER    shift, and go to state 91
+    BOOL_GREATER  shift, and go to state 92
 
     $default  reduce using rule 36 (declaration)
 
 
-State 181
+State 192
 
-   76 function_decl_item: FIXED var_type ID .
+   80 function_decl_item: FIXED var_type ID .
 
-    $default  reduce using rule 76 (function_decl_item)
-
-
-State 182
-
-   78 function_decl_list: function_decl_list ',' function_decl_item .
-
-    $default  reduce using rule 78 (function_decl_list)
+    $default  reduce using rule 80 (function_decl_item)
 
 
-State 183
+State 193
+
+   82 function_decl_list: function_decl_list ',' function_decl_item .
+
+    $default  reduce using rule 82 (function_decl_list)
+
+
+State 194
 
    27 assign: LET THERE BE expression DIVIDING complex_identifier .
    50 expression: complex_identifier .
@@ -3191,7 +3526,7 @@ State 183
     $default      reduce using rule 27 (assign)
 
 
-State 184
+State 195
 
    29 assign: LET THERE BE expression REMINDING complex_identifier .
    50 expression: complex_identifier .
@@ -3211,7 +3546,7 @@ State 184
     $default      reduce using rule 29 (assign)
 
 
-State 185
+State 196
 
    28 assign: LET THERE BE expression EMPOWERING complex_identifier .
    50 expression: complex_identifier .
@@ -3231,37 +3566,37 @@ State 185
     $default      reduce using rule 28 (assign)
 
 
-State 186
+State 197
 
    25 assign: LET THERE BE expression ADDED BOOL_TO . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 195
+    complex_identifier  go to state 206
 
 
-State 187
+State 198
 
    26 assign: LET THERE BE expression CONSPIRED FROM . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 196
+    complex_identifier  go to state 207
 
 
-State 188
+State 199
 
    31 assign: WRITE expression AS CHAPTER expression BOOL_TO . complex_identifier
 
     ID       shift, and go to state 4
     CHAPTER  shift, and go to state 24
 
-    complex_identifier  go to state 197
+    complex_identifier  go to state 208
 
 
-State 189
+State 200
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -3285,7 +3620,7 @@ State 189
     $default  reduce using rule 48 (expression)
 
 
-State 190
+State 201
 
    39 expression: expression . ADDING expression
    40           | expression . CONSPIRING expression
@@ -3309,26 +3644,26 @@ State 190
     $default  reduce using rule 49 (expression)
 
 
-State 191
+State 202
 
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' . function_decl_list '>' '<' statements '>'
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' . function_decl_list '>' '<' statements '>'
 
-    ID            shift, and go to state 59
-    FIXED         shift, and go to state 136
-    INT_TYPE      shift, and go to state 61
-    STR_TYPE      shift, and go to state 62
-    BOOLEAN_TYPE  shift, and go to state 63
-    BOOK          shift, and go to state 64
+    ID            shift, and go to state 63
+    FIXED         shift, and go to state 144
+    INT_TYPE      shift, and go to state 65
+    STR_TYPE      shift, and go to state 66
+    BOOLEAN_TYPE  shift, and go to state 67
+    BOOK          shift, and go to state 68
 
-    var_type            go to state 137
-    function_decl_item  go to state 138
-    function_decl_list  go to state 198
+    var_type            go to state 145
+    function_decl_item  go to state 146
+    function_decl_list  go to state 209
 
 
-State 192
+State 203
 
     3 statements: statements . statement
-   80 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' statements . '>'
+   84 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' statements . '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -3356,38 +3691,42 @@ State 192
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 199
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 210
 
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 193
-
-   70 for_statement: FOR assign ',' SINCE expression ',' assign . '<' statements '>'
-
-    '<'  shift, and go to state 200
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
-State 194
+State 204
 
-   67 if_statement: ASK WHETHER '<' expression '>' THEN '<' . statements '>'
-   68             | ASK WHETHER '<' expression '>' THEN '<' . statements '>' OTHERWISE '<' statements '>'
+   74 for_statement: FOR assign ',' SINCE expression ',' assign . '<' statements '>'
+
+    '<'  shift, and go to state 211
+
+
+State 205
+
+   71 if_statement: ASK WHETHER '<' expression '>' THEN '<' . statements '>'
+   72             | ASK WHETHER '<' expression '>' THEN '<' . statements '>' OTHERWISE '<' statements '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -3415,416 +3754,71 @@ State 194
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
-    statements          go to state 201
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
+    statements          go to state 212
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
-State 195
+State 206
 
    25 assign: LET THERE BE expression ADDED BOOL_TO complex_identifier .
 
     $default  reduce using rule 25 (assign)
 
 
-State 196
+State 207
 
    26 assign: LET THERE BE expression CONSPIRED FROM complex_identifier .
 
     $default  reduce using rule 26 (assign)
 
 
-State 197
+State 208
 
    31 assign: WRITE expression AS CHAPTER expression BOOL_TO complex_identifier .
 
     $default  reduce using rule 31 (assign)
 
 
-State 198
-
-   78 function_decl_list: function_decl_list . ',' function_decl_item
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list . '>' '<' statements '>'
-
-    '>'  shift, and go to state 202
-    ','  shift, and go to state 163
-
-
-State 199
-
-   80 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' statements '>' .
-
-    $default  reduce using rule 80 (function_decl)
-
-
-State 200
-
-   70 for_statement: FOR assign ',' SINCE expression ',' assign '<' . statements '>'
-
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-
-    statements          go to state 203
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 201
-
-    3 statements: statements . statement
-   67 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements . '>'
-   68             | ASK WHETHER '<' expression '>' THEN '<' statements . '>' OTHERWISE '<' statements '>'
-
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 204
-
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 202
-
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' . '<' statements '>'
-
-    '<'  shift, and go to state 205
-
-
-State 203
-
-    3 statements: statements . statement
-   70 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements . '>'
-
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 206
-
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 204
-
-   67 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' .
-   68             | ASK WHETHER '<' expression '>' THEN '<' statements '>' . OTHERWISE '<' statements '>'
-
-    OTHERWISE  shift, and go to state 207
-
-    $default  reduce using rule 67 (if_statement)
-
-
-State 205
-
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' . statements '>'
-
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-
-    statements          go to state 208
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
-State 206
-
-   70 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements '>' .
-
-    $default  reduce using rule 70 (for_statement)
-
-
-State 207
-
-   68 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE . '<' statements '>'
-
-    '<'  shift, and go to state 209
-
-
-State 208
-
-    3 statements: statements . statement
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements . '>'
-
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 210
-
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
-
-
 State 209
 
-   68 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' . statements '>'
+   82 function_decl_list: function_decl_list . ',' function_decl_item
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list . '>' '<' statements '>'
 
-    SINCE          shift, and go to state 1
-    NUMERIC        shift, and go to state 2
-    VERBOSE        shift, and go to state 3
-    ID             shift, and go to state 4
-    NONE           shift, and go to state 5
-    ONE            shift, and go to state 6
-    NUMBER         shift, and go to state 7
-    STRING         shift, and go to state 8
-    BOOL_TRUE      shift, and go to state 9
-    BOOL_FALSE     shift, and go to state 10
-    QUOTE          shift, and go to state 11
-    SUMMON         shift, and go to state 12
-    FLOW_BREAK     shift, and go to state 13
-    FLOW_CONTINUE  shift, and go to state 14
-    EXEUNT         shift, and go to state 15
-    DESCRIBE       shift, and go to state 16
-    CRY            shift, and go to state 17
-    FOR            shift, and go to state 18
-    ASK            shift, and go to state 19
-    ENTER          shift, and go to state 20
-    PROCLAIM       shift, and go to state 21
-    LET            shift, and go to state 22
-    BOOK           shift, and go to state 23
-    CHAPTER        shift, and go to state 24
-    WRITE          shift, and go to state 25
-    ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-
-    statements          go to state 211
-    statement           go to state 30
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
+    '>'  shift, and go to state 213
+    ','  shift, and go to state 173
 
 
 State 210
 
-   79 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>' .
+   84 function_decl: DESCRIBE ID AS var_type ADVENTURE '<' statements '>' .
 
-    $default  reduce using rule 79 (function_decl)
+    $default  reduce using rule 84 (function_decl)
 
 
 State 211
 
-    3 statements: statements . statement
-   68 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements . '>'
+   74 for_statement: FOR assign ',' SINCE expression ',' assign '<' . statements '>'
 
     SINCE          shift, and go to state 1
     NUMERIC        shift, and go to state 2
@@ -3852,29 +3846,406 @@ State 211
     CHAPTER        shift, and go to state 24
     WRITE          shift, and go to state 25
     ERASE          shift, and go to state 26
-    '<'            shift, and go to state 27
-    '>'            shift, and go to state 212
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
 
-    statement           go to state 76
-    complex_identifier  go to state 31
-    assign              go to state 32
-    declaration         go to state 33
-    struct_decl         go to state 34
-    expression          go to state 35
-    output              go to state 36
-    input               go to state 37
-    verbose             go to state 38
-    numeric             go to state 39
-    if_statement        go to state 40
-    while_statement     go to state 41
-    for_statement       go to state 42
-    flow_break          go to state 43
-    function_decl       go to state 44
-    function_call       go to state 45
+    statements          go to state 214
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
 
 
 State 212
 
-   68 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>' .
+    3 statements: statements . statement
+   71 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements . '>'
+   72             | ASK WHETHER '<' expression '>' THEN '<' statements . '>' OTHERWISE '<' statements '>'
 
-    $default  reduce using rule 68 (if_statement)
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 215
+
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 213
+
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' . '<' statements '>'
+
+    '<'  shift, and go to state 216
+
+
+State 214
+
+    3 statements: statements . statement
+   74 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements . '>'
+
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 217
+
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 215
+
+   71 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' .
+   72             | ASK WHETHER '<' expression '>' THEN '<' statements '>' . OTHERWISE '<' statements '>'
+
+    OTHERWISE  shift, and go to state 218
+
+    $default  reduce using rule 71 (if_statement)
+
+
+State 216
+
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' . statements '>'
+
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+
+    statements          go to state 219
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 217
+
+   74 for_statement: FOR assign ',' SINCE expression ',' assign '<' statements '>' .
+
+    $default  reduce using rule 74 (for_statement)
+
+
+State 218
+
+   72 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE . '<' statements '>'
+
+    '<'  shift, and go to state 220
+
+
+State 219
+
+    3 statements: statements . statement
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements . '>'
+
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 221
+
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 220
+
+   72 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' . statements '>'
+
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+
+    statements          go to state 222
+    statement           go to state 32
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 221
+
+   83 function_decl: DESCRIBE ID AS var_type ADVENTURE OF '<' function_decl_list '>' '<' statements '>' .
+
+    $default  reduce using rule 83 (function_decl)
+
+
+State 222
+
+    3 statements: statements . statement
+   72 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements . '>'
+
+    SINCE          shift, and go to state 1
+    NUMERIC        shift, and go to state 2
+    VERBOSE        shift, and go to state 3
+    ID             shift, and go to state 4
+    NONE           shift, and go to state 5
+    ONE            shift, and go to state 6
+    NUMBER         shift, and go to state 7
+    STRING         shift, and go to state 8
+    BOOL_TRUE      shift, and go to state 9
+    BOOL_FALSE     shift, and go to state 10
+    QUOTE          shift, and go to state 11
+    SUMMON         shift, and go to state 12
+    FLOW_BREAK     shift, and go to state 13
+    FLOW_CONTINUE  shift, and go to state 14
+    EXEUNT         shift, and go to state 15
+    DESCRIBE       shift, and go to state 16
+    CRY            shift, and go to state 17
+    FOR            shift, and go to state 18
+    ASK            shift, and go to state 19
+    ENTER          shift, and go to state 20
+    PROCLAIM       shift, and go to state 21
+    LET            shift, and go to state 22
+    BOOK           shift, and go to state 23
+    CHAPTER        shift, and go to state 24
+    WRITE          shift, and go to state 25
+    ERASE          shift, and go to state 26
+    ENLIST         shift, and go to state 27
+    LENGTH         shift, and go to state 28
+    '<'            shift, and go to state 29
+    '>'            shift, and go to state 223
+
+    statement           go to state 82
+    complex_identifier  go to state 33
+    assign              go to state 34
+    declaration         go to state 35
+    struct_decl         go to state 36
+    expression          go to state 37
+    output              go to state 38
+    input               go to state 39
+    verbose             go to state 40
+    numeric             go to state 41
+    to_list             go to state 42
+    length_of           go to state 43
+    if_statement        go to state 44
+    while_statement     go to state 45
+    for_statement       go to state 46
+    flow_break          go to state 47
+    function_decl       go to state 48
+    function_call       go to state 49
+
+
+State 223
+
+   72 if_statement: ASK WHETHER '<' expression '>' THEN '<' statements '>' OTHERWISE '<' statements '>' .
+
+    $default  reduce using rule 72 (if_statement)
