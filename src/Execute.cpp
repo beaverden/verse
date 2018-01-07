@@ -1119,6 +1119,7 @@ Language::Value* executeDivision(Language::Value* first, Language::Value* second
     {
         res->type = "$INT";
         int* val = new int;
+	if (INT(second->data) == 0) yyfmterror(first->lineno, "Can't divide by zero");
         (*val) = INT(first->data) / INT(second->data);
         res->data = (void*)val;
     }
@@ -1138,6 +1139,7 @@ Language::Value* executeReminder(Language::Value* first, Language::Value* second
     {
         res->type = "$INT";
         int* val = new int;
+	if (INT(second->data) == 0) yyfmterror(first->lineno, "Can't divide by zero");
         (*val) = INT(first->data) % INT(second->data);
         res->data = (void*)val;
     }
