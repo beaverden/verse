@@ -1,7 +1,6 @@
 enter whole res telling 1
 enter whole i
-enter whole n
-summon<n>
+1 adding "salut"
 
 for let i be 1, since i up to lower than n, let i ascend
 <

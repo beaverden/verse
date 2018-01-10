@@ -1,0 +1,17 @@
+proclaim complex_type 
+<
+	whole a, 
+	whole b
+>
+
+describe func as whole adventure of <complex_type var>
+<
+	quote<"Hello! " adding verbose<a from var>>
+	quote<"Hi " adding verbose<b from var>>
+	exeunt 1!
+>
+
+enter complex_type t
+let a from t be 5
+let b from t be 6
+cry for func<t>

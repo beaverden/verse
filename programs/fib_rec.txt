@@ -1,0 +1,15 @@
+describe fib as whole adventure of <whole n>
+<
+	ask whether <n is 0> then
+	<
+		exeunt 1!
+	>
+	ask whether <n is 1> then
+	<
+		exeunt 1!
+	>
+	enter whole res telling cry for fib<n conspiring 1> adding cry for fib<n conspiring 2>
+	exeunt res!
+>
+
+quote<cry for fib<10>>

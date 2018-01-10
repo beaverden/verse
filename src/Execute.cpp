@@ -537,12 +537,14 @@ Language::Value* executeInput(AS_TREE* tree)
     else if (var->type == "$INT")
     {
         int* val = new int;
+        (*val) = 0;
         std::cin >> (*val);
         var->data = (void*)val;
     }
     else if (var->type == "$BOOL")
     {
         bool* val = new bool;
+        (*val) = false;
         std::cin >> (*val);
         var->data = (void*)val;
     }
