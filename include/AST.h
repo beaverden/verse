@@ -1,6 +1,7 @@
 
 #ifndef AST_H
 #define AST_H
+//#define DEBUG_MODE
 
 #include <string>
 #include <string.h>
@@ -16,6 +17,7 @@
 #include <functional>
 
 extern int yylineno;
+static int debug_index = 0;
 
 enum Type { 
     STATEMENTS          = 0, 
@@ -220,37 +222,37 @@ struct AS_TREE
 };
 
 /* PARSER */
-AS_TREE* make_break();
-AS_TREE* make_continue();
-AS_TREE* make_return(AS_TREE* expr);
-AS_TREE* make_void();
-std::string* make_type(std::string type);
-AS_TREE* make_statements(AS_TREE* orig, AS_TREE* val);
-AS_TREE* make_assignment(AS_TREE* var, AS_TREE* value);
-AS_TREE* make_incdec(AS_TREE* var, AS_TREE* delta, Operation op);
-AS_TREE* make_expression(AS_TREE* exp1, AS_TREE* exp2, Operation op);
-AS_TREE* make_value(std::string* type, void* data);
-AS_TREE* make_value(AS_TREE* val);
-AS_TREE* make_identifier(AS_TREE* orig, std::string* name);
-AS_TREE* make_indexer(AS_TREE* orig, AS_TREE* index);
-AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TREE* value);
-AS_TREE* make_declaration_list(AS_TREE* orig, AS_TREE* val);
-AS_TREE* make_struct_declaration(std::string* name, AS_TREE* decl_list);
-AS_TREE* make_input(AS_TREE* id);
-AS_TREE* make_conversion(AS_TREE* expr, Type type);
-AS_TREE* make_output(AS_TREE* expr);
-AS_TREE* make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
-AS_TREE* make_while(AS_TREE* expr, AS_TREE* st);
-AS_TREE* make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
-AS_TREE* make_flow_break(Type type, AS_TREE* expr);
-AS_TREE* make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type);
-AS_TREE* make_length(AS_TREE* expr);
+AS_TREE*        make_break();
+AS_TREE*        make_continue();
+AS_TREE*        make_return(AS_TREE* expr);
+AS_TREE*        make_void();
+std::string*    make_type(std::string type);
+AS_TREE*        make_statements(AS_TREE* orig, AS_TREE* val);
+AS_TREE*        make_assignment(AS_TREE* var, AS_TREE* value);
+AS_TREE*        make_incdec(AS_TREE* var, AS_TREE* delta, Operation op);
+AS_TREE*        make_expression(AS_TREE* exp1, AS_TREE* exp2, Operation op);
+AS_TREE*        make_value(std::string* type, void* data);
+AS_TREE*        make_value(AS_TREE* val);
+AS_TREE*        make_identifier(AS_TREE* orig, std::string* name);
+AS_TREE*        make_indexer(AS_TREE* orig, AS_TREE* index);
+AS_TREE*        make_variable(std::string* type, std::string* name, bool isConst, AS_TREE* value);
+AS_TREE*        make_declaration_list(AS_TREE* orig, AS_TREE* val);
+AS_TREE*        make_struct_declaration(std::string* name, AS_TREE* decl_list);
+AS_TREE*        make_input(AS_TREE* id);
+AS_TREE*        make_conversion(AS_TREE* expr, Type type);
+AS_TREE*        make_output(AS_TREE* expr);
+AS_TREE*        make_if(AS_TREE* expr, AS_TREE* st1, AS_TREE* st2);
+AS_TREE*        make_while(AS_TREE* expr, AS_TREE* st);
+AS_TREE*        make_for(AS_TREE* as1, AS_TREE* expr, AS_TREE* as2, AS_TREE* stmts);
+AS_TREE*        make_flow_break(Type type, AS_TREE* expr);
+AS_TREE*        make_list_alter(AS_TREE* expr, AS_TREE* index, AS_TREE* id, Type type);
+AS_TREE*        make_length(AS_TREE* expr);
 
-AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val);
-AS_TREE* make_function_decl_item(std::string* type, std::string* id, bool isConst);
-AS_TREE* make_function_declaration(std::string* id, std::string* returnType, AS_TREE* decl_list, AS_TREE* stmts);
-AS_TREE* make_function_call(std::string* id, AS_TREE* list);
-AS_TREE* make_expression_list(AS_TREE* orig, AS_TREE* val);
+AS_TREE*        make_function_decl_list(AS_TREE* orig, AS_TREE* val);
+AS_TREE*        make_function_decl_item(std::string* type, std::string* id, bool isConst);
+AS_TREE*        make_function_declaration(std::string* id, std::string* returnType, AS_TREE* decl_list, AS_TREE* stmts);
+AS_TREE*        make_function_call(std::string* id, AS_TREE* list);
+AS_TREE*        make_expression_list(AS_TREE* orig, AS_TREE* val);
 /* PARSER */
 
 

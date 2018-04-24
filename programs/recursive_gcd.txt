@@ -14,5 +14,4 @@ enter whole darkness
 enter whole light
 summon<darkness>
 summon<light>
-quote<cry for revelation<"salut", light>>
 quote<cry for revelation<darkness, light>>

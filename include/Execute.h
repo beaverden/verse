@@ -1,6 +1,9 @@
 #include "../include/AST.h"
 #include "../include/types.h"
-
+#include <execinfo.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 AS_TREE* executeStatements(AS_TREE* tree);
 AS_TREE* executeStatement(AS_TREE* tree);

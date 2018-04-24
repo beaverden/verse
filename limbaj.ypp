@@ -12,6 +12,7 @@ extern int yylineno;
 int yylex(void);
 
 %}
+%define parse.error verbose
 
 %union {
 	AS_TREE* 		treevalue;
@@ -343,6 +344,7 @@ function_decl:
 		$$ = make_function_declaration(
 				new std::string(STR($2)), 
 				new std::string(STR($4)), $8, $11);
+
 	}
 	| DESCRIBE ID AS var_type ADVENTURE '<' statements '>'
 	{

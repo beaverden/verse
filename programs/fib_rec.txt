@@ -2,7 +2,7 @@ describe fib as whole adventure of <whole n>
 <
 	ask whether <n is 0> then
 	<
-		exeunt 1!
+		exeunt 0!
 	>
 	ask whether <n is 1> then
 	<
@@ -12,4 +12,6 @@ describe fib as whole adventure of <whole n>
 	exeunt res!
 >
 
-quote<cry for fib<10>>
+enter whole n
+summon<n>
+quote<cry for fib<n>>

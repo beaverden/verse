@@ -21,6 +21,9 @@ AS_TREE* make_return(AS_TREE* expr)
     AS_TREE* node = new AS_TREE;
     node->type = Type::RETURN;
     node->data.return_value.value = expr;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Return statement\n", debug_index++);
+    #endif
     return node;
 }
 
@@ -156,6 +159,9 @@ AS_TREE* make_variable(std::string* type, std::string* name, bool isConst, AS_TR
     node->data.declaration.name = name;
     node->data.declaration.isConst = isConst;
     node->data.declaration.value = value;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Variable declaration [type = %s, name = %s, isConst = %d]\n", debug_index++, type->c_str(), name->c_str(), isConst);
+    #endif
     return node;
 }
 
@@ -166,6 +172,9 @@ AS_TREE* make_struct_declaration(std::string* name, AS_TREE* decl_list)
     node->type = Type::STRUCT_DECLARATION;
     node->data.struct_declaration.typeName = name;
     node->data.struct_declaration.decl_list = decl_list;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Structure declared [name = %s]\n", debug_index++, name->c_str());     
+    #endif
     return node; 
 }
 
@@ -181,6 +190,9 @@ AS_TREE* make_input(AS_TREE* id)
     wrap->type = Type::EXPRESSION;
     wrap->data.expression.left = node;
     wrap->data.expression.op = Operation::OP_NOTHING;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Input request\n", debug_index++);
+    #endif
     return wrap;
 }
 
@@ -206,6 +218,9 @@ AS_TREE* make_output(AS_TREE* expr)
     node->lineno = yylineno;
     node->type = Type::OUTPUT;
     node->data.output.expr = expr;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Output\n", debug_index++);
+    #endif   
     return node;
 }
 
@@ -248,6 +263,9 @@ AS_TREE* make_flow_break(Type type, AS_TREE* expr)
     node->lineno = yylineno;
     node->type = type;
     node->data.return_value.value = expr;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Flow break instruction [type = %d]\n", debug_index++, type);
+    #endif
     return node;
 }
 
@@ -259,6 +277,9 @@ AS_TREE* make_function_decl_item(std::string* type, std::string* id, bool isCons
     node->data.function_decl_item.type = type;
     node->data.function_decl_item.id = id;
     node->data.function_decl_item.isConstant = isConst;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] ------ Function declaration item: [type = %s, id = %s, isConst = %d]\n", debug_index++, type->c_str(), id->c_str(), isConst);
+    #endif
     return node;
 }
 
@@ -272,6 +293,9 @@ AS_TREE* make_function_decl_list(AS_TREE* orig, AS_TREE* val)
         orig->data.function_decl_list.list = new std::vector<AS_TREE*>;
     }
     orig->data.function_decl_list.list->push_back(val);
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] --- Function declaration param list: [size = %lu]\n", debug_index++, orig->data.function_decl_list.list->size());
+    #endif
     return orig;
 }
 
@@ -284,9 +308,8 @@ AS_TREE* make_function_declaration(std::string* id, std::string* returnType, AS_
     node->data.function_decl.returnType = returnType;
     node->data.function_decl.decl_list = decl_list;
     node->data.function_decl.stmts = stmts;
-    
     #ifdef DEBUG_MODE
-        printf("Function declaration!\n");
+        printf("%3d) [AST] Function declaration!\n", debug_index++);
         if (decl_list != nullptr)
         {
             std::vector<AS_TREE*> v = (*decl_list->data.function_decl_list.list);
@@ -331,6 +354,9 @@ AS_TREE* make_function_call(std::string* id, AS_TREE* list)
     wrap->type = Type::EXPRESSION;
     wrap->data.expression.left = node;
     wrap->data.expression.op = Operation::OP_NOTHING;
+    #ifdef DEBUG_MODE
+        printf("%3d) [AST] Function call found [id = %s]\n", debug_index++, id->c_str());
+    #endif
     return wrap;
 }
 

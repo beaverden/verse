@@ -1,6 +1,7 @@
 enter whole res telling 1
 enter whole i
-1 adding "salut"
+enter whole n
+summon<n>
 
 for let i be 1, since i up to lower than n, let i ascend
 <

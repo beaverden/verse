@@ -1,4 +1,5 @@
 enter book v telling book<>
-write $ chapter book<1,2,3> to v 
+write chapter book<1,2,3> to v 
+write chapter book<book<1,2>> to v
 quote<v>
 

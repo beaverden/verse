@@ -84,6 +84,7 @@
         return NUMBER;
     }
 [ \t]|"the"|"be"|"a"|"an"|"'s" ;
+\r\n {yylineno++;}
 \n {yylineno++;}
 . {return yytext[0];}
 

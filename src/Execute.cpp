@@ -8,7 +8,6 @@ static std::stack<std::map<std::string, Language::Variable*>> executionContext;
 static Language::GlobalContext global;
 static unsigned int temp_count = 0;
 
-
 Language::Variable* getVariable(std::string name)
 {
     if (!executionContext.empty())
@@ -286,6 +285,9 @@ Language::Variable* make_copy(Language::Variable* old)
 
 AS_TREE* executeStatements(AS_TREE* tree)
 {
+    #ifdef DEBUG_MODE
+        printf("\n%3d) [EXEC] Starting to execute statements\n", debug_index++);
+    #endif
     if (tree == nullptr) return make_void();
     if (tree->type == Type::STATEMENTS)
     {
@@ -319,6 +321,9 @@ AS_TREE* executeStatements(AS_TREE* tree)
 AS_TREE* executeStatement(AS_TREE* tree)
 {
     if (tree == nullptr) return make_void();
+    #ifdef DEBUG_MODE
+        printf("%3d) [EXEC] Executing Statement [type = %d]\n", debug_index++, tree->type);
+    #endif
     switch (tree->type)
     {
         case Type::EXPRESSION:
@@ -416,7 +421,7 @@ Language::Variable* executeDeclaration(AS_TREE* tree)
 
 	}
 	#ifdef DEBUG_MODE
-		printf("Variable:\n\tTYPE: %s\n\tNAME: %s\n", newVar->type.c_str(), newVar->name.c_str());
+		printf("%3d) [EXEC] Variable [type = %s name = %s]\n", debug_index++, newVar->type.c_str(), newVar->name.c_str());
 	#endif
     addVariable(newVar);
 	return newVar;
@@ -454,14 +459,15 @@ AS_TREE* executeStructDeclaration(AS_TREE* tree)
         }
         complexTypes[typeName] = ctype;
         #ifdef DEBUG_MODE
-            printf("Complex type [%s] defined:\n", ctype->typeName.c_str());
+            printf("%3d) [EXEC] Complex type [%s] defined:\n", debug_index++, ctype->typeName.c_str());
             for (auto p : ctype->vars)
             {
-                printf("\t%s %s;\n", p.second.type.c_str(), p.first.c_str());				
+                printf("\t\t%s %s;\n", p.second.type.c_str(), p.first.c_str());				
             }
         #endif
     }
     else yyfmterror(tree->lineno, "Invalid type struct declaration");
+    return make_void();
 }
 
 AS_TREE* executeAssignment(AS_TREE* tree)
@@ -728,6 +734,9 @@ AS_TREE* executeFunctionDecl(AS_TREE* tree)
         yyfmterror(tree->lineno, "Function with this name already exists");
     }
     functions[name] = tree;
+    #ifdef DEBUG_MODE
+        printf("Declared function %s\n", name.c_str());
+    #endif
     return make_void();
 }
 
@@ -853,10 +862,15 @@ Language::Value* executeFunction(AS_TREE* tree)
         paramNo++;
     }
     #ifdef DEBUG_MODE
-        printf("Function call\n");
-        for (auto v : variables)
+        printf("%3d) Function call\n", debug_index++);
+        if (variables.size() != 0)
+            for (auto v : variables)
+            {
+                printf("\t\tParam: %s\n", v->type.c_str());
+            }
+        else 
         {
-            printf("\tParam: %s\n", v->type.c_str());
+            printf("\t\tNo parameters");
         }
     #endif
     std::map<std::string, Language::Variable*> newContext;
@@ -1196,7 +1210,7 @@ Language::Value* executeMultiplication(Language::Value* first, Language::Value* 
 }
 /* =============================== /.EXPRESSIONS =================================*/
 
-
+    
 void leave()
 {
 	exit(-1);
@@ -1204,9 +1218,17 @@ void leave()
 
 
 int yyerror(const char* s)
-{	
-    printf("Syntax error on line %d\n", yylineno);
-	leave();
+{
+    void *array[10];
+    size_t size;
+
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
+    printf("Syntax error on line %d, %s\n", yylineno, s);
+    leave();
 }
 
 int yyfmterror(int lineno, const char* fmt, ...)
