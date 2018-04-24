@@ -1,6 +1,6 @@
-.vscode
+.vscode/
 *.yy.c
-*.output
+y.output
 *.tab.c
 *.tab.h
 *.out
